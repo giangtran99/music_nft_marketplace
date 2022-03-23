@@ -1,6 +1,5 @@
 import { useContext  } from 'react';
 
-import MintForm from './MintNFT/MintForm';
 import NFTCollection from './NFTCollection/NFTCollection';
 import CollectionContext from '../../store/collection-context';
 import MarketplaceContext from '../../store/marketplace-context';
