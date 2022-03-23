@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from 'react';
-
 import web3 from './connection/web3';
 import Navbar from './components/Layout/Navbar';
 import MintForm from './components/Content/MintNFT/MintForm';
@@ -15,6 +14,8 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import './output.css'
+
 const App = () => {
   const web3Ctx = useContext(Web3Context);
   const collectionCtx = useContext(CollectionContext);
