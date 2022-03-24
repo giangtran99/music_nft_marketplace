@@ -29,7 +29,7 @@ function classNames(...classes) {
 
 const Navbar = () => {
   const [fundsLoading, setFundsLoading] = useState(false);
-
+  console.log(fundsLoading)
   const web3Ctx = useContext(Web3Context);
   const marketplaceCtx = useContext(MarketplaceContext);
 

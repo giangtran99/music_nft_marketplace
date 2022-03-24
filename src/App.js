@@ -14,7 +14,7 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import './output.css'
+import './App.css'
 
 const App = () => {
   const web3Ctx = useContext(Web3Context);
