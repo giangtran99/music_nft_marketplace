@@ -6,6 +6,8 @@ import CollectionContext from '../../../store/collection-context';
 const ipfsClient = require('ipfs-http-client');
 const ipfs = ipfsClient.create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
 
+const audioTail = ["mp3", "mp4"]
+const imageTail = ["jpg", "png"]
 const MintForm = () => {
   const [enteredName, setEnteredName] = useState('');
   const [descriptionIsValid, setDescriptionIsValid] = useState(true);
@@ -14,9 +16,8 @@ const MintForm = () => {
   const [nameIsValid, setNameIsValid] = useState(true);
 
   const [capturedFileBuffer, setCapturedFileBuffer] = useState(null);
-  const [capturedFile, setCapturedFile] = useState(null);
+  const [capturedFile, setCapturedFile] = useState({});
   const [fileIsValid, setFileIsValid] = useState(true);
-  console.log("@@capturedFile",capturedFile)
   const web3Ctx = useContext(Web3Context);
   const collectionCtx = useContext(CollectionContext);
 
@@ -28,13 +29,30 @@ const MintForm = () => {
     setEnteredDescription(event.target.value);
   };
 
+  const getTypeFile = (fileTail) => {
+    if (audioTail.includes(fileTail)) {
+      return "audio"
+    } else if (imageTail.includes(fileTail)) {
+      return "image"
+    }else {
+      return null
+    }
+
+  }
   const captureFile = (event) => {
-    console.log("@@ao that", event)
     event.preventDefault();
 
+    let result = {}
     const file = event.target.files[0];
-    console.log("@@ao that", file)
-    setCapturedFile(file)
+    var src = URL.createObjectURL(file);
+    result.source = src
+    let tail = file.name.split(".")[file.name.split(".").length-1]
+    let typeFile = getTypeFile(tail)
+    if (!typeFile) {
+      return
+    }
+    result.type = typeFile
+    setCapturedFile(result)
     const reader = new window.FileReader();
     reader.readAsArrayBuffer(file);
     reader.onloadend = () => {
@@ -44,7 +62,6 @@ const MintForm = () => {
 
   const submissionHandler = (event) => {
     event.preventDefault();
-    console.log("@@alo alo")
     enteredName ? setNameIsValid(true) : setNameIsValid(false);
     enteredDescription ? setDescriptionIsValid(true) : setDescriptionIsValid(false);
     capturedFileBuffer ? setFileIsValid(true) : setFileIsValid(false);
@@ -102,6 +119,7 @@ const MintForm = () => {
   const descriptionClass = descriptionIsValid ? "form-control" : "form-control is-invalid";
   const fileClass = fileIsValid ? "form-control" : "form-control is-invalid";
 
+  console.log("@@capturedFile", capturedFile)
   return (
     <>
       <div>
@@ -117,20 +135,20 @@ const MintForm = () => {
           <div className="mt-5 md:mt-0 md:col-span-2">
             <form onSubmit={submissionHandler}>
               <div className="shadow sm:rounded-md sm:overflow-hidden">
-                <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
-                  <div className="grid grid-cols-3 gap-6">
+                <div className="px-4 py-5 bg-white space-y-12 sm:p-6">
+                  <div className="grid grid-cols-12 gap-12">
                     <div className="col-span-3 sm:col-span-2">
                       <label htmlFor="about" className="block text-sm font-medium text-gray-700">
                         Name
                       </label>
                       <div className="mt-1 flex rounded-md shadow-sm">
-                        <input
+                        <textarea
                           value={enteredName}
                           onChange={enteredNameHandler}
                           type="text"
                           name="company-website"
                           id="company-website"
-                          className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
+                          className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
                           placeholder="NFT name..."
                         />
                       </div>
@@ -155,27 +173,61 @@ const MintForm = () => {
                   </div>
 
                   <div>
-                  <label htmlFor="about" className="block text-sm font-medium text-gray-700">
-                        Metadata
-                      </label>
-                        <div class="flex items-center justify-center w-full">
-                          <label class="flex flex-col w-full h-32 border-4 border-dashed hover:bg-gray-100 hover:border-gray-300">
-                            <div class="flex flex-col items-center justify-center pt-7">
-                              <svg xmlns="http://www.w3.org/2000/svg"
-                                class="w-12 h-12 text-gray-400 group-hover:text-gray-600" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path fill-rule="evenodd"
-                                  d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                                  clip-rule="evenodd" />
-                              </svg>
-                              <p class="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
-                                Select a photo</p>
-                            </div>
-                            <input onChange={captureFile} value={capturedFile} type="file" class="opacity-0" />
-                          </label>
+                    <label htmlFor="about" className="block text-sm font-medium text-gray-700">
+                      Cover photo
+                    </label>
+                    <div class="flex items-center justify-center w-full">
+                      <label
+                        class="flex flex-col w-full h-32 border-4 border-dashed hover:bg-gray-100 hover:border-gray-300">
+                        <div class="relative flex flex-col items-center justify-center pt-7">
+                          {/* <img src={"https://www.w3schools.com/images/w3schools_green.jpg"} id="preview" class="absolute inset-0 w-full h-32"/> */}
+                          <svg xmlns="http://www.w3.org/2000/svg"
+                            class="w-12 h-12 text-gray-400 group-hover:text-gray-600" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                              d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                              clip-rule="evenodd" />
+                          </svg>
+                          <p class="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
+                            Select a photo</p>
                         </div>
+                        <input type="file" class="opacity-0" accept="image/*" />
+                      </label>
+
+                    </div>
                   </div>
-                
+
+                  <div>
+                    <label htmlFor="about" className="block text-sm font-medium text-gray-700">
+                      Metadata
+                    </label>
+
+                    <div class="flex items-center justify-center w-full">
+                      <label
+                        class="flex flex-col w-full h-28 border-4 border-dashed hover:bg-gray-100 hover:border-gray-300">
+                        <div class="relative flex flex-col items-center justify-center pt-7">
+
+                          {capturedFile.type === "audio" ? <audio controls autoplay>
+                            <source src={capturedFile.source} type="audio/ogg" />
+                          </audio>
+                            : <img src={capturedFile.source} id="preview" class="absolute inset-0 w-64 h-32" />}
+
+                          <svg xmlns="http://www.w3.org/2000/svg"
+                            class="w-12 h-12 text-gray-400 group-hover:text-gray-600" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                              d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                              clip-rule="evenodd" />
+                          </svg>
+                          <p class="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
+                            Select a photo or audio</p>
+                        </div>
+                        <input onChange={captureFile} type="file" class="opacity-0" />
+                      </label>
+
+                    </div>
+                  </div>
+
                 </div>
 
 

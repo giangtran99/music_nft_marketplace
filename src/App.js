@@ -146,7 +146,7 @@ const App = () => {
           {/* Menu */}
           {/* Noi Dung */}
           <Routes>
-            <Route exact path='/home' element={showContent && <Main/>}/>
+            <Route exact path='/marketplace' element={showContent && <Main/>}/>
             <Route exact path='/mint' element={showContent && <MintForm/>}/>
           </Routes>
         </div>
