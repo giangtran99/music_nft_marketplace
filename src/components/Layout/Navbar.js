@@ -16,7 +16,8 @@ const user = {
 }
 const navigation = [
   { name: 'Marketplace', href: '/marketplace', current: true },
-  { name: 'Mint', href: '/mint', current: true },
+  { name: 'Creator', href: '/creator', current: false },
+  { name: 'Mint', href: '/mint', current: false },
 ]
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
@@ -81,7 +82,7 @@ const Navbar = () => {
   return (
  
     <div className="min-h-full">
-    <Disclosure as="nav" className="bg-gray-800">
+    <Disclosure as="nav" className="bg-indigo-800">
       {({ open }) => (
         <>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

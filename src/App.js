@@ -1,7 +1,8 @@
 import React, { useContext, useEffect } from 'react';
 import web3 from './connection/web3';
 import Navbar from './components/Layout/Navbar';
-import MintForm from './components/Content/MintNFT/MintForm';
+import MintForm from './components/Content/MintNFT';
+import Creator from './components/Content/CreatorList';
 import Main from './components/Content/Main';
 import Web3Context from './store/web3-context';
 import CollectionContext from './store/collection-context';
@@ -148,6 +149,7 @@ const App = () => {
           <Routes>
             <Route exact path='/marketplace' element={showContent && <Main/>}/>
             <Route exact path='/mint' element={showContent && <MintForm/>}/>
+            <Route exact path='/creator' element={showContent && <Creator/>}/>
           </Routes>
         </div>
       </Router>

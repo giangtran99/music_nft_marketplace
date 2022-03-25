@@ -82,7 +82,7 @@ const NFTCollection = () => {
     <>
       <div class="grid place-items-center min-h-screen bg-gradient-to-t from-blue-200 to-indigo-900 p-5">
         <div>
-          <h1 class="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-200 mb-5">Made for you</h1>
+          <h1 class="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-200 mb-5">Explore NFT</h1>
           <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div class="bg-gray-900 shadow-lg rounded p-3">
               <div class="group relative">

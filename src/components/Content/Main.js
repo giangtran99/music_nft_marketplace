@@ -1,6 +1,6 @@
 import { useContext  } from 'react';
 
-import NFTCollection from './NFTCollection/NFTCollection';
+import NFTCollection from './NFTCollection';
 import CollectionContext from '../../store/collection-context';
 import MarketplaceContext from '../../store/marketplace-context';
 import Spinner from '../Layout/Spinner';
