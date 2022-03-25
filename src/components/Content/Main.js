@@ -11,7 +11,7 @@ const Main = () => {
   const marketplaceCtx = useContext(MarketplaceContext);
   
   return(
-    <div className="container-fluid mt-2">
+    <div className="container-fluid">
       {!marketplaceCtx.mktIsLoading && <NFTCollection />}
       {marketplaceCtx.mktIsLoading && <Spinner />}
     </div>
