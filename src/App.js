@@ -18,6 +18,8 @@ import {
   Link
 } from "react-router-dom";
 import './App.css'
+import UserInfo from './components/Content/UserInfo';
+import NFTInfo from './components/Content/NFTInfo';
 
 const App = () => {
   const web3Ctx = useContext(Web3Context);
@@ -153,6 +155,8 @@ const App = () => {
             <Route exact path='/mint' element={showContent && <MintForm/>}/>
             <Route exact path='/creator' element={showContent && <Creator/>}/>
             <Route exact path='/creator/:id' element={showContent && <CreatorInfo/>}/>
+            <Route exact path='/userinfo' element={showContent && <UserInfo/>}/>
+            <Route exact path='/nft/:id' element={showContent && <NFTInfo/>}/>
           </Routes>
         </div>
       </Router>

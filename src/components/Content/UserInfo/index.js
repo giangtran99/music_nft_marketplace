@@ -1,7 +1,7 @@
 import React from 'react'
 import Profile from '../../../music-components/Profile'
 
-const CreatorInfo = ({ color = "red" }) => {
+const UserInfo = ({ color = "red" }) => {
 	const [openTab, setOpenTab] = React.useState(1);
 	return (
 		<>
@@ -10,4 +10,4 @@ const CreatorInfo = ({ color = "red" }) => {
 	);
 };
 
-export default CreatorInfo;
+export default UserInfo;
