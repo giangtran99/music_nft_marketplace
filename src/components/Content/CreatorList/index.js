@@ -80,7 +80,7 @@ const NFTCollection = () => {
 
   return (
     <>
-      <div class=" bg-gray-200 dark:bg-gray-900 flex flex-wrap items-center justify-center">
+      <div class=" bg-gray-200 bg-indigo-900 flex flex-wrap items-center justify-center">
   <div class="container max-w-lg bg-white rounded dark:bg-gray-800 shadow-lg transform duration-200 easy-in-out m-12">
     <div class="h-2/4 sm:h-64 overflow-hidden">
       <img class="w-full rounded-t"

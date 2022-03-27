@@ -15,7 +15,7 @@ ReactDOM.render(
           <App />
         </MarketplaceProvider>
       </CollectionProvider>
-    </Web3Provider>,
+    </Web3Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

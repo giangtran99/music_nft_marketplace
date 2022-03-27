@@ -122,20 +122,20 @@ const MintForm = () => {
   console.log("@@capturedFile", capturedFile)
   return (
     <>
-      <div>
+      <div className="bg-slate-800">
         <div className="md:grid md:grid-cols-3 md:gap-6 content-center">
           <div className="mt-5 md:mt-0 md:col-span-6">
             <div className="md:col-span-1">
-              <div className="px-4 sm:px-0 ">
-                <h4 className="text-lg font-medium leading-9 text-gray-900 text-center	">Create New NFT</h4>
+              <div className="px-4 sm:px-0 mt-10">
+                <h4 className="text-3xl font-medium leading-9 text-white text-center">Create New NFT</h4>
               </div>
             </div>
             <form onSubmit={submissionHandler}>
               <div className="shadow sm:rounded-md sm:overflow-hidden">
-                <div className="px-4 py-5 bg-white space-y-12 sm:p-6">
+                <div className="px-4 py-5 bg-slate-800 space-y-12 sm:p-6">
                   <div>
                     <div className="col-span-3 sm:col-span-2">
-                      <label htmlFor="about" className="block text-sm font-medium text-gray-700">
+                      <label htmlFor="about" className="block text-sm font-medium text-white">
                         Name
                       </label>
                       <div className="mt-1 flex rounded-md shadow-sm">
@@ -153,7 +153,7 @@ const MintForm = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="description" className="block text-sm font-medium text-white">
                       Description
                     </label>
                     <div className="mt-1">
@@ -170,7 +170,7 @@ const MintForm = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="about" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="about" className="block text-sm font-medium text-white">
                       Cover photo
                     </label>
                     <div class="flex items-center w-full">
@@ -195,7 +195,7 @@ const MintForm = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="about" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="about" className="block text-sm font-medium text-white">
                       Metadata
                     </label>
                     <div class="flex items-center justify-center w-full">
@@ -213,17 +213,17 @@ const MintForm = () => {
                               d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
                               clip-rule="evenodd" />
                           </svg>
-                          <p class="pt-2 text-sm tracking-wider text-gray-400 group-hover:text-gray-600"> Select a photo or audio</p>
+                          <p class="pt-2 text-sm tracking-wider text-gray-400 group-hover:text-indigo-400"> Select a photo or audio</p>
                         </div>
                         <input onChange={captureFile} type="file" class="opacity-0" />
                       </label>
                     </div>
                   </div>
                 </div>
-                <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                <div className="px-4 py-3 bg-slate-800 text-right sm:px-6">
                   <button
                     type="submit"
-                    className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-xl font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
                     Mint
                   </button>

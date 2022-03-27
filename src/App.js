@@ -3,7 +3,9 @@ import web3 from './connection/web3';
 import Navbar from './components/Layout/Navbar';
 import MintForm from './components/Content/MintNFT';
 import Creator from './components/Content/CreatorList';
+import CreatorInfo from './components/Content/CreatorInfo';
 import Main from './components/Content/Main';
+import Footer from './components/Layout/Footer';
 import Web3Context from './store/web3-context';
 import CollectionContext from './store/collection-context';
 import MarketplaceContext from './store/marketplace-context'
@@ -150,10 +152,11 @@ const App = () => {
             <Route exact path='/marketplace' element={showContent && <Main/>}/>
             <Route exact path='/mint' element={showContent && <MintForm/>}/>
             <Route exact path='/creator' element={showContent && <Creator/>}/>
+            <Route exact path='/creator/:id' element={showContent && <CreatorInfo/>}/>
           </Routes>
         </div>
       </Router>
-
+      {showNavbar && <Footer/>}
     </React.Fragment>
   );
 };
