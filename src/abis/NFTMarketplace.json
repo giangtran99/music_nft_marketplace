@@ -139,8 +139,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -184,8 +183,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -204,8 +202,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -236,8 +233,7 @@
       "name": "fillOffer",
       "outputs": [],
       "stateMutability": "payable",
-      "type": "function",
-      "payable": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -16319,11 +16315,22 @@
       "links": {},
       "address": "0x96fDaDadC27034497781b928d4515774c3A4Ed2D",
       "transactionHash": "0xc95bf499720ae6fe02d241be99f2858ed20092332d3e40f0bb89959d503eac33"
+    },
+    "1648659378498": {
+      "events": {},
+      "links": {},
+      "address": "0x37F49faD67ac7aacf4675d986FF6A7010E9995a7",
+      "transactionHash": "0xaa424d22145ee13cccddf5809870e86cf4bdd1e5f2946b17e5b6d4184e2e40b8"
+    },
+    "1648743224478": {
+      "events": {},
+      "links": {},
+      "address": "0xD75FED30DB3b7378aE26a2C67B19a01e1F94A28c",
+      "transactionHash": "0xd79da19748f86cf7a56e02befef5a1a5bf399fcacfdddc50c11e08d0c0e43748"
     }
   },
   "schemaVersion": "3.4.6",
-  "updatedAt": "2022-03-27T13:32:58.773Z",
-  "networkType": "ethereum",
+  "updatedAt": "2022-04-01T17:42:32.589Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},
