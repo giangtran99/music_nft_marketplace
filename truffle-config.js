@@ -1,9 +1,8 @@
 require('dotenv').config();
 
-const HDWalletProvider = require('truffle-hdwallet-provider-privkey');
+const HDWalletProvider = require('@truffle/hdwallet-provider');
 const privateKeys = process.env.PRIVATE_KEYS || "";
 
-console.log("@@privateKeys",privateKeys.split(","))
 module.exports = {
 
   networks: {
@@ -14,7 +13,7 @@ module.exports = {
     },
     rinkeby: {
       provider: function() {
-        return new HDWalletProvider(privateKeys.split(','), `https://rinkeby.infura.io/v3/${process.env.INFURA_API_KEY}` // Url to an Ethereum node
+        return new HDWalletProvider(privateKeys.split(','), `https://rinkeby.infura.io/v3/${process.env.RINKEBY_API_KEY}` // Url to an Ethereum node
         )
       },
       gas: 5000000,
@@ -23,11 +22,14 @@ module.exports = {
     },
     ropsten: {
       provider: function() {
-        return new HDWalletProvider(privateKeys.split(','), `https://ropsten.infura.io/v3/${process.env.INFURA_API_KEY}`)
+        return new HDWalletProvider(privateKeys.split(','), `wss://ropsten.infura.io/ws/v3/${process.env.INFURA_API_KEY}`)
       },
       network_id: 3,
-      gas: 3000000,
-      gasPrice: 21
+      gas: 7000000,
+      gasPrice: 2000000000,
+      confirmations: 2,    // # of confs to wait between deployments. (default: 0)
+      timeoutBlocks: 4000,  // # of blocks before a deployment times out  (minimum/default: 50)
+      skipDryRun: true 
     }
   },
   contracts_directory: './src/contracts',
