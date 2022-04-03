@@ -48,13 +48,14 @@ const App = () => {
       // Load Network ID
       const networkId = await web3Ctx.loadNetworkId(web3);
 
+
       // Load Contracts      
       const nftDeployedNetwork = NFTCollection.networks[networkId];
       const nftContract = collectionCtx.loadContract(web3, NFTCollection, nftDeployedNetwork);
 
       const mktDeployedNetwork = NFTMarketplace.networks[networkId];
       const mktContract = marketplaceCtx.loadContract(web3, NFTMarketplace, mktDeployedNetwork);
-
+      console.log("@@nftContract",nftDeployedNetwork)
       if (nftContract) {
         // Load total Supply
         const totalSupply = await collectionCtx.loadTotalSupply(nftContract);
