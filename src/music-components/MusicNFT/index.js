@@ -35,7 +35,7 @@ const MusicNFT = ({ NFTCollection = [], marketplaceCtx }) => {
 
                             <div className="p-5 flex">
                                 <div >
-                                    <h3 className="text-white text-lg">{NFT.title}</h3>
+                                    <h3 className="text-white text-lg">{NFT.account}</h3>
                                     <p className="text-gray-400">{`${NFT.owner.substr(0, 7)}...${NFT.owner.substr(NFT.owner.length - 7)}`}</p>
 
                                 </div>
