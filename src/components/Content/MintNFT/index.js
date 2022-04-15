@@ -21,6 +21,7 @@ const MintForm = () => {
   const web3Ctx = useContext(Web3Context);
   const collectionCtx = useContext(CollectionContext);
 
+  
   const enteredNameHandler = (event) => {
     setEnteredName(event.target.value);
   };
@@ -37,7 +38,6 @@ const MintForm = () => {
     } else {
       return null
     }
-
   }
   const captureFile = (event) => {
     event.preventDefault();

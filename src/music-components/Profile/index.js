@@ -1,9 +1,15 @@
 
 import React from 'react'
 import MusicNFT from '../MusicNFT';
+import CollectionContext from '../../store/collection-context';
+import MarketplaceContext from '../../store/marketplace-context';
+import Web3Context from '../../store/web3-context';
 import TransactionTable from '../TransactionTable';
 const Profile = ({ color = "indigo", NFTs = [], Transactions = [] }) => {
     const [openTab, setOpenTab] = React.useState(1);
+    const collectionCtx = React.useContext(CollectionContext);
+    const web3Ctx = React.useContext(Web3Context);
+    const marketplaceCtx = React.useContext(MarketplaceContext);
 
     return (<>
         <div className="w-full h-full">
@@ -33,7 +39,7 @@ const Profile = ({ color = "indigo", NFTs = [], Transactions = [] }) => {
                             </div>
                         </div>
                     </div>
-                    <div className="max-w-5xl h-full mx-auto">
+                    <div className="max-w-7xl h-full mx-auto">
                         <div className="flex flex-col space-y-2 mt-3 items-center justify-center pb-3 border-b-2">
                             <p className="text-4xl font-bold">Giang Tran</p>
                             <p className="text-sm text-gray-500">I am Software Engineer</p>
@@ -109,7 +115,7 @@ const Profile = ({ color = "indigo", NFTs = [], Transactions = [] }) => {
                                     <div className="px-4 py-5 flex-auto">
                                         <div className="tab-content tab-space">
                                             <div className={openTab === 1 ? "block" : "hidden"} id="link1">
-                                                <MusicNFT  NFTCollection={NFTs}/>
+                                                <MusicNFT marketplaceCtx={marketplaceCtx} account={web3Ctx.account} NFTCollection={collectionCtx.collection} type="profile"/>
                                             </div>
                                             <div className={openTab === 2 ? "block" : "hidden"} id="link2">
                                                 <TransactionTable />

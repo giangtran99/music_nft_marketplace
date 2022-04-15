@@ -77,6 +77,7 @@ const App = () => {
         window.alert('NFTCollection contract not deployed to detected network.')
       }
 
+      console.log("@@mktContract",mktContract)
       if (mktContract) {
         // Load offer count
         const offerCount = await marketplaceCtx.loadOfferCount(mktContract);
