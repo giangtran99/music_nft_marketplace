@@ -41,8 +41,8 @@
     "truffle": "5.3.14"
   },
   "scripts": {
-    "start": "GENERATE_SOURCEMAP=false react-app-rewired start",
-    "win-start": "set \"GENERATE_SOURCEMAP=false\" && react-app-rewired start",
+    "start": "GENERATE_SOURCEMAP=false PORT=7399 react-app-rewired start",
+    "win-start": "set \"GENERATE_SOURCEMAP=false\" && PORT=7399 react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
