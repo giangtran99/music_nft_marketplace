@@ -17,7 +17,7 @@ const user = {
 const navigation = [
   { name: 'Marketplace', href: '/marketplace', current: true },
   { name: 'Creator', href: '/creator', current: false },
-  { name: 'Mint', href: '/mint', current: false },
+  // { name: 'Mint', href: '/mint', current: false },
 ]
 const userNavigation = [
   { name: 'Your Profile', href: '/userinfo' },

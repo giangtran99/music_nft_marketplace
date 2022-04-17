@@ -1,10 +1,12 @@
 
 import React from 'react'
 import MusicNFT from '../MusicNFT';
+import AlbumNFT from '../AlbumNFT';
 import CollectionContext from '../../store/collection-context';
 import MarketplaceContext from '../../store/marketplace-context';
 import Web3Context from '../../store/web3-context';
 import TransactionTable from '../TransactionTable';
+import { PlusIcon, CollectionIcon } from '@heroicons/react/outline'
 const Profile = ({ color = "indigo", NFTs = [], Transactions = [] }) => {
     const [openTab, setOpenTab] = React.useState(1);
     const collectionCtx = React.useContext(CollectionContext);
@@ -34,7 +36,7 @@ const Profile = ({ color = "indigo", NFTs = [], Transactions = [] }) => {
                             </div>
                             <div className="absolute" style={{ bottom: 30, right: 30 }}>
                                 <button className="focus:outline-none px-3 py-2 hover:bg-gray-50 font-semibold bg-white rounded-md">
-                                    <i className="fas fa-camera mr-2"></i>Edit Cover Photo
+                                    <i className="fas fa-camera mr-1"></i>Edit Cover Photo
                                 </button>
                             </div>
                         </div>
@@ -46,89 +48,97 @@ const Profile = ({ color = "indigo", NFTs = [], Transactions = [] }) => {
                         </div>
 
                         {/*start */}
-
-                        <div className="flex flex-wrap">
-                            <div className="w-full">
-                                <ul
-                                    className="flex mb-0 list-none flex-wrap pt-3 pb-4 flex-row"
-                                    role="tablist"
-                                >
-                                    <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
-                                        <a
-                                            className={
-                                                "text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal " +
-                                                (openTab === 1
-                                                    ? "text-white bg-" + color + "-600"
-                                                    : "text-" + color + "-600 bg-white")
-                                            }
-                                            onClick={e => {
-                                                e.preventDefault();
-                                                setOpenTab(1);
-                                            }}
-                                            data-toggle="tab"
-                                            href="#link1"
-                                            role="tablist"
-                                        >
-                                            <i className="fas fa-space-shuttle text-base mr-1"></i> NFTs
-                                        </a>
-                                    </li>
-                                    <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
-                                        <a
-                                            className={
-                                                "text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal " +
-                                                (openTab === 2
-                                                    ? "text-white bg-" + color + "-600"
-                                                    : "text-" + color + "-600 bg-white")
-                                            }
-                                            onClick={e => {
-                                                e.preventDefault();
-                                                setOpenTab(2);
-                                            }}
-                                            data-toggle="tab"
-                                            href="#link2"
-                                            role="tablist"
-                                        >
-                                            <i className="fas fa-cog text-base mr-1"></i>  Transactions
-                                        </a>
-                                    </li>
-                                    <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
-                                        <a
-                                            className={
-                                                "text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal " +
-                                                (openTab === 3
-                                                    ? "text-white bg-" + color + "-600"
-                                                    : "text-" + color + "-600 bg-white")
-                                            }
-                                            onClick={e => {
-                                                e.preventDefault();
-                                                setOpenTab(3);
-                                            }}
-                                            data-toggle="tab"
-                                            href="#link3"
-                                            role="tablist"
-                                        >
-                                            <i className="fas fa-briefcase text-base mr-1"></i>  ...
-                                        </a>
-                                    </li>
-                                </ul>
+                        <div>
+                            <div className='text-right mt-10'>
+                                <a className='m-auto' href='/mint'>
+                                    <button class="w-[160px] bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+                                        <PlusIcon className="h-5 w-5 text-blue-500" />
+                                        <span className='m-auto'>Mint NFT</span>
+                                    </button>
+                                </a>
+                                <a className='m-auto' href='/create-album'>
+                                    <button class="ml-[20px] w-[160px] bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+                                        <CollectionIcon className="h-5 w-5 text-blue-500" />
+                                        <span className='m-auto'>New Album</span>
+                                    </button>
+                                </a>
+                            </div>
+                            <div className="mt-10 flex flex-wrap">
+                                <div className="w-full">
+                                    <ul
+                                        className="flex mb-0 list-none flex-wrap pt-3 pb-4 flex-row"
+                                        role="tablist"
+                                    >
+                                        <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
+                                            <a
+                                                className={
+                                                    "text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal " +
+                                                    (openTab === 1
+                                                        ? "text-white bg-" + color + "-600"
+                                                        : "text-" + color + "-600 bg-white")
+                                                }
+                                                onClick={e => {
+                                                    e.preventDefault();
+                                                    setOpenTab(1);
+                                                }}
+                                                data-toggle="tab"
+                                                href="#link1"
+                                                role="tablist"
+                                            >
+                                                <i className="fas fa-space-shuttle text-base mr-1"></i> My NFTs
+                                            </a>
+                                        </li>
+                                        <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
+                                            <a
+                                                className={
+                                                    "text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal " +
+                                                    (openTab === 2
+                                                        ? "text-white bg-" + color + "-600"
+                                                        : "text-" + color + "-600 bg-white")
+                                                }
+                                                onClick={e => {
+                                                    e.preventDefault();
+                                                    setOpenTab(2);
+                                                }}
+                                                data-toggle="tab"
+                                                href="#link2"
+                                                role="tablist"
+                                            >
+                                                <i className="fas fa-cog text-base mr-1"></i>  My Albums
+                                            </a>
+                                        </li>
+                                        <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
+                                            <a
+                                                className={
+                                                    "text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal " +
+                                                    (openTab === 3
+                                                        ? "text-white bg-" + color + "-600"
+                                                        : "text-" + color + "-600 bg-white")
+                                                }
+                                                onClick={e => {
+                                                    e.preventDefault();
+                                                    setOpenTab(3);
+                                                }}
+                                                data-toggle="tab"
+                                                href="#link3"
+                                                role="tablist"
+                                            >
+                                                <i className="fas fa-briefcase text-base mr-1"></i>  Transactions
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                                 <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded">
                                     <div className="px-4 py-5 flex-auto">
                                         <div className="tab-content tab-space">
                                             <div className={openTab === 1 ? "block" : "hidden"} id="link1">
-                                                <MusicNFT marketplaceCtx={marketplaceCtx} account={web3Ctx.account} NFTCollection={collectionCtx.collection} type="profile"/>
+                                                <MusicNFT marketplaceCtx={marketplaceCtx} account={web3Ctx.account} NFTCollection={collectionCtx.collection} type="profile" />
                                             </div>
                                             <div className={openTab === 2 ? "block" : "hidden"} id="link2">
-                                                <TransactionTable />
+                                                <AlbumNFT />
                                             </div>
                                             <div className={openTab === 3 ? "block" : "hidden"} id="link3">
-                                                <p>
-                                                    Efficiently unleash cross-media information without
-                                                    cross-media value. Quickly maximize timely deliverables for
-                                                    real-time schemas.
-                                                    <br />
-                                                    <br /> Dramatically maintain clicks-and-mortar solutions
-                                                    without functional solutions.
-                                                </p>
+                                                <TransactionTable />
                                             </div>
                                         </div>
                                     </div>

@@ -57,27 +57,7 @@ const NFTCollection = () => {
   //     });
   // };
 
-  const products = [
-    {
-      id: 1,
-      name: 'Basic Tee',
-      href: '#',
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-      imageAlt: "Front of men's Basic Tee in black.",
-      price: '$35',
-      color: 'Black',
-    },
-    {
-      id: 2,
-      name: 'Basic Tee',
-      href: '#',
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-      imageAlt: "Front of men's Basic Tee in black.",
-      price: '$35',
-      color: 'Black',
-    },
-  ]
-
+ 
   return (
     <>
       <div class="grid place-items-center min-h-screen bg-gradient-to-t from-blue-200 to-indigo-900 p-5">
@@ -186,9 +166,9 @@ const NFTCollection = () => {
     //           <h5 className="card-title">{NFT.title}</h5>
     //         </div>
     //         <audio controls>
-    //         <source src={`https://ipfs.infura.io/ipfs/${NFT.img}`} type="audio/ogg"/>
+    //         <source src={`https://ipfs.infura.io/ipfs/${NFT.metadata}`} type="audio/ogg"/>
     //         </audio>
-    //         {/* <img src={`https://ipfs.infura.io/ipfs/${NFT.img}`} className="card-img-bottom" alt={`NFT ${key}`} />                          */}
+    //         {/* <img src={`https://ipfs.infura.io/ipfs/${NFT.metadata}`} className="card-img-bottom" alt={`NFT ${key}`} />                          */}
     //         <p className="fw-light fs-6">{`${owner.substr(0,7)}...${owner.substr(owner.length - 7)}`}</p>
     //         {index !== -1 ?
     //           owner !== web3Ctx.account ?

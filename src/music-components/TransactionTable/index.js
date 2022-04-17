@@ -21,7 +21,7 @@ const TransactionTable = () => {
                         <tr>
                             <td className="px-6 py-4">
                                 <div className="flex items-center space-x-6">
-                                    <div className="inline-flex w-10 h-10"> <img className='w-10 h-10 object-cover' alt='User avatar' src='https://i.imgur.com/siKnZP2.jpg' /> </div>
+                                    <div className="inline-flex w-10 h-10"> <img className='w-10 h-10 object-cover' alt='User avatar' src='https://i.metadataur.com/siKnZP2.jpg' /> </div>
                                     <div>
                                         <p> Maps </p>
                                         <p className="text-gray-500 text-sm font-semibold tracking-wide">Maroon 5</p>

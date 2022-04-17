@@ -1,11 +1,11 @@
-import React ,{useContext,useRef,createRef}from 'react'
+import React, { useContext, useRef, createRef } from 'react'
 import eth from '../../img/eth.png';
 import { formatPrice } from '../../helpers/utils';
 import web3 from '../../connection/web3';
 import Web3Context from '../../store/web3-context';
 import CollectionContext from '../../store/collection-context';
 import MarketplaceContext from '../../store/marketplace-context';
-
+import { PlusIcon } from '@heroicons/react/outline'
 
 const CONTRACT_ADDRESS = "0xfbB86211738Cca5d9Fa82871667b14358D4F2Fdf"
 
@@ -13,46 +13,46 @@ const MusicNFT = ({ NFTCollection = [], account, type }) => {
     const web3Ctx = useContext(Web3Context);
     const collectionCtx = useContext(CollectionContext);
     const marketplaceCtx = useContext(MarketplaceContext);
-  
-  
+
+
     const priceRefs = useRef([]);
     if (priceRefs.current.length !== collectionCtx.collection.length) {
-      priceRefs.current = Array(collectionCtx.collection.length).fill().map((_, i) => priceRefs.current[i]  || createRef());
+        priceRefs.current = Array(collectionCtx.collection.length).fill().map((_, i) => priceRefs.current[i] || createRef());
     }
-  
+
     const getNFTCollectionbyAccount = () => {
         if (account) return NFTCollection.filter(NFT => NFT.owner === account)
         return NFTCollection
     }
 
-    const makeOfferHandler = (event,id,key) => {
+    const makeOfferHandler = (event, id, key) => {
         event.preventDefault();
         const enteredPrice = web3.utils.toWei(priceRefs.current[key].current.value, 'ether');
         collectionCtx.contract.methods.approve(marketplaceCtx.contract.options.address, id).send({ from: web3Ctx.account })
-          .on('transactionHash', (hash) => {
-            marketplaceCtx.setMktIsLoading(true);
-          })
-          .on('receipt', (receipt) => {
-            marketplaceCtx.contract.methods.makeOffer(id, enteredPrice).send({ from: web3Ctx.account })
-              .on('error', (error) => {
-                window.alert('Something went wrong when pushing to the blockchain');
-                marketplaceCtx.setMktIsLoading(false);
-              });
-          });
+            .on('transactionHash', (hash) => {
+                marketplaceCtx.setMktIsLoading(true);
+            })
+            .on('receipt', (receipt) => {
+                marketplaceCtx.contract.methods.makeOffer(id, enteredPrice).send({ from: web3Ctx.account })
+                    .on('error', (error) => {
+                        window.alert('Something went wrong when pushing to the blockchain');
+                        marketplaceCtx.setMktIsLoading(false);
+                    });
+            });
     };
-    
+
     return (<>
-        <div className="grid place-items-center min-h-screen bg-gradient-to-t from-blue-200 to-indigo-900 p-5">
+        <div className="grid place-items-center min-h-screen bg-indigo-900 p-5">
             <div>
                 <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-200 mb-5">Explore NFT</h1>
-                <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10">
                     {getNFTCollectionbyAccount().map((NFT, key) => {
                         const index = marketplaceCtx.offers ? marketplaceCtx.offers.findIndex(offer => offer.id === NFT.id) : -1;
                         const owner = index === -1 ? NFT.owner : marketplaceCtx.offers[index].user;
                         const price = index !== -1 ? formatPrice(marketplaceCtx.offers[index].price).toFixed(2) : null;
                         return <div key={key} className="bg-gray-900 shadow-lg rounded p-3">
                             <div className="group relative">
-                                <img className="w-full block rounded" src="https://upload.wikimedia.org/wikipedia/en/f/f1/Tycho_-_Epoch.jpg" alt="" />
+                                <img className="m-auto w-72 block rounded" src={NFT.coverPhoto ? `https://ipfs.infura.io/ipfs/${NFT.coverPhoto}` : 'https://upload.wikimedia.org/wikipedia/en/f/f1/Tycho_-_Epoch.jpg'} alt="" />
                                 <div className="absolute bg-black rounded bg-opacity-0 group-hover:bg-opacity-60 w-full h-full top-0 flex items-center group-hover:opacity-100 transition justify-evenly">
                                     <button className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-heart" viewBox="0 0 16 16">
@@ -66,8 +66,8 @@ const MusicNFT = ({ NFTCollection = [], account, type }) => {
                                         </svg>
                                     </button>
                                 </div>
-                                <audio className='w-64 m-auto' controls>
-                                    <source src={`https://ipfs.infura.io/ipfs/${NFT.img}`} />
+                                <audio className='w-64 m-5 auto' controls>
+                                    <source src={`https://ipfs.infura.io/ipfs/${NFT.metadata}`} />
                                 </audio>
                             </div>
 
@@ -87,7 +87,7 @@ const MusicNFT = ({ NFTCollection = [], account, type }) => {
                             {!price && type === "profile" && NFT.owner === account ?
                                 <div class="flex items-center border-b border-teal-500 py-2">
                                     <input ref={priceRefs.current[key]} class="appearance-none bg-transparent border-none w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none" type="number" placeholder="Set price your NFT" aria-label="Full name" />
-                                    <button onClick={(e)=>makeOfferHandler(e,NFT.id,key)} class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded" type="button">
+                                    <button onClick={(e) => makeOfferHandler(e, NFT.id, key)} class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded" type="button">
                                         Offer
                                     </button>
                                 </div>

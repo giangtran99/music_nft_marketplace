@@ -112,7 +112,10 @@ const CollectionProvider = props => {
         collection = [{
           id: i + 1,
           title: metadata.properties.name.description,
-          img: metadata.properties.image.description,
+          metadata: metadata.properties.metadata.description,
+          description:metadata.properties.description.description,
+          coverPhoto:metadata.properties.coverPhoto.description,
+          minter:metadata.properties.description.minter,
           owner: owner
         }, ...collection];
       }catch {
@@ -135,9 +138,13 @@ const CollectionProvider = props => {
       NFT = {
         id: parseInt(id),
         title: metadata.properties.name.description,
-        img: metadata.properties.image.description,
+        metadata: metadata.properties.metadata.description,
+        description:metadata.properties.description.description,
+        coverPhoto:metadata.properties.coverPhoto.description,
+        minter:metadata.properties.description.minter,
         owner: owner
       };
+
     }catch {
       console.error('Something went wrong');
     }

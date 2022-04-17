@@ -145,9 +145,9 @@ const NFTCollection = () => {
     //           <h5 classNameName="card-title">{NFT.title}</h5>
     //         </div>
     //         <audio controls>
-    //         <source src={`https://ipfs.infura.io/ipfs/${NFT.img}`} type="audio/ogg"/>
+    //         <source src={`https://ipfs.infura.io/ipfs/${NFT.metadata}`} type="audio/ogg"/>
     //         </audio>
-    //         {/* <img src={`https://ipfs.infura.io/ipfs/${NFT.img}`} classNameName="card-img-bottom" alt={`NFT ${key}`} />                          */}
+    //         {/* <img src={`https://ipfs.infura.io/ipfs/${NFT.metadata}`} classNameName="card-img-bottom" alt={`NFT ${key}`} />                          */}
     //         <p classNameName="fw-light fs-6">{`${owner.substr(0,7)}...${owner.substr(owner.length - 7)}`}</p>
     //         {index !== -1 ?
     //           owner !== web3Ctx.account ?

@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import web3 from './connection/web3';
 import Navbar from './components/Layout/Navbar';
 import MintForm from './components/Content/MintNFT';
+import CreateAlbumForm from './components/Content/CreateAlbum';
 import Creator from './components/Content/CreatorList';
 import CreatorInfo from './components/Content/CreatorInfo';
 import Main from './components/Content/Main';
@@ -20,6 +21,8 @@ import {
 import './App.css'
 import UserInfo from './components/Content/UserInfo';
 import NFTInfo from './components/Content/NFTInfo';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   const web3Ctx = useContext(Web3Context);
@@ -55,11 +58,12 @@ const App = () => {
 
       const mktDeployedNetwork = NFTMarketplace.networks[networkId];
       const mktContract = marketplaceCtx.loadContract(web3, NFTMarketplace, mktDeployedNetwork);
-      console.log("@@nftContract",nftDeployedNetwork)
+      console.log("@@nftContract",nftContract)
       if (nftContract) {
+        console.log("@@totalSupply")
         // Load total Supply
         const totalSupply = await collectionCtx.loadTotalSupply(nftContract);
-
+        console.log("@@totalSupply2",totalSupply)
         // Load Collection
         collectionCtx.loadCollection(nftContract, totalSupply);
 
@@ -155,6 +159,7 @@ const App = () => {
           <Routes>
             <Route exact path='/marketplace' element={showContent && <Main/>}/>
             <Route exact path='/mint' element={showContent && <MintForm/>}/>
+            <Route exact path='/create-album' element={showContent && <CreateAlbumForm/>}/>
             <Route exact path='/creator' element={showContent && <Creator/>}/>
             <Route exact path='/creator/:id' element={showContent && <CreatorInfo/>}/>
             <Route exact path='/userinfo' element={showContent && <UserInfo/>}/>
@@ -162,6 +167,7 @@ const App = () => {
           </Routes>
         </div>
       </Router>
+      <ToastContainer />
       {showNavbar && <Footer/>}
     </React.Fragment>
   );

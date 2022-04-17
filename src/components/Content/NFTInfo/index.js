@@ -4,7 +4,7 @@ import eth from '../../../img/eth.png';
 import CollectionContext from '../../../store/collection-context';
 import MarketplaceContext from '../../../store/marketplace-context';
 import Web3Context from '../../../store/web3-context';
-
+import { formatPrice } from '../../../helpers/utils';
 
 import { useParams } from 'react-router-dom';
 
@@ -13,12 +13,18 @@ const NFTInfo = (props) => {
     const marketplaceCtx = React.useContext(MarketplaceContext);
     const web3Ctx = React.useContext(Web3Context);
     const [nftInfo, setNFTInfo] = React.useState()
+    const [price, setPrice] = React.useState()
     const index = marketplaceCtx.offers ? marketplaceCtx.offers.findIndex(offer => offer.id === nftInfo?.id) : -1;
 
     let { id } = useParams();
 
     console.log("@@props", id)
-    console.log("@@collectionCtx", nftInfo?.img)
+    console.log("@@collectionCtx", nftInfo)
+
+    const getNFTPrice = () => {
+        const price = index !== -1 ? formatPrice(marketplaceCtx.offers[index].price).toFixed(2) : null;
+        setPrice(price)
+    }
 
     React.useEffect(() => {
         console.log("@@collectionCtx.collection", collectionCtx.collection.filter(NFT => NFT.id === id))
@@ -27,9 +33,12 @@ const NFTInfo = (props) => {
         }
     }, [collectionCtx.collection.length])
 
+    React.useEffect(() => {
+        getNFTPrice()
+    }, [nftInfo])
+
     const buyHandler = (event) => {
         const buyIndex = parseInt(event.target.value);
-        console.log("@@go chu", marketplaceCtx.offers[buyIndex])
         marketplaceCtx.contract.methods.fillOffer(marketplaceCtx.offers[buyIndex].offerId).send({ from: web3Ctx.account, value: marketplaceCtx.offers[buyIndex].price })
             .on('transactionHash', (hash) => {
                 marketplaceCtx.setMktIsLoading(true);
@@ -48,7 +57,7 @@ const NFTInfo = (props) => {
 
                         <div key={""} className="bg-gray-900 shadow-lg rounded p-3">
                             <div className="group relative">
-                                <img className="w-full block rounded" src="https://upload.wikimedia.org/wikipedia/en/f/f1/Tycho_-_Epoch.jpg" alt="" />
+                                <img className="m-auto w-72 block rounded" src={nftInfo.coverPhoto ? `https://ipfs.infura.io/ipfs/${nftInfo.coverPhoto}` : "https://upload.wikimedia.org/wikipedia/en/f/f1/Tycho_-_Epoch.jpg"} alt="" />
                                 <div className="absolute bg-black rounded bg-opacity-0 group-hover:bg-opacity-60 w-full h-full top-0 flex items-center group-hover:opacity-100 transition justify-evenly">
                                     <button className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-heart" viewBox="0 0 16 16">
@@ -62,8 +71,8 @@ const NFTInfo = (props) => {
                                         </svg>
                                     </button>
                                 </div>
-                                <audio className='w-64 m-auto' controls>
-                                    <source src={`https://ipfs.infura.io/ipfs/${nftInfo.img}`} />
+                                <audio className='mt-5 w-64 m-auto' controls>
+                                    <source src={`https://ipfs.infura.io/ipfs/${nftInfo.metadata}`} />
                                 </audio>
                             </div>
 
@@ -122,14 +131,14 @@ const NFTInfo = (props) => {
                                     </a>
                                 </span>
                             </div>
-                            <p className="leading-relaxed">Fam locavore kickstarter distillery. Mixtape chillwave tumeric sriracha taximy chia microdosing tilde DIY. XOXO fam indxgo juiceramps cornhole raw denim forage brooklyn. Everyday carry +1 seitan poutine tumeric. Gastropub blue bottle austin listicle pour-over, neutra jean shorts keytar banjo tattooed umami cardigan.</p>
+                            <p className="leading-relaxed">{nftInfo.description}</p>
                             <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-200 mb-5">
 
 
                             </div>
                             <div className="flex">
                                 <div className='flex'>
-                                    <span className="my-auto text-white"><b>{`${null || "-"}`}</b></span>
+                                    <span className="my-auto text-white"><b>{`${price || "-"}`}</b></span>
                                     <img src={eth} width="42" className="bg-midnight" alt="price icon"></img>
                                 </div>
                                 <button onClick={buyHandler} value={index} className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">Buy</button>

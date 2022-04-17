@@ -6,8 +6,8 @@ import CollectionContext from '../../../store/collection-context';
 import MarketplaceContext from '../../../store/marketplace-context';
 import { formatPrice } from '../../../helpers/utils';
 import eth from '../../../img/eth.png';
-import MusicNFT from '../../../music-components/MusicNFT'
-
+// import MusicNFT from '../../../music-components/MusicNFT'
+import Filter from '../../../components/General/Filter'
 const NFTCollection = () => {
   const web3Ctx = useContext(Web3Context);
   const collectionCtx = useContext(CollectionContext);
@@ -17,7 +17,7 @@ const NFTCollection = () => {
   if (priceRefs.current.length !== collectionCtx.collection.length) {
     priceRefs.current = Array(collectionCtx.collection.length).fill().map((_, i) => priceRefs.current[i] || createRef());
   }
-
+  console.log("@@collectionCtx",collectionCtx)
   // const makeOfferHandler = (event, id, key) => {
   //   event.preventDefault();
   //   const enteredPrice = web3.utils.toWei(priceRefs.current[key].current.value, 'ether');
@@ -61,7 +61,8 @@ const NFTCollection = () => {
 
   return (
     <>
-    <MusicNFT NFTCollection={collectionCtx.collection} marketplaceCtx={marketplaceCtx}/>
+    <Filter/>
+    {/* <MusicNFT NFTCollection={collectionCtx.collection} marketplaceCtx={marketplaceCtx}/> */}
     </>
     // <div className="row text-center">
     //   {collectionCtx.collection.map((NFT, key) => {
@@ -74,9 +75,9 @@ const NFTCollection = () => {
     //           <h5 className="card-title">{NFT.title}</h5>
     //         </div>
     //         <audio controls>
-    //         <source src={`https://ipfs.infura.io/ipfs/${NFT.img}`} type="audio/ogg"/>
+    //         <source src={`https://ipfs.infura.io/ipfs/${NFT.metadata}`} type="audio/ogg"/>
     //         </audio>
-    //         {/* <img src={`https://ipfs.infura.io/ipfs/${NFT.img}`} className="card-img-bottom" alt={`NFT ${key}`} />                          */}
+    //         {/* <img src={`https://ipfs.infura.io/ipfs/${NFT.metadata}`} className="card-img-bottom" alt={`NFT ${key}`} />                          */}
     //         <p className="fw-light fs-6">{`${owner.substr(0,7)}...${owner.substr(owner.length - 7)}`}</p>
     //         {index !== -1 ?
     //           owner !== web3Ctx.account ?
