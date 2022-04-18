@@ -8,8 +8,8 @@ import CollectionContext from '../../store/collection-context';
 import MarketplaceContext from '../../store/marketplace-context';
 import MusicNFT from '../../music-components/MusicNFT'
 import { request } from '../../helpers/utils'
-
-
+import NFTCollection from '../../abis/NFTCollection.json';
+import web3 from '../../connection/web3'
 const sortOptions = [
     { name: 'Most Popular', href: '#', current: true },
     { name: 'Best Rating', href: '#', current: false },
@@ -29,18 +29,18 @@ const subCategories = [
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
-const Filter = ({collectionCtx,marketplaceCtx,type}) => {
+const Filter = ({ collectionCtx, marketplaceCtx, type }) => {
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
-    const [filters,setFilters] = useState([])
-
+    const [filters, setFilters] = useState([])
+    const web3Ctx = useContext(Web3Context);
     useEffect(() => {
         request("/api/genre/index", {}, {}, "GET")
             .then(response => {
-                const options = response.map(item=>{
+                const options = response.map(item => {
                     return {
-                        value:item.id,
-                        label:item.name,
-                        checked:false
+                        value: item.id,
+                        label: item.name,
+                        checked: false
                     }
                 })
                 const _filters = [
@@ -54,7 +54,7 @@ const Filter = ({collectionCtx,marketplaceCtx,type}) => {
                         name: 'Status',
                         options: [
                             { value: 'on sale', label: 'On Sale', checked: false },
-                            { value: 'not listing', label: 'Not Listing', checked: false },
+                            { value: 'not listed', label: 'Not Listed', checked: false },
                         ],
                     },
                 ]
@@ -81,7 +81,7 @@ const Filter = ({collectionCtx,marketplaceCtx,type}) => {
                         >
                             <div className="ml-auto relative max-w-xs w-full h-full bg-white shadow-xl py-4 pb-12 flex flex-col overflow-y-auto">
                                 <div className="px-4 flex items-center justify-between">
-                                    <h2 className="text-lg font-medium text-gray-900">Filters</h2>
+                                    <h2 className="text-lg font-medium text-gray-900">Explore NFT</h2>
                                     <button
                                         type="button"
                                         className="-mr-2 w-10 h-10 bg-white p-2 rounded-md flex items-center justify-center text-gray-400"
@@ -145,7 +145,7 @@ const Filter = ({collectionCtx,marketplaceCtx,type}) => {
 
                 <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="relative z-10 flex items-baseline justify-between pt-20 pb-6 border-b border-gray-200">
-                        <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">Filters</h1>
+                        <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">Explore NFT</h1>
                         <div className="flex items-center">
                             <Menu as="div" className="relative inline-block text-left">
                                 <div>
@@ -212,10 +212,10 @@ const Filter = ({collectionCtx,marketplaceCtx,type}) => {
 
                         <div className="grid grid-cols-1 lg:grid-cols-5 gap-x-8 gap-y-10">
                             {/* Filters */}
-                            <form className="hidden lg:block">
+                            <form className="lg:block">
                                 <h3 className="sr-only">Categories</h3>
                                 {filters.map((section) => (
-                                    <Disclosure open={true} as="div" key={section.id} className="border-b border-gray-200 py-6">
+                                    <Disclosure defaultOpen={true} as="div" key={section.id} className="border-b border-gray-200 py-6">
                                         {({ open }) => (
                                             <>
                                                 <h3 className="-my-3 flow-root">
@@ -238,8 +238,20 @@ const Filter = ({collectionCtx,marketplaceCtx,type}) => {
                                                                     id={`filter-${section.id}-${optionIdx}`}
                                                                     name={`${section.id}[]`}
                                                                     defaultValue={option.value}
-                                                                    onChange={(e)=>{
-                                                                        console.log("@@la ly do",e.target.value)
+                                                                    onChange={async (e) => {
+                                                                        // Load Network ID
+                                                                        const response = await request(`/api/nft/genre-id/${e.target.value}`, {}, {}, "GET")
+                                                                        const networkId = await web3Ctx.loadNetworkId(web3);
+
+                                                                        // Load Contracts      
+                                                                        const nftDeployedNetwork = NFTCollection.networks[networkId];
+                                                                        const nftContract = collectionCtx.loadContract(web3, NFTCollection, nftDeployedNetwork);
+                                                                        if (nftContract) {
+                                                                            collectionCtx.loadCollectionFromServer(nftContract, response);
+                                                                        }
+
+
+
                                                                     }}
                                                                     type="radio"
                                                                     defaultChecked={option.checked}

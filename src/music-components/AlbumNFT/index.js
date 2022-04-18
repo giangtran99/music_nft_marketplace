@@ -45,7 +45,7 @@ const AlbumNFT = ({ AlbumList = [] }) => {
 
                             <div className="p-5 flex">
                                 <div className="m-auto">
-                                    <a href={`/nft/${album.id}`}>
+                                    <a href={`/album/${album.id}`}>
                                         <h3 className="italic text-black text-4xl">{album.name}</h3>
                                     </a>
                                 </div>

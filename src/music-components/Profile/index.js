@@ -86,7 +86,7 @@ const Profile = ({ color = "indigo", NFTs = [], Transactions = [] }) => {
                                                 href="#link1"
                                                 role="tablist"
                                             >
-                                                <i className="fas fa-space-shuttle text-base mr-1"></i> My NFTs
+                                                <i className="fas fa-space-shuttle text-base mr-1"></i> NFTs
                                             </a>
                                         </li>
                                         <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
@@ -105,7 +105,7 @@ const Profile = ({ color = "indigo", NFTs = [], Transactions = [] }) => {
                                                 href="#link2"
                                                 role="tablist"
                                             >
-                                                <i className="fas fa-cog text-base mr-1"></i>  My Albums
+                                                <i className="fas fa-cog text-base mr-1"></i>  Albums
                                             </a>
                                         </li>
                                         <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">

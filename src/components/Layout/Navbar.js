@@ -28,6 +28,23 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
+const SearchBar = ()=>{
+  return (<>
+  <div class="container flex mx-auto ml-20">
+    <div class="flex border-2 rounded">
+        <button class="flex items-center justify-center px-4 border-r">
+            <svg class="w-6 h-6 text-gray-600" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24">
+                <path
+                    d="M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z">
+                </path>
+            </svg>
+        </button>
+        <input type="text" class="px-4 py-2 w-[500px]" placeholder="Search music NFTs, Album,..."/>
+    </div>
+</div>
+  </>)
+}
 const Navbar = () => {
   const [fundsLoading, setFundsLoading] = useState(false);
   console.log(fundsLoading)
@@ -114,24 +131,22 @@ const Navbar = () => {
                     ))}
                   </div>
                 </div>
+                <SearchBar/>
               </div>
               <div className="hidden md:block">
                 <div className="ml-4 flex items-center md:ml-6">
-                <button
-                    onClick={claimFundsHandler}
-                    type="button"
-                    className="mr-3 bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                  >
-                    <span className="sr-only">View notifications</span>
-                    <RefreshIcon className="h-6 w-6" aria-hidden="true" />
-                  </button>
-                  <button
+                <button onClick={claimFundsHandler}  class="w-[120px] bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+                                        <RefreshIcon className="h-5 w-5 text-blue-500" />
+                                        <span className='m-auto'>Claim</span>
+                                    </button>
+         
+                  {/* <button
                     type="button"
                     className="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                   >
                     <span className="sr-only">View notifications</span>
                     <BellIcon className="h-6 w-6" aria-hidden="true" />
-                  </button>
+                  </button> */}
 
                   {/* Profile dropdown */}
                   <Menu as="div" className="ml-3 relative">

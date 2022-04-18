@@ -190,30 +190,30 @@ const MintForm = () => {
 
   return (
     <>
-      <div classNameName="bg-white">
-        <div classNameName="md:grid md:grid-cols-3 md:gap-6 content-center">
-          <div classNameName="mt-5 md:mt-0 md:col-span-6">
-            <div classNameName="md:col-span-1">
-              <div classNameName="px-4 sm:px-0 mt-10">
-                <h4 classNameName="text-3xl font-medium leading-9 text-black text-center">Create New NFT</h4>
+      <div className="bg-white">
+        <div className="md:grid md:grid-cols-3 md:gap-6 content-center">
+          <div className="mt-5 md:mt-0 md:col-span-6">
+            <div className="md:col-span-1">
+              <div className="px-4 sm:px-0 mt-10">
+                <h4 className="text-3xl font-medium leading-9 text-black text-center">Create New NFT</h4>
               </div>
             </div>
             <form onSubmit={submissionHandler}>
-              <div classNameName="shadow sm:rounded-md sm:overflow-hidden">
-                <div classNameName="px-4 py-5 bg-white sm:p-6">
+              <div className="shadow sm:rounded-md sm:overflow-hidden">
+                <div className="px-4 py-5 bg-white sm:p-6">
                   <div>
-                    <div classNameName="col-span-3 sm:col-span-2">
-                      <label htmlFor="about" classNameName="block text-sm font-medium text-black">
+                    <div className="col-span-3 sm:col-span-2">
+                      <label htmlFor="about" className="block text-sm font-medium text-black">
                         Name
                       </label>
-                      <div classNameName="mt-1 flex rounded-md shadow-sm">
+                      <div className="mt-1 flex rounded-md shadow-sm">
                         <textarea
                           value={enteredName}
                           onChange={enteredNameHandler}
                           type="text"
                           name="company-website"
                           id="company-website"
-                          classNameName="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
+                          className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
                           placeholder="NFT name..."
                         />
                       </div>
@@ -221,15 +221,15 @@ const MintForm = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="description" classNameName="block text-sm font-medium text-black mt-5">
+                    <label htmlFor="description" className="block text-sm font-medium text-black mt-5">
                       Description
                     </label>
-                    <div classNameName="mt-1">
+                    <div className="mt-1">
                       <textarea
                         id="description"
                         name="description"
                         rows={3}
-                        classNameName="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
+                        className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
                         placeholder="description..."
                         value={enteredDescription}
                         onChange={enteredDescriptionHandler}
@@ -238,10 +238,10 @@ const MintForm = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="genre" classNameName="block text-sm font-medium text-black mt-5">
+                    <label htmlFor="genre" className="block text-sm font-medium text-black mt-5">
                       Genre
                     </label>
-                    <div classNameName="mt-1">
+                    <div className="mt-1">
                       <select value={enteredGenre} onChange={enteredGenreHandler} className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full h-[30px] sm:text-sm border border-gray-300 rounded-md" id="grid-state">
                         {listGenre.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
                       </select>
@@ -250,7 +250,7 @@ const MintForm = () => {
 
 
                   <div>
-                    <label htmlFor="about" classNameName="block text-sm font-medium text-black mt-5">
+                    <label htmlFor="about" className="block text-sm font-medium text-black mt-5">
                       Cover photo
                     </label>
                     <div className="flex items-center w-full">
@@ -274,7 +274,7 @@ const MintForm = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="about" classNameName="block text-sm font-medium text-black mt-5">
+                    <label htmlFor="about" className="block text-sm font-medium text-black mt-5">
                       Metadata
                     </label>
                     <div className="flex items-center justify-center w-full">
@@ -299,10 +299,10 @@ const MintForm = () => {
                     </div>
                   </div>
                 </div>
-                <div classNameName="px-4 py-3 bg-white text-right sm:px-6">
+                <div className="px-4 py-3 bg-white text-right sm:px-6">
                   <button
                     type="submit"
-                    classNameName="bg-indigo-800 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-xl font-medium rounded-md text-black hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    className="bg-indigo-800 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-xl font-medium rounded-md text-black hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
                     Mint
                   </button>
@@ -315,34 +315,34 @@ const MintForm = () => {
 
     </>
     // <form onSubmit={submissionHandler}>
-    //   <div classNameName="row justify-content-center">
-    //     <div classNameName="col-md-2">
+    //   <div className="row justify-content-center">
+    //     <div className="col-md-2">
     //       <input
     //         type='text'
-    //         classNameName={`${nameclassName} mb-1`}
+    //         className={`${nameclassName} mb-1`}
     //         placeholder='Name...'
     //         value={enteredName}
     //         onChange={enteredNameHandler}
     //       />
     //     </div>
-    //     <div classNameName="col-md-6">
+    //     <div className="col-md-6">
     //       <input
     //         type='text'
-    //         classNameName={`${descriptionclassName} mb-1`}
+    //         className={`${descriptionclassName} mb-1`}
     //         placeholder='Description...'
     //         value={enteredDescription}
     //         onChange={enteredDescriptionHandler}
     //       />
     //     </div>
-    //     <div classNameName="col-md-2">
+    //     <div className="col-md-2">
     //       <input
     //         type='file'
-    //         classNameName={`${fileclassName} mb-1`}
+    //         className={`${fileclassName} mb-1`}
     //         onChange={captureFile}
     //       />
     //     </div>
     //   </div>
-    //   <button type='submit' classNameName='btn btn-lg btn-info text-black btn-block'>MINT</button>
+    //   <button type='submit' className='btn btn-lg btn-info text-black btn-block'>MINT</button>
     // </form>
   );
 };

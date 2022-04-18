@@ -130,13 +130,13 @@ const CollectionProvider = props => {
 
     for(let i = 0; i < nfts.length; i++) {
       try {
-        const response = await fetch(`https://ipfs.infura.io/ipfs/${nfts.tokens[i]}?clear`);
+        const response = await fetch(`https://ipfs.infura.io/ipfs/${nfts[i].cid}?clear`);
         if(!response.ok) {
           throw new Error('Something went wrong');
         }
 
         const metadata = await response.json();
-        const owner = await contract.methods.ownerOf(nfts.tokens[i]).call();
+        const owner = await contract.methods.ownerOf(nfts[i].tokenId).call();
 
         collection = [{
           id: i + 1,

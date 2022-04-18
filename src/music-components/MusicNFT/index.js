@@ -80,7 +80,7 @@ const MusicNFT = ({ NFTCollection = [], account, type }) => {
 
                                 </div>
                                 <div className='flex ml-auto'>
-                                    <span className="my-auto text-white"><b>{`${price || "-"}`}</b></span>
+                                    <span className="my-auto text-white text-sm"><b>{`${price || "Not listed"}`}</b></span>
                                     <img src={eth} className="bg-midnight m-auto h-[36px] w-[36px]" alt="price icon"></img>
                                 </div>
                             </div>
