@@ -125,6 +125,35 @@ const CollectionProvider = props => {
     dispatchCollectionAction({type: 'LOADCOLLECTION', collection: collection});     
   };
 
+  const loadCollectionFromServerHandler = async(contract,nfts) => {
+    let collection = [];
+
+    for(let i = 0; i < nfts.length; i++) {
+      try {
+        const response = await fetch(`https://ipfs.infura.io/ipfs/${nfts.tokens[i]}?clear`);
+        if(!response.ok) {
+          throw new Error('Something went wrong');
+        }
+
+        const metadata = await response.json();
+        const owner = await contract.methods.ownerOf(nfts.tokens[i]).call();
+
+        collection = [{
+          id: i + 1,
+          title: metadata.properties.name.description,
+          metadata: metadata.properties.metadata.description,
+          description:metadata.properties.description.description,
+          coverPhoto:metadata.properties.coverPhoto.description,
+          minter:metadata.properties.description.minter,
+          owner: owner
+        }, ...collection];
+      }catch {
+        console.error('Something went wrong');
+      }
+    }
+    dispatchCollectionAction({type: 'LOADCOLLECTION', collection: collection});     
+  };
+
   const updateCollectionHandler = async(contract, id, owner) => {
     let NFT;
     const hash = await contract.methods.tokenURI(id).call();
@@ -167,6 +196,7 @@ const CollectionProvider = props => {
     loadContract: loadContractHandler,
     loadTotalSupply: loadTotalSupplyHandler,
     loadCollection: loadCollectionHandler,
+    loadCollectionFromServer: loadCollectionFromServerHandler,
     updateCollection: updateCollectionHandler,
     updateOwner: updateOwnerHandler,
     setNftIsLoading: setNftIsLoadingHandler

@@ -21,6 +21,7 @@ import {
 import './App.css'
 import UserInfo from './components/Content/UserInfo';
 import NFTInfo from './components/Content/NFTInfo';
+import AlbumInfo from './components/Content/AlbumInfo';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -164,6 +165,7 @@ const App = () => {
             <Route exact path='/creator/:id' element={showContent && <CreatorInfo/>}/>
             <Route exact path='/userinfo' element={showContent && <UserInfo/>}/>
             <Route exact path='/nft/:id' element={showContent && <NFTInfo/>}/>
+            <Route exact path='/album/:id' element={showContent && <AlbumInfo/>}/>
           </Routes>
         </div>
       </Router>

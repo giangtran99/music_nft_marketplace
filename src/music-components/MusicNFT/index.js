@@ -42,17 +42,17 @@ const MusicNFT = ({ NFTCollection = [], account, type }) => {
     };
 
     return (<>
-        <div className="grid place-items-center min-h-screen bg-indigo-900 p-5">
+        <div className={`min-h-screen bg-white p-5`}>
             <div>
-                <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-200 mb-5">Explore NFT</h1>
-                <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10">
+                {/* <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-200 mb-5">Explore NFT</h1> */}
+                <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     {getNFTCollectionbyAccount().map((NFT, key) => {
                         const index = marketplaceCtx.offers ? marketplaceCtx.offers.findIndex(offer => offer.id === NFT.id) : -1;
                         const owner = index === -1 ? NFT.owner : marketplaceCtx.offers[index].user;
                         const price = index !== -1 ? formatPrice(marketplaceCtx.offers[index].price).toFixed(2) : null;
                         return <div key={key} className="bg-gray-900 shadow-lg rounded p-3">
                             <div className="group relative">
-                                <img className="m-auto w-72 block rounded" src={NFT.coverPhoto ? `https://ipfs.infura.io/ipfs/${NFT.coverPhoto}` : 'https://upload.wikimedia.org/wikipedia/en/f/f1/Tycho_-_Epoch.jpg'} alt="" />
+                                <img className="m-auto w-68 block rounded" src={NFT.coverPhoto ? `https://ipfs.infura.io/ipfs/${NFT.coverPhoto}` : 'https://upload.wikimedia.org/wikipedia/en/f/f1/Tycho_-_Epoch.jpg'} alt="" />
                                 <div className="absolute bg-black rounded bg-opacity-0 group-hover:bg-opacity-60 w-full h-full top-0 flex items-center group-hover:opacity-100 transition justify-evenly">
                                     <button className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-heart" viewBox="0 0 16 16">
@@ -66,22 +66,22 @@ const MusicNFT = ({ NFTCollection = [], account, type }) => {
                                         </svg>
                                     </button>
                                 </div>
-                                <audio className='w-64 m-5 auto' controls>
+                                <audio className='w-64 m-auto mt-5' controls>
                                     <source src={`https://ipfs.infura.io/ipfs/${NFT.metadata}`} />
                                 </audio>
                             </div>
 
-                            <div className="p-5 flex">
+                            <div className="p-4 flex">
                                 <div >
                                     <a href={`/nft/${NFT.id}`}>
                                         <h3 className="text-white text-lg">{NFT.title}</h3>
                                     </a>
-                                    <p className="text-gray-400">{`${NFT.owner.substr(0, 7)}...${NFT.owner.substr(NFT.owner.length - 7)}`}</p>
+                                    <p className="text-gray-400 text-sm">{`Owned by ${NFT.owner.substr(0, 2)}...${NFT.owner.substr(NFT.owner.length - 5)}`}</p>
 
                                 </div>
-                                <div className='flex ml-20'>
+                                <div className='flex ml-auto'>
                                     <span className="my-auto text-white"><b>{`${price || "-"}`}</b></span>
-                                    <img src={eth} width="38" className="bg-midnight my-auto h-[36px]" alt="price icon"></img>
+                                    <img src={eth} className="bg-midnight m-auto h-[36px] w-[36px]" alt="price icon"></img>
                                 </div>
                             </div>
                             {!price && type === "profile" && NFT.owner === account ?

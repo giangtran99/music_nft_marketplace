@@ -81,8 +81,8 @@ const Navbar = () => {
 
   return (
  
-    <div className="min-h-full">
-    <Disclosure as="nav" className="bg-indigo-800">
+    <div className="min-h-full border-b">
+    <Disclosure as="nav" className="bg-white-600">
       {({ open }) => (
         <>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

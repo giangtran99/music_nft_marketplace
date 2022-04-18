@@ -1,5 +1,5 @@
 
-import { Fragment, useState ,useContext} from 'react'
+import { Fragment, useState, useContext, useEffect } from 'react'
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
 import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon } from '@heroicons/react/solid'
@@ -7,6 +7,8 @@ import Web3Context from '../../store/web3-context';
 import CollectionContext from '../../store/collection-context';
 import MarketplaceContext from '../../store/marketplace-context';
 import MusicNFT from '../../music-components/MusicNFT'
+import { request } from '../../helpers/utils'
+
 
 const sortOptions = [
     { name: 'Most Popular', href: '#', current: true },
@@ -22,32 +24,47 @@ const subCategories = [
     { name: 'Hip Bags', href: '#' },
     { name: 'Laptop Sleeves', href: '#' },
 ]
-const filters = [
-    {
-        id: 'genre',
-        name: 'Genre',
-        options: [
-            { value: 'white', label: 'White', checked: false },
-            { value: 'beige', label: 'Beige', checked: false },
-            { value: 'blue', label: 'Blue', checked: true },
-            { value: 'brown', label: 'Brown', checked: false },
-            { value: 'green', label: 'Green', checked: false },
-            { value: 'purple', label: 'Purple', checked: false },
-        ],
-    },
-]
+
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
-const Filter = () => {
+const Filter = ({collectionCtx,marketplaceCtx,type}) => {
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
-    const web3Ctx = useContext(Web3Context);
-    const collectionCtx = useContext(CollectionContext);
-    const marketplaceCtx = useContext(MarketplaceContext);
-  
+    const [filters,setFilters] = useState([])
+
+    useEffect(() => {
+        request("/api/genre/index", {}, {}, "GET")
+            .then(response => {
+                const options = response.map(item=>{
+                    return {
+                        value:item.id,
+                        label:item.name,
+                        checked:false
+                    }
+                })
+                const _filters = [
+                    {
+                        id: 'genre',
+                        name: 'Genre',
+                        options: options
+                    },
+                    {
+                        id: 'status',
+                        name: 'Status',
+                        options: [
+                            { value: 'on sale', label: 'On Sale', checked: false },
+                            { value: 'not listing', label: 'Not Listing', checked: false },
+                        ],
+                    },
+                ]
+                console.log("@@thuoc", response)
+                setFilters(_filters)
+            })
+    }, [])
+
     return (<>
-        <div className="bg-indigo-900">
+        <div className="bg-white">
             <div>
                 {/* Mobile filter dialog */}
                 <Transition.Root show={mobileFiltersOpen} as={Fragment}>
@@ -78,7 +95,6 @@ const Filter = () => {
                                 {/* Filters */}
                                 <form className="mt-4 border-t border-gray-200">
                                     <h3 className="sr-only">Categories</h3>
-
                                     {filters.map((section) => (
                                         <Disclosure as="div" key={section.id} className="border-t border-gray-200 px-4 py-6">
                                             {({ open }) => (
@@ -128,12 +144,12 @@ const Filter = () => {
                 </Transition.Root>
 
                 <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="relative z-10 flex items-baseline justify-between pt-24 pb-6 border-b border-gray-200">
+                    <div className="relative z-10 flex items-baseline justify-between pt-20 pb-6 border-b border-gray-200">
                         <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">Filters</h1>
                         <div className="flex items-center">
                             <Menu as="div" className="relative inline-block text-left">
                                 <div>
-                                    <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                                    <Menu.Button className="group inline-flex justify-center text-sm font-medium text-black-700 hover:text-gray-900">
                                         Sort
                                         <ChevronDownIcon
                                             className="flex-shrink-0 -mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500"
@@ -199,7 +215,7 @@ const Filter = () => {
                             <form className="hidden lg:block">
                                 <h3 className="sr-only">Categories</h3>
                                 {filters.map((section) => (
-                                    <Disclosure as="div" key={section.id} className="border-b border-gray-200 py-6">
+                                    <Disclosure open={true} as="div" key={section.id} className="border-b border-gray-200 py-6">
                                         {({ open }) => (
                                             <>
                                                 <h3 className="-my-3 flow-root">
@@ -222,13 +238,16 @@ const Filter = () => {
                                                                     id={`filter-${section.id}-${optionIdx}`}
                                                                     name={`${section.id}[]`}
                                                                     defaultValue={option.value}
-                                                                    type="checkbox"
+                                                                    onChange={(e)=>{
+                                                                        console.log("@@la ly do",e.target.value)
+                                                                    }}
+                                                                    type="radio"
                                                                     defaultChecked={option.checked}
                                                                     className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
                                                                 />
                                                                 <label
                                                                     htmlFor={`filter-${section.id}-${optionIdx}`}
-                                                                    className="ml-3 text-sm text-gray-600"
+                                                                    className="ml-3 text-sm text-black-600"
                                                                 >
                                                                     {option.label}
                                                                 </label>
@@ -244,7 +263,7 @@ const Filter = () => {
 
                             {/* Product grid */}
                             <div className="lg:col-span-4">
-                                 <MusicNFT NFTCollection={collectionCtx.collection} marketplaceCtx={marketplaceCtx}/>
+                                <MusicNFT NFTCollection={collectionCtx.collection} marketplaceCtx={marketplaceCtx} type={type} />
                             </div>
                         </div>
                     </section>

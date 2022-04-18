@@ -61,7 +61,7 @@ const NFTCollection = () => {
 
   return (
     <>
-    <Filter/>
+    <Filter collectionCtx={collectionCtx} marketplaceCtx={marketplaceCtx}/>
     {/* <MusicNFT NFTCollection={collectionCtx.collection} marketplaceCtx={marketplaceCtx}/> */}
     </>
     // <div className="row text-center">

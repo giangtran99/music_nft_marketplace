@@ -3,12 +3,13 @@ import { useState, useContext } from 'react';
 import Web3Context from '../../../store/web3-context';
 import CollectionContext from '../../../store/collection-context';
 import {request} from '../../../helpers/utils'
+import { toast } from 'react-toastify';
 
 const ipfsClient = require('ipfs-http-client');
 const ipfs = ipfsClient.create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
 
 const audioTail = ["mp3", "mp4"]
-const imageTail = ["jpg", "png"]
+const imageTail = ["jpg", "png","jpeg"]
 const CreateAlbumForm = () => {
   const [enteredName, setEnteredName] = useState('');
   const [descriptionIsValid, setDescriptionIsValid] = useState(true);
@@ -76,30 +77,25 @@ const CreateAlbumForm = () => {
         return;
       }
 
-      const metadata = {
-        title: "Asset Metadata",
-        type: "object",
-        properties: {
-          name: {
-            type: "string",
-            description: enteredName
-          },
-          description: {
-            type: "string",
-            description: enteredDescription
-          },
-          image: {
-            type: "string",
-            description: fileAdded.path
-          }
-        }
+      const body = {
+        name: enteredName,
+        description:enteredDescription,
+        album_picture: fileAdded.path
       };
 
-      const metadataAdded = await ipfs.add(JSON.stringify(metadata));
-      if (!metadataAdded) {
-        console.error('Something went wrong when updloading the file');
-        return;
-      }
+      request("/api/album/create",body,{},"POST")
+      .then(response=>{
+        if(response.id){
+          toast.success("Success Create Album !", {
+            position: toast.POSITION.TOP_RIGHT
+          });
+          return
+        }
+        toast.error("Fail Create Album !", {
+          position: toast.POSITION.TOP_RIGHT
+        });
+        return
+      })
     };
 
     formIsValid && mintNFT();
@@ -112,20 +108,20 @@ const CreateAlbumForm = () => {
   console.log("@@capturedFile", capturedFile)
   return (
     <>
-      <div className="bg-slate-800">
+      <div className="bg-white">
         <div className="md:grid md:grid-cols-3 md:gap-6 content-center">
           <div className="mt-5 md:mt-0 md:col-span-6">
             <div className="md:col-span-1">
               <div className="px-4 sm:px-0 mt-10">
-                <h4 className="text-3xl font-medium leading-9 text-white text-center">Create New Album</h4>
+                <h4 className="text-3xl font-medium leading-9 text-black text-center">Create New Album</h4>
               </div>
             </div>
             <form onSubmit={submissionHandler}>
               <div className="shadow sm:rounded-md sm:overflow-hidden">
-                <div className="px-4 py-5 bg-slate-800 space-y-12 sm:p-6">
+                <div className="px-4 py-5 bg-white space-y-12 sm:p-6">
                   <div>
                     <div className="col-span-3 sm:col-span-2">
-                      <label htmlFor="about" className="block text-sm font-medium text-white">
+                      <label htmlFor="about" className="block text-sm font-medium text-black">
                         Name
                       </label>
                       <div className="mt-1 flex rounded-md shadow-sm">
@@ -143,7 +139,7 @@ const CreateAlbumForm = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="description" className="block text-sm font-medium text-white">
+                    <label htmlFor="description" className="block text-sm font-medium text-black">
                       Description
                     </label>
                     <div className="mt-1">
@@ -160,14 +156,14 @@ const CreateAlbumForm = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="about" className="block text-sm font-medium text-white">
+                    <label htmlFor="about" className="block text-sm font-medium text-black">
                       Cover photo
                     </label>
                     <div class="flex items-center w-full">
                       <label
                         class="flex flex-col w-[300px] h-[300px] border-4 border-dashed hover:bg-gray-100 hover:border-gray-300">
                         <div class="relative flex flex-col items-center justify-center pt-7">
-                        <img src={capturedFile.source} id="preview" class="absolute inset-0 w-64 h-auto" />
+                        <img src={capturedFile.source} id="preview" class="absolute inset-0 w-full w-full" />
                           <svg xmlns="http://www.w3.org/2000/svg"
                             class="w-12 h-12 text-gray-400 group-hover:text-gray-600" viewBox="0 0 20 20"
                             fill="currentColor">
@@ -185,7 +181,7 @@ const CreateAlbumForm = () => {
                   </div>
 
                   {/* <div>
-                    <label htmlFor="about" className="block text-sm font-medium text-white">
+                    <label htmlFor="about" className="block text-sm font-medium text-black">
                       Metadata
                     </label>
                     <div class="flex items-center justify-center w-full">
@@ -210,10 +206,10 @@ const CreateAlbumForm = () => {
                     </div>
                   </div> */}
                 </div>
-                <div className="px-4 py-3 bg-slate-800 text-right sm:px-6">
+                <div className="px-4 py-3 bg-white text-right sm:px-6">
                   <button
                     type="submit"
-                    className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-xl font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-xl font-medium rounded-md text-black bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
                     Create
                   </button>
@@ -253,7 +249,7 @@ const CreateAlbumForm = () => {
     //       />
     //     </div>
     //   </div>
-    //   <button type='submit' className='btn btn-lg btn-info text-white btn-block'>MINT</button>
+    //   <button type='submit' className='btn btn-lg btn-info text-black btn-block'>MINT</button>
     // </form>
   );
 };

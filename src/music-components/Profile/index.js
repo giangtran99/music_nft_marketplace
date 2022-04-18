@@ -7,6 +7,7 @@ import MarketplaceContext from '../../store/marketplace-context';
 import Web3Context from '../../store/web3-context';
 import TransactionTable from '../TransactionTable';
 import { PlusIcon, CollectionIcon } from '@heroicons/react/outline'
+import Filter from '../../components/General/Filter';
 const Profile = ({ color = "indigo", NFTs = [], Transactions = [] }) => {
     const [openTab, setOpenTab] = React.useState(1);
     const collectionCtx = React.useContext(CollectionContext);
@@ -132,7 +133,7 @@ const Profile = ({ color = "indigo", NFTs = [], Transactions = [] }) => {
                                     <div className="px-4 py-5 flex-auto">
                                         <div className="tab-content tab-space">
                                             <div className={openTab === 1 ? "block" : "hidden"} id="link1">
-                                                <MusicNFT marketplaceCtx={marketplaceCtx} account={web3Ctx.account} NFTCollection={collectionCtx.collection} type="profile" />
+                                                <Filter marketplaceCtx={marketplaceCtx} account={web3Ctx.account} collectionCtx={collectionCtx} type="profile" />
                                             </div>
                                             <div className={openTab === 2 ? "block" : "hidden"} id="link2">
                                                 <AlbumNFT />
