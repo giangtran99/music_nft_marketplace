@@ -1,4 +1,5 @@
 import { useReducer } from 'react';
+import { request } from '../helpers/utils';
 
 import CollectionContext from './collection-context';
 
@@ -29,10 +30,12 @@ const collectionReducer = (state, action) => {
   }
 
   if(action.type === 'LOADCOLLECTION') {    
+    console.log("@@action.albums",action.albums)
     return {
       contract: state.contract,
       totalSupply: state.totalSupply,
       collection: action.collection,
+      albums:action.albums,
       nftIsLoading: state.nftIsLoading
     };
   }
@@ -139,7 +142,7 @@ const CollectionProvider = props => {
         const owner = await contract.methods.ownerOf(nfts[i].tokenId).call();
 
         collection = [{
-          id: i + 1,
+          id: nfts[i].tokenId,
           title: metadata.properties.name.description,
           metadata: metadata.properties.metadata.description,
           description:metadata.properties.description.description,
@@ -147,11 +150,41 @@ const CollectionProvider = props => {
           minter:metadata.properties.description.minter,
           owner: owner
         }, ...collection];
+
       }catch {
         console.error('Something went wrong');
       }
     }
     dispatchCollectionAction({type: 'LOADCOLLECTION', collection: collection});     
+  };
+  const loadCollectionFromSearchHander = async(contract,textSearch) => {
+    let collection = [] 
+    const result = await request(`/api/nft/search/${textSearch}`,{},{},'GET')
+    for(let i = 0; i < result.nfts.length; i++) {
+      try {
+        const response = await fetch(`https://ipfs.infura.io/ipfs/${result.nfts[i].cid}?clear`);
+        if(!response.ok) {
+          throw new Error('Something went wrong');
+        }
+
+        const metadata = await response.json();
+        const owner = await contract.methods.ownerOf(result.nfts[i].tokenId).call();
+
+        collection = [{
+          id: result.nfts[i].tokenId,
+          title: metadata.properties.name.description,
+          metadata: metadata.properties.metadata.description,
+          description:metadata.properties.description.description,
+          coverPhoto:metadata.properties.coverPhoto.description,
+          minter:metadata.properties.description.minter,
+          owner: owner
+        }, ...collection];
+
+      }catch {
+        console.error('Something went wrong');
+      }
+    }
+    dispatchCollectionAction({type: 'LOADCOLLECTION', collection: collection, albums:result.albums});     
   };
 
   const updateCollectionHandler = async(contract, id, owner) => {
@@ -192,11 +225,13 @@ const CollectionProvider = props => {
     contract: CollectionState.contract,
     totalSupply: CollectionState.totalSupply,
     collection: CollectionState.collection,
+    albums: CollectionState.albums,
     nftIsLoading:CollectionState.nftIsLoading,
     loadContract: loadContractHandler,
     loadTotalSupply: loadTotalSupplyHandler,
     loadCollection: loadCollectionHandler,
     loadCollectionFromServer: loadCollectionFromServerHandler,
+    loadCollectionFromSearch:loadCollectionFromSearchHander,
     updateCollection: updateCollectionHandler,
     updateOwner: updateOwnerHandler,
     setNftIsLoading: setNftIsLoadingHandler

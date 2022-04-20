@@ -25,7 +25,6 @@ const AlbumNFT = ({ AlbumList = [] }) => {
             <div>
                 <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     {listAlbum.map((album, key) => {
-
                         return <div key={key} className="bg-sky-100 shadow-lg rounded-2xl p-3">
                             <div className="group relative">
                                 <img className="w-full block rounded" src={`https://ipfs.infura.io/ipfs/${album.album_picture}`} alt="" />
@@ -49,7 +48,9 @@ const AlbumNFT = ({ AlbumList = [] }) => {
                                         <h3 className="italic text-black text-4xl">{album.name}</h3>
                                     </a>
                                 </div>
+                                
                             </div>
+                            <p className="text-gray-400 text-lg text-center">{`Created by ${album.metamask_address.substr(0, 4)}...${album.metamask_address.substr(album.metamask_address.length - 5)}`}</p>
 
                         </div>
                     })}

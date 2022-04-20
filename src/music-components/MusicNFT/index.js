@@ -9,12 +9,13 @@ import { PlusIcon } from '@heroicons/react/outline'
 
 const CONTRACT_ADDRESS = "0xfbB86211738Cca5d9Fa82871667b14358D4F2Fdf"
 
-const MusicNFT = ({ NFTCollection = [], account, type }) => {
+const MusicNFT = ({ NFTCollection = [], Album = [], account, type }) => {
     const web3Ctx = useContext(Web3Context);
     const collectionCtx = useContext(CollectionContext);
     const marketplaceCtx = useContext(MarketplaceContext);
 
-
+    console.log("@@marketplaceCtx", marketplaceCtx)
+    console.log("@@Album", Album)
     const priceRefs = useRef([]);
     if (priceRefs.current.length !== collectionCtx.collection.length) {
         priceRefs.current = Array(collectionCtx.collection.length).fill().map((_, i) => priceRefs.current[i] || createRef());
@@ -23,6 +24,10 @@ const MusicNFT = ({ NFTCollection = [], account, type }) => {
     const getNFTCollectionbyAccount = () => {
         if (account) return NFTCollection.filter(NFT => NFT.owner === account)
         return NFTCollection
+    }
+    const getAblbumyAccount = () => {
+        if (account) return Album.filter(NFT => NFT.owner === account)
+        return Album
     }
 
     const makeOfferHandler = (event, id, key) => {
@@ -41,69 +46,111 @@ const MusicNFT = ({ NFTCollection = [], account, type }) => {
             });
     };
 
-    return (<>
-        <div className={`min-h-screen bg-white p-5`}>
-            <div>
-                {/* <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-200 mb-5">Explore NFT</h1> */}
-                <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    {getNFTCollectionbyAccount().map((NFT, key) => {
-                        const index = marketplaceCtx.offers ? marketplaceCtx.offers.findIndex(offer => offer.id === NFT.id) : -1;
-                        const owner = index === -1 ? NFT.owner : marketplaceCtx.offers[index].user;
-                        const price = index !== -1 ? formatPrice(marketplaceCtx.offers[index].price).toFixed(2) : null;
-                        return <div key={key} className="bg-gray-900 shadow-lg rounded p-3">
-                            <div className="group relative">
-                                <img className="m-auto w-68 block rounded" src={NFT.coverPhoto ? `https://ipfs.infura.io/ipfs/${NFT.coverPhoto}` : 'https://upload.wikimedia.org/wikipedia/en/f/f1/Tycho_-_Epoch.jpg'} alt="" />
-                                <div className="absolute bg-black rounded bg-opacity-0 group-hover:bg-opacity-60 w-full h-full top-0 flex items-center group-hover:opacity-100 transition justify-evenly">
-                                    <button className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-heart" viewBox="0 0 16 16">
-                                            <path d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
-                                        </svg>
-                                    </button>
+    return (
+        <>
+            {getNFTCollectionbyAccount().length > 0 ?
+                <div className={`min-h-screen bg-white p-5`}>
+                    <div>
+                        <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-black-200 mb-5">NFTs</h1>
+                        <section className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                            {getNFTCollectionbyAccount().map((NFT, key) => {
+                                const index = marketplaceCtx.offers ? marketplaceCtx.offers.findIndex(offer => offer.id === NFT.id) : -1;
+                                const owner = index === -1 ? NFT.owner : marketplaceCtx.offers[index].user;
+                                const price = index !== -1 ? formatPrice(marketplaceCtx.offers[index].price).toFixed(2) : null;
+                                return <div key={key} className="bg-gray-900 shadow-lg rounded p-3">
+                                    <div className="group relative">
+                                        <img className="m-auto w-68 block rounded" src={NFT.coverPhoto ? `https://ipfs.infura.io/ipfs/${NFT.coverPhoto}` : 'https://upload.wikimedia.org/wikipedia/en/f/f1/Tycho_-_Epoch.jpg'} alt="" />
+                                        <div className="absolute bg-black rounded bg-opacity-0 group-hover:bg-opacity-60 w-full h-full top-0 flex items-center group-hover:opacity-100 transition justify-evenly">
+                                            <button className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-heart" viewBox="0 0 16 16">
+                                                    <path d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
+                                                </svg>
+                                            </button>
 
-                                    <button className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-three-dots" viewBox="0 0 16 16">
-                                            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <audio className='w-64 m-auto mt-5' controls>
-                                    <source src={`https://ipfs.infura.io/ipfs/${NFT.metadata}`} />
-                                </audio>
-                            </div>
+                                            <button className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-three-dots" viewBox="0 0 16 16">
+                                                    <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <audio className='w-64 m-auto mt-5' controls>
+                                            <source src={`https://ipfs.infura.io/ipfs/${NFT.metadata}`} />
+                                        </audio>
+                                    </div>
 
-                            <div className="p-4 flex">
-                                <div >
-                                    <a href={`/nft/${NFT.id}`}>
-                                        <h3 className="text-white text-lg">{NFT.title}</h3>
-                                    </a>
-                                    <p className="text-gray-400 text-sm">{`Owned by ${NFT.owner.substr(0, 2)}...${NFT.owner.substr(NFT.owner.length - 5)}`}</p>
+                                    <div className="p-4 flex">
+                                        <div >
+                                            <a href={`/nft/${NFT.id}`}>
+                                                <h3 className="text-white text-lg">{NFT.title.length > 7 ? `${NFT.title.split(' ')[0]}...` : NFT.title}</h3>
+                                            </a>
+                                            <p className="text-gray-400 text-xs">{NFT.owner !== web3Ctx.account ? `Owned by ${NFT.owner.substr(0, 2)}...${NFT.owner.substr(NFT.owner.length - 3)}` : "Owned by me"}</p>
 
-                                </div>
-                                <div className='flex ml-auto'>
-                                    <span className="my-auto text-white text-sm"><b>{`${price || "Not listed"}`}</b></span>
-                                    <img src={eth} className="bg-midnight m-auto h-[36px] w-[36px]" alt="price icon"></img>
-                                </div>
-                            </div>
-                            {!price && type === "profile" && NFT.owner === account ?
-                                <div class="flex items-center border-b border-teal-500 py-2">
-                                    <input ref={priceRefs.current[key]} class="appearance-none bg-transparent border-none w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none" type="number" placeholder="Set price your NFT" aria-label="Full name" />
-                                    <button onClick={(e) => makeOfferHandler(e, NFT.id, key)} class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded" type="button">
-                                        Offer
-                                    </button>
-                                </div>
-                                : null}
-                            {/* <div className="p-5">
+                                        </div>
+                                        <div className='flex ml-auto'>
+                                            <span className="my-auto text-white text-xs"><b>{`${price || "Not listed"}`}</b></span>
+                                            <img src={eth} className="bg-midnight m-auto h-[36px] w-[36px]" alt="price icon"></img>
+                                        </div>
+                                    </div>
+                                    {!price && type === "profile" && NFT.owner === account ?
+                                        <div class="flex items-center border-b border-teal-500 py-2">
+                                            <input ref={priceRefs.current[key]} class="appearance-none bg-transparent border-none w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none" type="number" placeholder="Set price your NFT" aria-label="Full name" />
+                                            <button onClick={(e) => makeOfferHandler(e, NFT.id, key)} class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded" type="button">
+                                                Offer
+                                            </button>
+                                        </div>
+                                        : null}
+                                    {/* <div className="p-5">
                                 <img src={eth} width="25" height="25" className="align-center float-start" alt="price icon"></img>
                                 <p className="text-start"><b>{`${price}`}</b></p>
                             </div> */}
 
-                        </div>
-                    })}
-                </section>
-            </div>
-        </div>
+                                </div>
+                            })}
+                        </section>
+                    </div>
+                </div>
+                : null}
 
-    </>)
+            {getAblbumyAccount().length > 0 ?
+                <div className={`min-h-screen bg-white p-2`}>
+                    <div>
+                        <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-black-200 mb-5">Albums</h1>
+                        <section className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                            {getAblbumyAccount().map((album, key) => {
+                                return <div key={key} className="bg-sky-100 shadow-lg rounded-2xl p-3">
+                                    <div className="group relative">
+                                        <img className="w-full block rounded" src={`https://ipfs.infura.io/ipfs/${album.album_picture}`} alt="" />
+                                        <div className="absolute bg-black rounded bg-opacity-0 group-hover:bg-opacity-60 w-full h-full top-0 flex items-center group-hover:opacity-100 transition justify-evenly">
+                                            <button className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-heart" viewBox="0 0 16 16">
+                                                    <path d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
+                                                </svg>
+                                            </button>
+                                            <button className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-three-dots" viewBox="0 0 16 16">
+                                                    <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="p-5 flex">
+                                        <div className="m-auto">
+                                            <a href={`/album/${album.id}`}>
+                                                <h3 className="italic text-black text-4xl">{album.name}</h3>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    
+                                    <p className="text-gray-400 text-lg text-center">{`Created by ${album.metamask_address.substr(0, 4)}...${album.metamask_address.substr(album.metamask_address.length - 5)}`}</p>
+
+                                </div>
+                            })}
+                        </section>
+                    </div>
+                </div>
+                : null}
+        </>)
 }
 
 export default MusicNFT

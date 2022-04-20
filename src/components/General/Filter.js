@@ -1,7 +1,7 @@
 
-import { Fragment, useState, useContext, useEffect } from 'react'
+import { Fragment, useState, useContext, useEffect ,useRef} from 'react'
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
-import { XIcon } from '@heroicons/react/outline'
+import { RefreshIcon, XIcon } from '@heroicons/react/outline'
 import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon } from '@heroicons/react/solid'
 import Web3Context from '../../store/web3-context';
 import CollectionContext from '../../store/collection-context';
@@ -29,11 +29,34 @@ const subCategories = [
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
-const Filter = ({ collectionCtx, marketplaceCtx, type }) => {
+const Filter = ({ collectionCtx, marketplaceCtx,account, type }) => {
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
     const [filters, setFilters] = useState([])
+    const refFilter = useRef()
     const web3Ctx = useContext(Web3Context);
-    useEffect(() => {
+
+    console.log("@@collectionCtx",collectionCtx)
+    const getNFTCollection = async (genreId)=>{
+        console.log("@@genreId",genreId)
+        const networkId = await web3Ctx.loadNetworkId(web3);
+        // Load Contracts      
+        const nftDeployedNetwork = NFTCollection.networks[networkId];
+        const nftContract = collectionCtx.loadContract(web3, NFTCollection, nftDeployedNetwork);
+        if (nftContract) {
+            if(genreId){
+                const response = await request(`/api/nft/genre-id/${genreId}`, {}, {}, "GET")
+                collectionCtx.loadCollectionFromServer(nftContract, response);
+                return
+            }
+            const totalSupply = await collectionCtx.loadTotalSupply(nftContract);
+            collectionCtx.loadCollection(nftContract, totalSupply);
+            fetchFilter()
+          
+        }
+    
+    }
+
+    const fetchFilter = ()=>{
         request("/api/genre/index", {}, {}, "GET")
             .then(response => {
                 const options = response.map(item => {
@@ -61,6 +84,9 @@ const Filter = ({ collectionCtx, marketplaceCtx, type }) => {
                 console.log("@@thuoc", response)
                 setFilters(_filters)
             })
+    }
+    useEffect(() => {
+        fetchFilter()
     }, [])
 
     return (<>
@@ -68,7 +94,7 @@ const Filter = ({ collectionCtx, marketplaceCtx, type }) => {
             <div>
                 {/* Mobile filter dialog */}
                 <Transition.Root show={mobileFiltersOpen} as={Fragment}>
-                    <Dialog as="div" className="fixed inset-0 flex z-40 lg:hidden" onClose={setMobileFiltersOpen}>
+                    <Dialog as="div" className="fixed inset-0 flex z-10 lg:hidden" onClose={setMobileFiltersOpen}>
 
                         <Transition.Child
                             as={Fragment}
@@ -81,7 +107,7 @@ const Filter = ({ collectionCtx, marketplaceCtx, type }) => {
                         >
                             <div className="ml-auto relative max-w-xs w-full h-full bg-white shadow-xl py-4 pb-12 flex flex-col overflow-y-auto">
                                 <div className="px-4 flex items-center justify-between">
-                                    <h2 className="text-lg font-medium text-gray-900">Explore NFT</h2>
+                                    <h2 className="text-lg font-medium text-gray-900">Explore music</h2>
                                     <button
                                         type="button"
                                         className="-mr-2 w-10 h-10 bg-white p-2 rounded-md flex items-center justify-center text-gray-400"
@@ -145,7 +171,7 @@ const Filter = ({ collectionCtx, marketplaceCtx, type }) => {
 
                 <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="relative z-10 flex items-baseline justify-between pt-20 pb-6 border-b border-gray-200">
-                        <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">Explore NFT</h1>
+                        <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">Explore music</h1>
                         <div className="flex items-center">
                             <Menu as="div" className="relative inline-block text-left">
                                 <div>
@@ -192,7 +218,9 @@ const Filter = ({ collectionCtx, marketplaceCtx, type }) => {
 
                             <button type="button" className="p-2 -m-2 ml-5 sm:ml-7 text-gray-400 hover:text-gray-500">
                                 <span className="sr-only">View grid</span>
-                                <ViewGridIcon className="w-5 h-5" aria-hidden="true" />
+                                <RefreshIcon onClick={()=>{
+                                    window.location.reload()
+                                }} className="w-5 h-5" aria-hidden="true" />
                             </button>
                             <button
                                 type="button"
@@ -210,9 +238,9 @@ const Filter = ({ collectionCtx, marketplaceCtx, type }) => {
                             Products
                         </h2>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-5 gap-x-8 gap-y-10">
+                        <div className="grid grid-cols-1 lg:grid-cols-5 gap-x-10 gap-y-10">
                             {/* Filters */}
-                            <form className="lg:block">
+                            <form id="create-course-form" ref={refFilter} className="lg:block">
                                 <h3 className="sr-only">Categories</h3>
                                 {filters.map((section) => (
                                     <Disclosure defaultOpen={true} as="div" key={section.id} className="border-b border-gray-200 py-6">
@@ -235,26 +263,17 @@ const Filter = ({ collectionCtx, marketplaceCtx, type }) => {
                                                         {section.options.map((option, optionIdx) => (
                                                             <div key={option.value} className="flex items-center">
                                                                 <input
+                                
                                                                     id={`filter-${section.id}-${optionIdx}`}
                                                                     name={`${section.id}[]`}
                                                                     defaultValue={option.value}
                                                                     onChange={async (e) => {
                                                                         // Load Network ID
-                                                                        const response = await request(`/api/nft/genre-id/${e.target.value}`, {}, {}, "GET")
-                                                                        const networkId = await web3Ctx.loadNetworkId(web3);
-
-                                                                        // Load Contracts      
-                                                                        const nftDeployedNetwork = NFTCollection.networks[networkId];
-                                                                        const nftContract = collectionCtx.loadContract(web3, NFTCollection, nftDeployedNetwork);
-                                                                        if (nftContract) {
-                                                                            collectionCtx.loadCollectionFromServer(nftContract, response);
-                                                                        }
-
-
+                                                                        getNFTCollection(e.target.value)
 
                                                                     }}
                                                                     type="radio"
-                                                                    defaultChecked={option.checked}
+                                                                    // defaultChecked={option.checked}
                                                                     className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
                                                                 />
                                                                 <label
@@ -275,7 +294,7 @@ const Filter = ({ collectionCtx, marketplaceCtx, type }) => {
 
                             {/* Product grid */}
                             <div className="lg:col-span-4">
-                                <MusicNFT NFTCollection={collectionCtx.collection} marketplaceCtx={marketplaceCtx} type={type} />
+                                <MusicNFT account={account} Album={collectionCtx.albums} NFTCollection={collectionCtx.collection} marketplaceCtx={marketplaceCtx} type={type} />
                             </div>
                         </div>
                     </section>

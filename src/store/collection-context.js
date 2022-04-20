@@ -9,6 +9,7 @@ const CollectionContext = React.createContext({
   loadTotalSupply: () => {},
   loadCollection: () => {},
   loadCollectionFromServer :()=>{},
+  loadCollectionFromSearch :()=>{},
   updateTotalSupply: () => {},
   updateCollection: () => {},
   updateOwner: () => {},

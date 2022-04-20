@@ -158,12 +158,12 @@ const MintForm = () => {
         .on('transactionHash', async (hash) => {
           const receipt = await web3.eth.getTransactionReceipt(hash)
           const tokenId = web3.utils.hexToNumber(receipt.logs[0].topics[3])
-          console.log("@@ di dau day 1", tokenId);
+
           const body = {
-            name:enteredName,
+            name: enteredName,
             cid: metadataAdded.path,
             genre_id: enteredGenre,
-            tokenId:tokenId,
+            tokenId: tokenId,
           }
           if (hash) {
             toast.success("Success Mint NFT !", {
@@ -302,7 +302,7 @@ const MintForm = () => {
                 <div className="px-4 py-3 bg-white text-right sm:px-6">
                   <button
                     type="submit"
-                    className="bg-indigo-800 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-xl font-medium rounded-md text-black hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    className="bg-indigo-500 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-xl font-medium rounded-md text-black hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
                     Mint
                   </button>

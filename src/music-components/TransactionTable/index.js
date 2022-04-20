@@ -4,9 +4,9 @@ import eth from '../../img/eth.png';
 const TransactionTable = () => {
     return (<>
         <div className="grid place-items-center p-5">
-            <div>
+            <div className="border shadow-lg mt-2 container px-7 py-24 mx-auto">
             <h1 className="text-gray-900 text-3xl title-font font-medium">Item Activity</h1>
-                <table className='mt-5 max-w-4xl w-[2048px] whitespace-nowrap rounded-lg bg-gray divide-y divide-gray-300 overflow-hidden'>
+                <table className='mt-5 max-w-7xl w-full whitespace-nowrap rounded-lg bg-gray divide-y divide-gray-300 overflow-hidden'>
                     <thead className="bg-gray-900">
                         <tr className="text-white text-left">
                             <th className="font-semibold text-sm uppercase px-6 py-4"> Item </th>
@@ -16,7 +16,8 @@ const TransactionTable = () => {
                             <th className="font-semibold text-sm uppercase px-6 py-4"></th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200 bg-gray">
+                    
+                    <tbody className="divide-y divide-gray-200 bg-gray-200">
                         <tr>
                             <td className="px-6 py-4">
                                 <div className="flex items-center space-x-6">
@@ -30,7 +31,7 @@ const TransactionTable = () => {
                             <td className="px-6 py-6 flex">
                                 <p className="text-gray-500 text-sm font-semibold tracking-wide my-auto"> 3
                                 </p>
-                                <img width="25" height="25" src={eth} />
+                                <img width="25" height="21" src={eth} />
                             </td>
                             <td className="px-6 py-4 text-center"> xxx </td>
                             <td className="px-6 py-4 text-center"> xxx </td>

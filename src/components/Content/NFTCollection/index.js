@@ -13,6 +13,7 @@ const NFTCollection = () => {
   const collectionCtx = useContext(CollectionContext);
   const marketplaceCtx = useContext(MarketplaceContext);
 
+  console.log("@@marketplaceCtx",marketplaceCtx)
   const priceRefs = useRef([]);
   if (priceRefs.current.length !== collectionCtx.collection.length) {
     priceRefs.current = Array(collectionCtx.collection.length).fill().map((_, i) => priceRefs.current[i] || createRef());
@@ -61,7 +62,7 @@ const NFTCollection = () => {
 
   return (
     <>
-    <Filter collectionCtx={collectionCtx} marketplaceCtx={marketplaceCtx}/>
+    <Filter account={marketplaceCtx.contract._address} collectionCtx={collectionCtx} marketplaceCtx={marketplaceCtx}/>
     {/* <MusicNFT NFTCollection={collectionCtx.collection} marketplaceCtx={marketplaceCtx}/> */}
     </>
     // <div className="row text-center">

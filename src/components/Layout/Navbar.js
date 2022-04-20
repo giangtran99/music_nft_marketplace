@@ -2,10 +2,13 @@ import { useContext, useState } from 'react';
 import { Fragment } from 'react'
 import Web3Context from '../../store/web3-context';
 import MarketplaceContext from '../../store/marketplace-context';
+import CollectionContext from '../../store/collection-context';
+import NFTCollection from '../../abis/NFTCollection.json';
+
 import web3 from '../../connection/web3';
 import { formatPrice } from '../../helpers/utils';
 import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { BellIcon, MenuIcon, XIcon,RefreshIcon } from '@heroicons/react/outline'
+import { BellIcon, MenuIcon, XIcon, SwitchHorizontalIcon } from '@heroicons/react/outline'
 
 
 const user = {
@@ -28,28 +31,43 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const SearchBar = ()=>{
+const SearchBar = ({collectionCtx ,web3Ctx}) => {
+  const [textSearch,setTextSearch] = useState()
   return (<>
-  <div class="container flex mx-auto ml-20">
-    <div class="flex border-2 rounded">
+    <div class="container flex mx-auto ml-20">
+      <div class="flex border-2 rounded">
         <button class="flex items-center justify-center px-4 border-r">
-            <svg class="w-6 h-6 text-gray-600" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24">
-                <path
-                    d="M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z">
-                </path>
-            </svg>
+          <svg class="w-6 h-6 text-gray-600" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24">
+            <path
+              d="M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z">
+            </path>
+          </svg>
         </button>
-        <input type="text" class="px-4 py-2 w-[500px]" placeholder="Search music NFTs, Album,..."/>
+        <input onChange={(e)=>setTextSearch(e.target.value)} onKeyDown={async event => {
+          if (event.key === 'Enter') {
+            const networkId = await web3Ctx.loadNetworkId(web3);
+
+            // Load Contracts      
+            const nftDeployedNetwork = NFTCollection.networks[networkId];
+            const nftContract = collectionCtx.loadContract(web3, NFTCollection, nftDeployedNetwork);
+            if(nftContract){
+              collectionCtx.loadCollectionFromSearch(nftContract,textSearch)
+            }
+          }
+        }} type="text" class="px-4 py-2 w-[500px]" placeholder="Search music NFTs, Album,..." />
+      </div>
     </div>
-</div>
   </>)
 }
+
 const Navbar = () => {
   const [fundsLoading, setFundsLoading] = useState(false);
   console.log(fundsLoading)
   const web3Ctx = useContext(Web3Context);
   const marketplaceCtx = useContext(MarketplaceContext);
+  const collectionCtx = useContext(CollectionContext);
+
 
   const connectWalletHandler = async () => {
     try {
@@ -97,50 +115,50 @@ const Navbar = () => {
   }
 
   return (
- 
+
     <div className="min-h-full border-b">
-    <Disclosure as="nav" className="bg-white-600">
-      {({ open }) => (
-        <>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <img
-                    className="h-8 w-8"
-                    src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
-                    alt="Workflow"
-                  />
+      <Disclosure as="nav" className="bg-white-600">
+        {({ open }) => (
+          <>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex items-center justify-between h-16">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <img
+                      className="h-8 w-8"
+                      src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
+                      alt="Workflow"
+                    />
+                  </div>
+                  <div className="hidden md:block">
+                    <div className="ml-10 flex items-baseline space-x-4">
+                      {navigation.map((item) => (
+                        <a
+                          key={item.name}
+                          href={item.href}
+                          className={classNames(
+                            item.current
+                              ? 'bg-gray-900 text-white'
+                              : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                            'px-3 py-2 rounded-md text-sm font-medium'
+                          )}
+                          aria-current={item.current ? 'page' : undefined}
+                        >
+                          {item.name}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                  <SearchBar collectionCtx={collectionCtx} web3Ctx={web3Ctx} />
                 </div>
                 <div className="hidden md:block">
-                  <div className="ml-10 flex items-baseline space-x-4">
-                    {navigation.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.href}
-                        className={classNames(
-                          item.current
-                            ? 'bg-gray-900 text-white'
-                            : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                          'px-3 py-2 rounded-md text-sm font-medium'
-                        )}
-                        aria-current={item.current ? 'page' : undefined}
-                      >
-                        {item.name}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-                <SearchBar/>
-              </div>
-              <div className="hidden md:block">
-                <div className="ml-4 flex items-center md:ml-6">
-                <button onClick={claimFundsHandler}  class="w-[120px] bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
-                                        <RefreshIcon className="h-5 w-5 text-blue-500" />
-                                        <span className='m-auto'>Claim</span>
-                                    </button>
-         
-                  {/* <button
+                  <div className="ml-4 flex items-center md:ml-6">
+                    <button onClick={claimFundsHandler} class="w-[100px] bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold px-3 py-2 rounded inline-flex items-center">
+                      <SwitchHorizontalIcon className="h-4 w-4 text-blue-500" />
+                      <span className='m-auto font-medium'>Claim</span>
+                    </button>
+
+                    {/* <button
                     type="button"
                     className="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                   >
@@ -148,110 +166,110 @@ const Navbar = () => {
                     <BellIcon className="h-6 w-6" aria-hidden="true" />
                   </button> */}
 
-                  {/* Profile dropdown */}
-                  <Menu as="div" className="ml-3 relative">
-                    <div>
-                      <Menu.Button className="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
-                        <span className="sr-only">Open user menu</span>
-                        <img className="h-8 w-8 rounded-full" src={user.imageUrl} alt="" />
-                      </Menu.Button>
-                    </div>
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-100"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="z-10	origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {userNavigation.map((item) => (
-                          <Menu.Item key={item.name}>
-                            {({ active }) => (
-                              <a
-                                href={item.href}
-                                className={classNames(
-                                  active ? 'bg-gray-100' : '',
-                                  'block px-4 py-2 text-sm text-gray-700'
-                                )}
-                              >
-                                {item.name}
-                              </a>
-                            )}
-                          </Menu.Item>
-                        ))}
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
+                    {/* Profile dropdown */}
+                    <Menu as="div" className="ml-3 relative">
+                      <div>
+                        <Menu.Button className="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+                          <span className="sr-only">Open user menu</span>
+                          <img className="h-8 w-8 rounded-full" src={user.imageUrl} alt="" />
+                        </Menu.Button>
+                      </div>
+                      <Transition
+                        as={Fragment}
+                        enter="transition ease-out duration-100"
+                        enterFrom="transform opacity-0 scale-95"
+                        enterTo="transform opacity-100 scale-100"
+                        leave="transition ease-in duration-75"
+                        leaveFrom="transform opacity-100 scale-100"
+                        leaveTo="transform opacity-0 scale-95"
+                      >
+                        <Menu.Items className="z-10	origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                          {userNavigation.map((item) => (
+                            <Menu.Item key={item.name}>
+                              {({ active }) => (
+                                <a
+                                  href={item.href}
+                                  className={classNames(
+                                    active ? 'bg-gray-100' : '',
+                                    'block px-4 py-2 text-sm text-gray-700'
+                                  )}
+                                >
+                                  {item.name}
+                                </a>
+                              )}
+                            </Menu.Item>
+                          ))}
+                        </Menu.Items>
+                      </Transition>
+                    </Menu>
+                  </div>
+                </div>
+                <div className="-mr-2 flex md:hidden">
+                  {/* Mobile menu button */}
+                  <Disclosure.Button className="bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+                    <span className="sr-only">Open main menu</span>
+                    {open ? (
+                      <XIcon className="block h-6 w-6" aria-hidden="true" />
+                    ) : (
+                      <MenuIcon className="block h-6 w-6" aria-hidden="true" />
+                    )}
+                  </Disclosure.Button>
                 </div>
               </div>
-              <div className="-mr-2 flex md:hidden">
-                {/* Mobile menu button */}
-                <Disclosure.Button className="bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
-                  <span className="sr-only">Open main menu</span>
-                  {open ? (
-                    <XIcon className="block h-6 w-6" aria-hidden="true" />
-                  ) : (
-                    <MenuIcon className="block h-6 w-6" aria-hidden="true" />
-                  )}
-                </Disclosure.Button>
-              </div>
             </div>
-          </div>
 
-          <Disclosure.Panel className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              {navigation.map((item) => (
-                <Disclosure.Button
-                  key={item.name}
-                  as="a"
-                  href={item.href}
-                  className={classNames(
-                    item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                    'block px-3 py-2 rounded-md text-base font-medium'
-                  )}
-                  aria-current={item.current ? 'page' : undefined}
-                >
-                  {item.name}
-                </Disclosure.Button>
-              ))}
-            </div>
-            <div className="pt-4 pb-3 border-t border-gray-700">
-              <div className="flex items-center px-5">
-                <div className="flex-shrink-0">
-                  <img className="h-10 w-10 rounded-full" src={user.imageUrl} alt="" />
-                </div>
-                <div className="ml-3">
-                  <div className="text-base font-medium leading-none text-white">{user.name}</div>
-                  <div className="text-sm font-medium leading-none text-gray-400">{user.email}</div>
-                </div>
-                <button
-                  type="button"
-                  className="ml-auto bg-gray-800 flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                >
-                  <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
-              </div>
-              <div className="mt-3 px-2 space-y-1">
-                {userNavigation.map((item) => (
+            <Disclosure.Panel className="md:hidden">
+              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                {navigation.map((item) => (
                   <Disclosure.Button
                     key={item.name}
                     as="a"
                     href={item.href}
-                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
+                    className={classNames(
+                      item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                      'block px-3 py-2 rounded-md text-base font-medium'
+                    )}
+                    aria-current={item.current ? 'page' : undefined}
                   >
                     {item.name}
                   </Disclosure.Button>
                 ))}
               </div>
-            </div>
-          </Disclosure.Panel>
-        </>
-      )}
-    </Disclosure>
-  </div>
+              <div className="pt-4 pb-3 border-t border-gray-700">
+                <div className="flex items-center px-5">
+                  <div className="flex-shrink-0">
+                    <img className="h-10 w-10 rounded-full" src={user.imageUrl} alt="" />
+                  </div>
+                  <div className="ml-3">
+                    <div className="text-base font-medium leading-none text-white">{user.name}</div>
+                    <div className="text-sm font-medium leading-none text-gray-400">{user.email}</div>
+                  </div>
+                  <button
+                    type="button"
+                    className="ml-auto bg-gray-800 flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                  >
+                    <span className="sr-only">View notifications</span>
+                    <BellIcon className="h-6 w-6" aria-hidden="true" />
+                  </button>
+                </div>
+                <div className="mt-3 px-2 space-y-1">
+                  {userNavigation.map((item) => (
+                    <Disclosure.Button
+                      key={item.name}
+                      as="a"
+                      href={item.href}
+                      className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
+                    >
+                      {item.name}
+                    </Disclosure.Button>
+                  ))}
+                </div>
+              </div>
+            </Disclosure.Panel>
+          </>
+        )}
+      </Disclosure>
+    </div>
   );
 };
 

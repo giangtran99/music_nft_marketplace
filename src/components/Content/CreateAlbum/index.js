@@ -80,7 +80,8 @@ const CreateAlbumForm = () => {
       const body = {
         name: enteredName,
         description:enteredDescription,
-        album_picture: fileAdded.path
+        album_picture: fileAdded.path,
+        metamask_address: web3Ctx.account
       };
 
       request("/api/album/create",body,{},"POST")
