@@ -11,9 +11,10 @@ import Filter from '../../components/General/Filter';
 const Profile = ({ color = "indigo", NFTs = [], Transactions = [] }) => {
     const [openTab, setOpenTab] = React.useState(1);
     const collectionCtx = React.useContext(CollectionContext);
-    const web3Ctx = React.useContext(Web3Context);
+    // const web3Ctx = React.useContext(Web3Context);
     const marketplaceCtx = React.useContext(MarketplaceContext);
 
+    console.log("@@collectionCtx",collectionCtx)
     return (<>
         <div className="w-full h-full">
             <div className="w-full h-auto shadow bg-white rounded-md">
@@ -133,7 +134,7 @@ const Profile = ({ color = "indigo", NFTs = [], Transactions = [] }) => {
                                     <div className="px-4 py-5 flex-auto">
                                         <div className="tab-content tab-space">
                                             <div className={openTab === 1 ? "block" : "hidden"} id="link1">
-                                                <Filter marketplaceCtx={marketplaceCtx} account={web3Ctx.account} collectionCtx={collectionCtx} type="profile" />
+                                                <Filter _account="profile" />
                                             </div>
                                             <div className={openTab === 2 ? "block" : "hidden"} id="link2">
                                                 <AlbumNFT />

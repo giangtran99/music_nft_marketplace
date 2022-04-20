@@ -47,7 +47,6 @@ const SearchBar = ({collectionCtx ,web3Ctx}) => {
         <input onChange={(e)=>setTextSearch(e.target.value)} onKeyDown={async event => {
           if (event.key === 'Enter') {
             const networkId = await web3Ctx.loadNetworkId(web3);
-
             // Load Contracts      
             const nftDeployedNetwork = NFTCollection.networks[networkId];
             const nftContract = collectionCtx.loadContract(web3, NFTCollection, nftDeployedNetwork);

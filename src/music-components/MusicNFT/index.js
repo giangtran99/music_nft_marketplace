@@ -9,25 +9,27 @@ import { PlusIcon } from '@heroicons/react/outline'
 
 const CONTRACT_ADDRESS = "0xfbB86211738Cca5d9Fa82871667b14358D4F2Fdf"
 
-const MusicNFT = ({ NFTCollection = [], Album = [], account, type }) => {
+const MusicNFT = ({ type }) => {
     const web3Ctx = useContext(Web3Context);
     const collectionCtx = useContext(CollectionContext);
     const marketplaceCtx = useContext(MarketplaceContext);
 
-    console.log("@@marketplaceCtx", marketplaceCtx)
-    console.log("@@Album", Album)
+    console.log("@@collectionCtx",collectionCtx)
     const priceRefs = useRef([]);
     if (priceRefs.current.length !== collectionCtx.collection.length) {
         priceRefs.current = Array(collectionCtx.collection.length).fill().map((_, i) => priceRefs.current[i] || createRef());
     }
 
     const getNFTCollectionbyAccount = () => {
-        if (account) return NFTCollection.filter(NFT => NFT.owner === account)
-        return NFTCollection
+        if (type === "profile"){
+            return []
+        }
+        return []
     }
+
     const getAblbumyAccount = () => {
-        if (account) return Album.filter(NFT => NFT.owner === account)
-        return Album
+        if (web3Ctx.account) return collectionCtx.albums.filter(NFT => NFT.owner === web3Ctx.account)
+        return collectionCtx.albums
     }
 
     const makeOfferHandler = (event, id, key) => {
@@ -48,12 +50,12 @@ const MusicNFT = ({ NFTCollection = [], Album = [], account, type }) => {
 
     return (
         <>
-            {getNFTCollectionbyAccount().length > 0 ?
+            {collectionCtx.collection.length > 0 ?
                 <div className={`min-h-screen bg-white p-5`}>
                     <div>
                         <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-black-200 mb-5">NFTs</h1>
                         <section className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                            {getNFTCollectionbyAccount().map((NFT, key) => {
+                            {collectionCtx.collection.map((NFT, key) => {
                                 const index = marketplaceCtx.offers ? marketplaceCtx.offers.findIndex(offer => offer.id === NFT.id) : -1;
                                 const owner = index === -1 ? NFT.owner : marketplaceCtx.offers[index].user;
                                 const price = index !== -1 ? formatPrice(marketplaceCtx.offers[index].price).toFixed(2) : null;
@@ -91,7 +93,7 @@ const MusicNFT = ({ NFTCollection = [], Album = [], account, type }) => {
                                             <img src={eth} className="bg-midnight m-auto h-[36px] w-[36px]" alt="price icon"></img>
                                         </div>
                                     </div>
-                                    {!price && type === "profile" && NFT.owner === account ?
+                                    {!price && type === "profile" && NFT.owner === web3Ctx.account ?
                                         <div class="flex items-center border-b border-teal-500 py-2">
                                             <input ref={priceRefs.current[key]} class="appearance-none bg-transparent border-none w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none" type="number" placeholder="Set price your NFT" aria-label="Full name" />
                                             <button onClick={(e) => makeOfferHandler(e, NFT.id, key)} class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded" type="button">

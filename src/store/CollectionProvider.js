@@ -7,58 +7,62 @@ const defaultCollectionState = {
   contract: null,
   totalSupply: null,
   collection: [],
+  albums: [],
   nftIsLoading: true
 };
 
 const collectionReducer = (state, action) => {
-  if(action.type === 'CONTRACT') {    
+  if (action.type === 'CONTRACT') {
     return {
       contract: action.contract,
       totalSupply: state.totalSupply,
       collection: state.collection,
+      albums: state.albums,
       nftIsLoading: state.nftIsLoading
     };
-  } 
-  
-  if(action.type === 'LOADSUPPLY') {
+  }
+
+  if (action.type === 'LOADSUPPLY') {
     return {
       contract: state.contract,
       totalSupply: action.totalSupply,
       collection: state.collection,
+      albums: state.albums,
       nftIsLoading: state.nftIsLoading
     };
   }
 
-  if(action.type === 'LOADCOLLECTION') {    
-    console.log("@@action.albums",action.albums)
+  if (action.type === 'LOADCOLLECTION') {
+    console.log("@@action",action)
     return {
       contract: state.contract,
       totalSupply: state.totalSupply,
       collection: action.collection,
-      albums:action.albums,
+      albums: action.albums,
       nftIsLoading: state.nftIsLoading
     };
   }
 
-  if(action.type === 'UPDATECOLLECTION') {    
+  if (action.type === 'UPDATECOLLECTION') {
     const index = state.collection.findIndex(NFT => NFT.id === parseInt(action.NFT.id));
     let collection = [];
 
-    if(index === -1) {
+    if (index === -1) {
       collection = [action.NFT, ...state.collection];
     } else {
       collection = [...state.collection];
-    }    
+    }
 
     return {
       contract: state.contract,
       totalSupply: state.totalSupply,
       collection: collection,
+      albums: state.albums,
       nftIsLoading: state.nftIsLoading
     };
   }
 
-  if(action.type === 'UPDATEOWNER') {
+  if (action.type === 'UPDATEOWNER') {
     const index = state.collection.findIndex(NFT => NFT.id === parseInt(action.id));
     let collection = [...state.collection];
     collection[index].owner = action.newOwner;
@@ -67,45 +71,47 @@ const collectionReducer = (state, action) => {
       contract: state.contract,
       totalSupply: state.totalSupply,
       collection: collection,
+      albums: state.albums,
       nftIsLoading: state.nftIsLoading
     };
   }
 
-  if(action.type === 'LOADING') {    
+  if (action.type === 'LOADING') {
     return {
       contract: state.contract,
       totalSupply: state.totalSupply,
       collection: state.collection,
+      albums: state.albums,
       nftIsLoading: action.loading
     };
   }
-  
+
   return defaultCollectionState;
 };
 
 const CollectionProvider = props => {
   const [CollectionState, dispatchCollectionAction] = useReducer(collectionReducer, defaultCollectionState);
-  
+
   const loadContractHandler = (web3, NFTCollection, deployedNetwork) => {
-    const contract = deployedNetwork ? new web3.eth.Contract(NFTCollection.abi, deployedNetwork.address): '';
-    dispatchCollectionAction({type: 'CONTRACT', contract: contract}); 
+    const contract = deployedNetwork ? new web3.eth.Contract(NFTCollection.abi, deployedNetwork.address) : '';
+    dispatchCollectionAction({ type: 'CONTRACT', contract: contract });
     return contract;
   };
 
-  const loadTotalSupplyHandler = async(contract) => {
+  const loadTotalSupplyHandler = async (contract) => {
     const totalSupply = await contract.methods.totalSupply().call();
-    dispatchCollectionAction({type: 'LOADSUPPLY', totalSupply: totalSupply});
+    dispatchCollectionAction({ type: 'LOADSUPPLY', totalSupply: totalSupply });
     return totalSupply;
   };
 
-  const loadCollectionHandler = async(contract, totalSupply) => {
+  const loadCollectionHandler = async (contract, totalSupply) => {
     let collection = [];
 
-    for(let i = 0; i < totalSupply; i++) {
+    for (let i = 0; i < totalSupply; i++) {
       const hash = await contract.methods.tokenURIs(i).call();
       try {
         const response = await fetch(`https://ipfs.infura.io/ipfs/${hash}?clear`);
-        if(!response.ok) {
+        if (!response.ok) {
           throw new Error('Something went wrong');
         }
 
@@ -116,25 +122,24 @@ const CollectionProvider = props => {
           id: i + 1,
           title: metadata.properties.name.description,
           metadata: metadata.properties.metadata.description,
-          description:metadata.properties.description.description,
-          coverPhoto:metadata.properties.coverPhoto.description,
-          minter:metadata.properties.description.minter,
+          description: metadata.properties.description.description,
+          coverPhoto: metadata.properties.coverPhoto.description,
+          minter: metadata.properties.description.minter,
           owner: owner
         }, ...collection];
-      }catch {
+      } catch {
         console.error('Something went wrong');
       }
     }
-    dispatchCollectionAction({type: 'LOADCOLLECTION', collection: collection});     
+    dispatchCollectionAction({ type: 'LOADCOLLECTION', collection: collection, albums: [] });
   };
 
-  const loadCollectionFromServerHandler = async(contract,nfts) => {
+  const loadCollectionFromServerHandler = async (contract, nfts, account) => {
     let collection = [];
-
-    for(let i = 0; i < nfts.length; i++) {
+    for (let i = 0; i < nfts.length; i++) {
       try {
         const response = await fetch(`https://ipfs.infura.io/ipfs/${nfts[i].cid}?clear`);
-        if(!response.ok) {
+        if (!response.ok) {
           throw new Error('Something went wrong');
         }
 
@@ -145,25 +150,25 @@ const CollectionProvider = props => {
           id: nfts[i].tokenId,
           title: metadata.properties.name.description,
           metadata: metadata.properties.metadata.description,
-          description:metadata.properties.description.description,
-          coverPhoto:metadata.properties.coverPhoto.description,
-          minter:metadata.properties.description.minter,
+          description: metadata.properties.description.description,
+          coverPhoto: metadata.properties.coverPhoto.description,
+          minter: metadata.properties.description.minter,
           owner: owner
         }, ...collection];
 
-      }catch {
+      } catch {
         console.error('Something went wrong');
       }
     }
-    dispatchCollectionAction({type: 'LOADCOLLECTION', collection: collection});     
+    dispatchCollectionAction({ type: 'LOADCOLLECTION', collection: collection, albums: [] });
   };
-  const loadCollectionFromSearchHander = async(contract,textSearch) => {
-    let collection = [] 
-    const result = await request(`/api/nft/search/${textSearch}`,{},{},'GET')
-    for(let i = 0; i < result.nfts.length; i++) {
+  const loadCollectionFromSearchHander = async (contract, textSearch) => {
+    let collection = []
+    const result = await request(`/api/nft/search/${textSearch}`, {}, {}, 'GET')
+    for (let i = 0; i < result.nfts.length; i++) {
       try {
         const response = await fetch(`https://ipfs.infura.io/ipfs/${result.nfts[i].cid}?clear`);
-        if(!response.ok) {
+        if (!response.ok) {
           throw new Error('Something went wrong');
         }
 
@@ -174,51 +179,52 @@ const CollectionProvider = props => {
           id: result.nfts[i].tokenId,
           title: metadata.properties.name.description,
           metadata: metadata.properties.metadata.description,
-          description:metadata.properties.description.description,
-          coverPhoto:metadata.properties.coverPhoto.description,
-          minter:metadata.properties.description.minter,
+          description: metadata.properties.description.description,
+          coverPhoto: metadata.properties.coverPhoto.description,
+          minter: metadata.properties.description.minter,
           owner: owner
         }, ...collection];
 
-      }catch {
+      } catch {
         console.error('Something went wrong');
       }
     }
-    dispatchCollectionAction({type: 'LOADCOLLECTION', collection: collection, albums:result.albums});     
+    dispatchCollectionAction({ type: 'LOADCOLLECTION', collection: collection, albums: result.albums });
   };
 
-  const updateCollectionHandler = async(contract, id, owner) => {
+  const updateCollectionHandler = async (contract, id, owner) => {
     let NFT;
     const hash = await contract.methods.tokenURI(id).call();
     try {
       const response = await fetch(`https://ipfs.infura.io/ipfs/${hash}?clear`);
-      if(!response.ok) {
-        throw new Error('Something went wrong');      }
+      if (!response.ok) {
+        throw new Error('Something went wrong');
+      }
 
-      const metadata = await response.json();      
+      const metadata = await response.json();
 
       NFT = {
         id: parseInt(id),
         title: metadata.properties.name.description,
         metadata: metadata.properties.metadata.description,
-        description:metadata.properties.description.description,
-        coverPhoto:metadata.properties.coverPhoto.description,
-        minter:metadata.properties.description.minter,
+        description: metadata.properties.description.description,
+        coverPhoto: metadata.properties.coverPhoto.description,
+        minter: metadata.properties.description.minter,
         owner: owner
       };
 
-    }catch {
+    } catch {
       console.error('Something went wrong');
     }
-    dispatchCollectionAction({type: 'UPDATECOLLECTION', NFT: NFT});
+    dispatchCollectionAction({ type: 'UPDATECOLLECTION', NFT: NFT });
   };
 
   const updateOwnerHandler = (id, newOwner) => {
-    dispatchCollectionAction({type: 'UPDATEOWNER', id: id, newOwner: newOwner});
+    dispatchCollectionAction({ type: 'UPDATEOWNER', id: id, newOwner: newOwner });
   };
 
   const setNftIsLoadingHandler = (loading) => {
-    dispatchCollectionAction({type: 'LOADING', loading: loading});
+    dispatchCollectionAction({ type: 'LOADING', loading: loading });
   };
 
   const collectionContext = {
@@ -226,17 +232,17 @@ const CollectionProvider = props => {
     totalSupply: CollectionState.totalSupply,
     collection: CollectionState.collection,
     albums: CollectionState.albums,
-    nftIsLoading:CollectionState.nftIsLoading,
+    nftIsLoading: CollectionState.nftIsLoading,
     loadContract: loadContractHandler,
     loadTotalSupply: loadTotalSupplyHandler,
     loadCollection: loadCollectionHandler,
     loadCollectionFromServer: loadCollectionFromServerHandler,
-    loadCollectionFromSearch:loadCollectionFromSearchHander,
+    loadCollectionFromSearch: loadCollectionFromSearchHander,
     updateCollection: updateCollectionHandler,
     updateOwner: updateOwnerHandler,
     setNftIsLoading: setNftIsLoadingHandler
   };
-  
+
   return (
     <CollectionContext.Provider value={collectionContext}>
       {props.children}

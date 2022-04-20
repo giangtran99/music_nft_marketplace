@@ -64,7 +64,6 @@ const App = () => {
         const totalSupply = await collectionCtx.loadTotalSupply(nftContract);
         // Load Collection
         collectionCtx.loadCollection(nftContract, totalSupply);
-
         // Event subscription
         nftContract.events.Transfer()
           .on('data', (event) => {

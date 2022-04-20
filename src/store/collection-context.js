@@ -4,6 +4,7 @@ const CollectionContext = React.createContext({
   contract: null,
   totalSupply: null,
   collection: [],
+  albums: [],
   nftIsLoading: true,
   loadContract: () => {},
   loadTotalSupply: () => {},

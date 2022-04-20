@@ -29,13 +29,13 @@ const subCategories = [
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
-const Filter = ({ collectionCtx, marketplaceCtx,account, type }) => {
+const Filter = ({ _account }) => {
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
     const [filters, setFilters] = useState([])
     const refFilter = useRef()
     const web3Ctx = useContext(Web3Context);
+    const collectionCtx = useContext(CollectionContext);
 
-    console.log("@@collectionCtx",collectionCtx)
     const getNFTCollection = async (genreId)=>{
         console.log("@@genreId",genreId)
         const networkId = await web3Ctx.loadNetworkId(web3);
@@ -45,15 +45,12 @@ const Filter = ({ collectionCtx, marketplaceCtx,account, type }) => {
         if (nftContract) {
             if(genreId){
                 const response = await request(`/api/nft/genre-id/${genreId}`, {}, {}, "GET")
-                collectionCtx.loadCollectionFromServer(nftContract, response);
+                collectionCtx.loadCollectionFromServer(nftContract, response ,_account);
                 return
             }
             const totalSupply = await collectionCtx.loadTotalSupply(nftContract);
             collectionCtx.loadCollection(nftContract, totalSupply);
-            fetchFilter()
-          
         }
-    
     }
 
     const fetchFilter = ()=>{
@@ -294,7 +291,7 @@ const Filter = ({ collectionCtx, marketplaceCtx,account, type }) => {
 
                             {/* Product grid */}
                             <div className="lg:col-span-4">
-                                <MusicNFT account={account} Album={collectionCtx.albums} NFTCollection={collectionCtx.collection} marketplaceCtx={marketplaceCtx} type={type} />
+                                <MusicNFT _account={_account} />
                             </div>
                         </div>
                     </section>
