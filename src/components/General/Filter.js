@@ -38,9 +38,8 @@ const Filter = ({ _account, type }) => {
     const markketplaceCtx = useContext(MarketplaceContext);
 
     console.log("@@collectionCtx", collectionCtx)
-  
+    console.log("@@markketplaceCtx", markketplaceCtx)
     const getNFTCollection = async (genreId) => {
-        console.log("@@genreId", genreId)
         const networkId = await web3Ctx.loadNetworkId(web3);
         // Load Contracts      
         const nftDeployedNetwork = NFTCollection.networks[networkId];

@@ -158,15 +158,26 @@ const MintForm = () => {
         .on('transactionHash', async (hash) => {
           const receipt = await web3.eth.getTransactionReceipt(hash)
           // console.log("@@vui buon0",web3.utils.hexToNumber(receipt.logs[0].topics[0]))
+          console.log("@@vui buon2",receipt)
+          console.log("@@ngon roi",collectionCtx.contract.events.allEvents())
           // console.log("@@vui buon1",web3.utils.hexToNumber(receipt.logs[0].topics[1]))
-          console.log("@@vui buon2",web3.utils.hexToNumber(receipt.logs[0].topics[2]))
+          // console.log("@@vui buon2",web3.utils.hexToNumber(receipt.logs[0].topics[2]))
           const tokenId = web3.utils.hexToNumber(receipt.logs[0].topics[3])
+          request('/api/transactionlog/create',{
+            action:"Mint",
+            from:receipt.from,
+            to:receipt.to,
+            ethPrice:0,
+            tokenId:tokenId
+          },{},'POST')
 
+          
           const body = {
             name: enteredName,
             cid: metadataAdded.path,
             genre_id: enteredGenre,
             tokenId: tokenId,
+            cover_photo:fileCoverPhotoAdded.path
           }
           if (hash) {
             toast.success("Success Mint NFT !", {

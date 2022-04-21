@@ -6,6 +6,7 @@ import MarketplaceContext from '../../../store/marketplace-context';
 import Web3Context from '../../../store/web3-context';
 import { request } from '../../../helpers/utils';
 import { useParams } from 'react-router-dom';
+import {Modal} from 'react-modal'
 
 const AlbumInfo = (props) => {
     const collectionCtx = React.useContext(CollectionContext);
@@ -13,6 +14,7 @@ const AlbumInfo = (props) => {
     const web3Ctx = React.useContext(Web3Context);
     const [albumInfo, setAlbumInfo] = React.useState()
     let { id } = useParams();
+    const [modalIsOpen, setIsOpen] = React.useState(false);
 
     React.useEffect(()=>{
         setAlbumInfo()
@@ -22,6 +24,26 @@ const AlbumInfo = (props) => {
     return (<>
         {true ?
         <>
+{/* 
+<Modal
+        isOpen={modalIsOpen}
+        onAfterOpen={afterOpenModal}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Hello</h2>
+        <button onClick={closeModal}>close</button>
+        <div>I am a modal</div>
+        <form>
+          <input />
+          <button>tab navigation</button>
+          <button>stays</button>
+          <button>inside</button>
+          <button>the modal</button>
+        </form>
+      </Modal> */}
+
         <div className="bg-black-200 text-black-300 min-h-screen p-10">
   
 

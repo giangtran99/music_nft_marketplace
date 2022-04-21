@@ -1,6 +1,6 @@
 import React, { useContext, useRef, createRef } from 'react'
 import eth from '../../img/eth.png';
-import { formatPrice,getOwner } from '../../helpers/utils';
+import { formatPrice,getOwner,request } from '../../helpers/utils';
 import web3 from '../../connection/web3';
 import Web3Context from '../../store/web3-context';
 import CollectionContext from '../../store/collection-context';
@@ -20,7 +20,6 @@ const MusicNFT = ({ type }) => {
         priceRefs.current = Array(collectionCtx.collection.length).fill().map((_, i) => priceRefs.current[i] || createRef());
     }
 
-    console.log("@@collectionCtx.collection",collectionCtx.collection)
     const getNFTCollectionbyType = (_type,owner,currentAccount) => {
 
         switch (_type) {
@@ -53,11 +52,31 @@ const MusicNFT = ({ type }) => {
         try{
             const enteredPrice = web3.utils.toWei(priceRefs.current[key].current.value, 'ether');
             collectionCtx.contract.methods.approve(marketplaceCtx.contract.options.address, id).send({ from: web3Ctx.account })
-                .on('transactionHash', (hash) => {
-                    marketplaceCtx.setMktIsLoading(true);
+                .on('transactionHash',async (hash) => {
+                  
                 })
                 .on('receipt', (receipt) => {
                     marketplaceCtx.contract.methods.makeOffer(id, enteredPrice).send({ from: web3Ctx.account })
+                .on('transactionHash',async (hash)=>{
+                            if(hash){
+                                const receipt = await web3.eth.getTransactionReceipt(hash)
+                                // console.log("@@vui buon0",web3.utils.hexToNumber(receipt.logs[0].topics[0]))
+                                const tokenId = web3.utils.hexToNumber(receipt.logs[0].topics[3])
+                                console.log("@@vui make offer",receipt)
+                                request('/api/transactionlog/create',{
+                                    action:"Make Offer",
+                                    from:receipt.from,
+                                    to:receipt.to,
+                                    ethPrice:+priceRefs.current[key].current.value,
+                                    tokenId:tokenId
+                                  },{},'POST')
+                                marketplaceCtx.setMktIsLoading(true);
+                                toast.success("Make offer is succeed")
+                                return
+                            }
+                            toast.error("Make offer failed")
+        
+                        })
                         .on('error', (error) => {
                             window.alert('Something went wrong when pushing to the blockchain');
                             marketplaceCtx.setMktIsLoading(false);

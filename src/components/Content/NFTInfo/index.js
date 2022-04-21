@@ -4,9 +4,10 @@ import eth from '../../../img/eth.png';
 import CollectionContext from '../../../store/collection-context';
 import MarketplaceContext from '../../../store/marketplace-context';
 import Web3Context from '../../../store/web3-context';
-import { formatPrice ,getOwner} from '../../../helpers/utils';
+import { formatPrice ,getOwner,request} from '../../../helpers/utils';
 import web3 from '../../../connection/web3'
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const NFTInfo = (props) => {
 
@@ -15,6 +16,7 @@ const NFTInfo = (props) => {
     const web3Ctx = React.useContext(Web3Context);
     const [nftInfo, setNFTInfo] = React.useState()
     const [price, setPrice] = React.useState()
+    // const [transactionLogs,setTransactionLogs] = React.useState([])
     let { id } = useParams();
     const index = marketplaceCtx.offers ? marketplaceCtx.offers.findIndex(offer => offer.id == id) : -1;
 
@@ -31,9 +33,10 @@ const NFTInfo = (props) => {
         setPrice(price)
     }
 
-    React.useEffect(()=>{
-
-    },[])
+    // React.useEffect(async ()=>{
+    //     const response = await request(`/api/transactionlog/get-tokenid/${id}`,{},{},"GET")
+    //     setTransactionLogs(response)
+    // },[])
     React.useEffect(async () => {
         if (collectionCtx.collection.length > 0) {
             const owner = await collectionCtx.contract.methods.ownerOf(id).call()
@@ -49,8 +52,25 @@ const NFTInfo = (props) => {
     const buyHandler = (event) => {
         const buyIndex = parseInt(event.target.value);
         marketplaceCtx.contract.methods.fillOffer(marketplaceCtx.offers[buyIndex].offerId).send({ from: web3Ctx.account, value: marketplaceCtx.offers[buyIndex].price })
-            .on('transactionHash', (hash) => {
-                marketplaceCtx.setMktIsLoading(true);
+            .on('transactionHash',async (hash) => {
+                if(hash){
+                    const receipt = await web3.eth.getTransactionReceipt(hash)
+                    const tokenId = web3.utils.hexToNumber(receipt.logs[0].topics[3])
+                    console.log("@@vui make buy",receipt)
+                    request('/api/transactionlog/create',{
+                        action:"Buy",
+                        from:receipt.from,
+                        to:receipt.to,
+                        ethPrice:+formatPrice(marketplaceCtx.offers[index].price).toFixed(2),
+                        tokenId:tokenId
+                      },{},'POST')
+            
+                    marketplaceCtx.setMktIsLoading(true);
+                    toast.success("Buy action is success ")
+                    return
+                }
+                toast.error("Buy action is failed ")
+  
             })
             .on('error', (error) => {
                 window.alert('Something went wrong when pushing to the blockchain');
@@ -162,7 +182,7 @@ const NFTInfo = (props) => {
                         </div>
                     </div>
                 </div>
-                <TransactionTable />
+                <TransactionTable type="nftInfo" data={nftInfo}/>
             </section>
             : null}
     </>)

@@ -39,32 +39,6 @@ const NFTCollection = () => {
     }
 
   };
-
-  const buyHandler = (event) => {
-    const buyIndex = parseInt(event.target.value);
-    marketplaceCtx.contract.methods.fillOffer(marketplaceCtx.offers[buyIndex].offerId).send({ from: web3Ctx.account, value: marketplaceCtx.offers[buyIndex].price })
-      .on('transactionHash', (hash) => {
-        marketplaceCtx.setMktIsLoading(true);
-      })
-      .on('error', (error) => {
-        window.alert('Something went wrong when pushing to the blockchain');
-        marketplaceCtx.setMktIsLoading(false);
-      });
-  };
-
-  const cancelHandler = (event) => {
-    const cancelIndex = parseInt(event.target.value);
-    marketplaceCtx.contract.methods.cancelOffer(marketplaceCtx.offers[cancelIndex].offerId).send({ from: web3Ctx.account })
-      .on('transactionHash', (hash) => {
-        marketplaceCtx.setMktIsLoading(true);
-      })
-      .on('error', (error) => {
-        window.alert('Something went wrong when pushing to the blockchain');
-        marketplaceCtx.setMktIsLoading(false);
-      });
-  };
-
-
   return (
     <>
       <div className="bg-white flex flex-wrap items-center justify-center">

@@ -11,9 +11,10 @@ import Filter from '../../components/General/Filter';
 const Profile = ({ color = "indigo", NFTs = [], Transactions = [] ,type}) => {
     const [openTab, setOpenTab] = React.useState(1);
     const collectionCtx = React.useContext(CollectionContext);
-    // const web3Ctx = React.useContext(Web3Context);
+    const web3Ctx = React.useContext(Web3Context);
     const marketplaceCtx = React.useContext(MarketplaceContext);
 
+    console.log("!!marketplaceCtx",marketplaceCtx,collectionCtx)
     return (<>
         <div className="w-full h-full">
             <div className="w-full h-auto shadow bg-white rounded-md">
@@ -44,8 +45,9 @@ const Profile = ({ color = "indigo", NFTs = [], Transactions = [] ,type}) => {
                     </div>
                     <div className="max-w-7xl h-full mx-auto">
                         <div className="flex flex-col space-y-2 mt-3 items-center justify-center pb-3 border-b-2">
-                            <p className="text-4xl font-bold">Giang Tran</p>
+                            <p className="text-4xl font-bold mt-2">{web3Ctx.account.substr(0,7)}...${web3Ctx.account.substr(web3Ctx.account.length - 7)}</p>
                             <p className="text-sm text-gray-500">I am Software Engineer</p>
+                            {/* <p className="text-sm text-gray-600 font-bold">Address Wallet : {web3Ctx.account}</p> */}
                         </div>
 
                         {/*start */}
@@ -139,7 +141,7 @@ const Profile = ({ color = "indigo", NFTs = [], Transactions = [] ,type}) => {
                                                 <AlbumNFT type={type}/>
                                             </div>
                                             <div className={openTab === 3 ? "block" : "hidden"} id="link3">
-                                                <TransactionTable />
+                                                <TransactionTable type={"userInfo"}/>
                                             </div>
                                         </div>
                                     </div>

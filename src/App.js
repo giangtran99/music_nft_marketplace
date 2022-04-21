@@ -158,7 +158,7 @@ const App = () => {
           {/* Menu */}
           {/* Noi Dung */}
           <Routes>
-            <Route exact path='/marketplace' element={showContent && <Main />} />
+            <Route exact path='/' element={showContent && <Main />} />
             <Route exact path='/mint' element={showContent && <MintForm />} />
             <Route exact path='/create-album' element={showContent && <CreateAlbumForm />} />
             <Route exact path='/creator' element={showContent && <Creator />} />
