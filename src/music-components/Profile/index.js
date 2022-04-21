@@ -8,13 +8,12 @@ import Web3Context from '../../store/web3-context';
 import TransactionTable from '../TransactionTable';
 import { PlusIcon, CollectionIcon } from '@heroicons/react/outline'
 import Filter from '../../components/General/Filter';
-const Profile = ({ color = "indigo", NFTs = [], Transactions = [] }) => {
+const Profile = ({ color = "indigo", NFTs = [], Transactions = [] ,type}) => {
     const [openTab, setOpenTab] = React.useState(1);
     const collectionCtx = React.useContext(CollectionContext);
     // const web3Ctx = React.useContext(Web3Context);
     const marketplaceCtx = React.useContext(MarketplaceContext);
 
-    console.log("@@collectionCtx",collectionCtx)
     return (<>
         <div className="w-full h-full">
             <div className="w-full h-auto shadow bg-white rounded-md">
@@ -134,10 +133,10 @@ const Profile = ({ color = "indigo", NFTs = [], Transactions = [] }) => {
                                     <div className="px-4 py-5 flex-auto">
                                         <div className="tab-content tab-space">
                                             <div className={openTab === 1 ? "block" : "hidden"} id="link1">
-                                                <Filter _account="profile" />
+                                                <Filter type={type} />
                                             </div>
                                             <div className={openTab === 2 ? "block" : "hidden"} id="link2">
-                                                <AlbumNFT />
+                                                <AlbumNFT type={type}/>
                                             </div>
                                             <div className={openTab === 3 ? "block" : "hidden"} id="link3">
                                                 <TransactionTable />

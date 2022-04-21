@@ -6,6 +6,7 @@ import CollectionContext from '../../../store/collection-context';
 import MarketplaceContext from '../../../store/marketplace-context';
 import { formatPrice } from '../../../helpers/utils';
 import eth from '../../../img/eth.png';
+import { toast } from 'react-toastify';
 
 const NFTCollection = () => {
   const web3Ctx = useContext(Web3Context);
@@ -19,18 +20,24 @@ const NFTCollection = () => {
 
   const makeOfferHandler = (event, id, key) => {
     event.preventDefault();
-    const enteredPrice = web3.utils.toWei(priceRefs.current[key].current.value, 'ether');
-    collectionCtx.contract.methods.approve(marketplaceCtx.contract.options.address, id).send({ from: web3Ctx.account })
-      .on('transactionHash', (hash) => {
-        marketplaceCtx.setMktIsLoading(true);
-      })
-      .on('receipt', (receipt) => {
-        marketplaceCtx.contract.methods.makeOffer(id, enteredPrice).send({ from: web3Ctx.account })
-          .on('error', (error) => {
-            window.alert('Something went wrong when pushing to the blockchain');
-            marketplaceCtx.setMktIsLoading(false);
-          });
-      });
+    try{
+      const enteredPrice = web3.utils.toWei(priceRefs.current[key].current.value, 'ether');
+      collectionCtx.contract.methods.approve(marketplaceCtx.contract.options.address, id).send({ from: web3Ctx.account })
+        .on('transactionHash', (hash) => {
+          marketplaceCtx.setMktIsLoading(true);
+        })
+        .on('receipt', (receipt) => {
+          marketplaceCtx.contract.methods.makeOffer(id, enteredPrice).send({ from: web3Ctx.account })
+            .on('error', (error) => {
+              window.alert('Something went wrong when pushing to the blockchain');
+              marketplaceCtx.setMktIsLoading(false);
+            });
+        });
+    }
+    catch(e){
+      toast.error("")
+    }
+
   };
 
   const buyHandler = (event) => {

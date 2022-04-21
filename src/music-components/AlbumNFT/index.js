@@ -7,18 +7,29 @@ import CollectionContext from '../../store/collection-context';
 import MarketplaceContext from '../../store/marketplace-context';
 
 
-const AlbumNFT = ({ AlbumList = [] }) => {
+const AlbumNFT = ({ type }) => {
     const web3Ctx = useContext(Web3Context);
     const collectionCtx = useContext(CollectionContext);
     const marketplaceCtx = useContext(MarketplaceContext);
     const [listAlbum, setListAlbum] = useState([])
-    useEffect(() => {
-        request("/api/album/index", {}, {}, "GET")
-            .then(response => {
-                console.log("@@thuoc", response)
-                setListAlbum(response)
-            })
-    }, [])
+
+    useEffect(async() =>{
+        const fetchData= async ()=>{
+            const response = await request("/api/album/index", {}, {}, "GET")
+            console.log("@@response",response)
+            switch(type){
+                case "userinfo":
+                return response.filter(item=>item.metamask_address == web3Ctx.account)
+                case "creator":
+                return response
+                default:
+                return response
+            }
+        }
+        const result = await fetchData()
+        console.log("@@result",result)
+        setListAlbum(result)
+    }, [web3Ctx.account])
 
     return (<>
         <div className="min-h-screen bg-white p-5">
@@ -27,7 +38,7 @@ const AlbumNFT = ({ AlbumList = [] }) => {
                     {listAlbum.map((album, key) => {
                         return <div key={key} className="bg-sky-100 shadow-lg rounded-2xl p-3">
                             <div className="group relative">
-                                <img className="w-full block rounded" src={`https://ipfs.infura.io/ipfs/${album.album_picture}`} alt="" />
+                                <img className="w-full block rounded" src={`https://ipfs.infura.io/ipfs/${album?.album_picture}`} alt="" />
                                 <div className="absolute bg-black rounded bg-opacity-0 group-hover:bg-opacity-60 w-full h-full top-0 flex items-center group-hover:opacity-100 transition justify-evenly">
                                     <button className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-heart" viewBox="0 0 16 16">
@@ -44,13 +55,13 @@ const AlbumNFT = ({ AlbumList = [] }) => {
 
                             <div className="p-5 flex">
                                 <div className="m-auto">
-                                    <a href={`/album/${album.id}`}>
-                                        <h3 className="italic text-black text-4xl">{album.name}</h3>
+                                    <a href={`/album/${album?.id}`}>
+                                        <h3 className="italic text-black text-4xl">{album?.name}</h3>
                                     </a>
                                 </div>
-                                
+
                             </div>
-                            <p className="text-gray-400 text-lg text-center">{`Created by ${album.metamask_address.substr(0, 4)}...${album.metamask_address.substr(album.metamask_address.length - 5)}`}</p>
+                            <p className="text-gray-400 text-lg text-center">{web3Ctx.account === album?.metamask_address ? `Created by me` : `Created by ${album?.metamask_address?.substr(0, 4)}...${album?.metamask_address?.substr(album?.metamask_address?.length - 5)}`}</p>
 
                         </div>
                     })}

@@ -1,7 +1,7 @@
 
 import eth from '../../img/eth.png';
 
-const TransactionTable = () => {
+const TransactionTable = ({data}) => {
     return (<>
         <div className="grid place-items-center p-5">
             <div className="border shadow-lg mt-2 container px-7 py-24 mx-auto">

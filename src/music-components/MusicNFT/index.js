@@ -1,51 +1,73 @@
 import React, { useContext, useRef, createRef } from 'react'
 import eth from '../../img/eth.png';
-import { formatPrice } from '../../helpers/utils';
+import { formatPrice,getOwner } from '../../helpers/utils';
 import web3 from '../../connection/web3';
 import Web3Context from '../../store/web3-context';
 import CollectionContext from '../../store/collection-context';
 import MarketplaceContext from '../../store/marketplace-context';
 import { PlusIcon } from '@heroicons/react/outline'
+import { toast } from 'react-toastify';
 
-const CONTRACT_ADDRESS = "0xfbB86211738Cca5d9Fa82871667b14358D4F2Fdf"
+
 
 const MusicNFT = ({ type }) => {
     const web3Ctx = useContext(Web3Context);
     const collectionCtx = useContext(CollectionContext);
     const marketplaceCtx = useContext(MarketplaceContext);
 
-    console.log("@@collectionCtx",collectionCtx)
     const priceRefs = useRef([]);
     if (priceRefs.current.length !== collectionCtx.collection.length) {
         priceRefs.current = Array(collectionCtx.collection.length).fill().map((_, i) => priceRefs.current[i] || createRef());
     }
 
-    const getNFTCollectionbyAccount = () => {
-        if (type === "profile"){
-            return []
+    console.log("@@collectionCtx.collection",collectionCtx.collection)
+    const getNFTCollectionbyType = (_type,owner,currentAccount) => {
+
+        switch (_type) {
+            case "userinfo":
+                const result = owner === currentAccount ? true : false
+                return result
+            case "creator":
+                return true
+            default:
+                return true
+
         }
-        return []
     }
 
-    const getAblbumyAccount = () => {
-        if (web3Ctx.account) return collectionCtx.albums.filter(NFT => NFT.owner === web3Ctx.account)
-        return collectionCtx.albums
+
+    const getAlbumbyAccount = (_type) => {
+        console.log("@@collectionCtx.collectio1n",collectionCtx.albums)
+        switch (_type) {
+            case "userinfo":
+                return collectionCtx.albums.filter(album => album.metamask_address === web3Ctx.account)
+            case "creator":
+                return collectionCtx.albums
+            default:
+                return collectionCtx.albums
+        }
     }
 
     const makeOfferHandler = (event, id, key) => {
         event.preventDefault();
-        const enteredPrice = web3.utils.toWei(priceRefs.current[key].current.value, 'ether');
-        collectionCtx.contract.methods.approve(marketplaceCtx.contract.options.address, id).send({ from: web3Ctx.account })
-            .on('transactionHash', (hash) => {
-                marketplaceCtx.setMktIsLoading(true);
-            })
-            .on('receipt', (receipt) => {
-                marketplaceCtx.contract.methods.makeOffer(id, enteredPrice).send({ from: web3Ctx.account })
-                    .on('error', (error) => {
-                        window.alert('Something went wrong when pushing to the blockchain');
-                        marketplaceCtx.setMktIsLoading(false);
-                    });
-            });
+        try{
+            const enteredPrice = web3.utils.toWei(priceRefs.current[key].current.value, 'ether');
+            collectionCtx.contract.methods.approve(marketplaceCtx.contract.options.address, id).send({ from: web3Ctx.account })
+                .on('transactionHash', (hash) => {
+                    marketplaceCtx.setMktIsLoading(true);
+                })
+                .on('receipt', (receipt) => {
+                    marketplaceCtx.contract.methods.makeOffer(id, enteredPrice).send({ from: web3Ctx.account })
+                        .on('error', (error) => {
+                            window.alert('Something went wrong when pushing to the blockchain');
+                            marketplaceCtx.setMktIsLoading(false);
+                        });
+                });
+        }
+        catch(e){
+            toast.error("Price can not empty !")
+        }
+  
     };
 
     return (
@@ -59,7 +81,10 @@ const MusicNFT = ({ type }) => {
                                 const index = marketplaceCtx.offers ? marketplaceCtx.offers.findIndex(offer => offer.id === NFT.id) : -1;
                                 const owner = index === -1 ? NFT.owner : marketplaceCtx.offers[index].user;
                                 const price = index !== -1 ? formatPrice(marketplaceCtx.offers[index].price).toFixed(2) : null;
-                                return <div key={key} className="bg-gray-900 shadow-lg rounded p-3">
+                                const realOwner = getOwner(web3Ctx.account,NFT.owner,marketplaceCtx,NFT.id)
+                                const isShow = getNFTCollectionbyType(type,realOwner,web3Ctx.account)
+                                console.log("@@isShow",isShow)
+                                return isShow ? (<div key={key} className="bg-gray-900 shadow-lg rounded p-3">
                                     <div className="group relative">
                                         <img className="m-auto w-68 block rounded" src={NFT.coverPhoto ? `https://ipfs.infura.io/ipfs/${NFT.coverPhoto}` : 'https://upload.wikimedia.org/wikipedia/en/f/f1/Tycho_-_Epoch.jpg'} alt="" />
                                         <div className="absolute bg-black rounded bg-opacity-0 group-hover:bg-opacity-60 w-full h-full top-0 flex items-center group-hover:opacity-100 transition justify-evenly">
@@ -85,7 +110,7 @@ const MusicNFT = ({ type }) => {
                                             <a href={`/nft/${NFT.id}`}>
                                                 <h3 className="text-white text-lg">{NFT.title.length > 7 ? `${NFT.title.split(' ')[0]}...` : NFT.title}</h3>
                                             </a>
-                                            <p className="text-gray-400 text-xs">{NFT.owner !== web3Ctx.account ? `Owned by ${NFT.owner.substr(0, 2)}...${NFT.owner.substr(NFT.owner.length - 3)}` : "Owned by me"}</p>
+                                            <p className="text-gray-400 text-xs">{realOwner !== web3Ctx.account ? `Owned by ${realOwner.substr(0, 2)}...${realOwner.substr(realOwner.length - 4)}` : "Owned by me"}</p>
 
                                         </div>
                                         <div className='flex ml-auto'>
@@ -93,7 +118,7 @@ const MusicNFT = ({ type }) => {
                                             <img src={eth} className="bg-midnight m-auto h-[36px] w-[36px]" alt="price icon"></img>
                                         </div>
                                     </div>
-                                    {!price && type === "profile" && NFT.owner === web3Ctx.account ?
+                                    {!price && type === "userinfo" && realOwner === web3Ctx.account ?
                                         <div class="flex items-center border-b border-teal-500 py-2">
                                             <input ref={priceRefs.current[key]} class="appearance-none bg-transparent border-none w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none" type="number" placeholder="Set price your NFT" aria-label="Full name" />
                                             <button onClick={(e) => makeOfferHandler(e, NFT.id, key)} class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded" type="button">
@@ -101,24 +126,21 @@ const MusicNFT = ({ type }) => {
                                             </button>
                                         </div>
                                         : null}
-                                    {/* <div className="p-5">
-                                <img src={eth} width="25" height="25" className="align-center float-start" alt="price icon"></img>
-                                <p className="text-start"><b>{`${price}`}</b></p>
-                            </div> */}
+                                 
 
                                 </div>
-                            })}
+                            ):null})}
                         </section>
                     </div>
                 </div>
                 : null}
 
-            {getAblbumyAccount().length > 0 ?
+            {getAlbumbyAccount(type).length > 0 ?
                 <div className={`min-h-screen bg-white p-2`}>
                     <div>
                         <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-black-200 mb-5">Albums</h1>
                         <section className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                            {getAblbumyAccount().map((album, key) => {
+                            {getAlbumbyAccount(type).map((album, key) => {
                                 return <div key={key} className="bg-sky-100 shadow-lg rounded-2xl p-3">
                                     <div className="group relative">
                                         <img className="w-full block rounded" src={`https://ipfs.infura.io/ipfs/${album.album_picture}`} alt="" />
@@ -145,7 +167,6 @@ const MusicNFT = ({ type }) => {
                                     </div>
                                     
                                     <p className="text-gray-400 text-lg text-center">{`Created by ${album.metamask_address.substr(0, 4)}...${album.metamask_address.substr(album.metamask_address.length - 5)}`}</p>
-
                                 </div>
                             })}
                         </section>

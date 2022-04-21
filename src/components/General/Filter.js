@@ -1,5 +1,5 @@
 
-import { Fragment, useState, useContext, useEffect ,useRef} from 'react'
+import { Fragment, useState, useContext, useEffect, useRef } from 'react'
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
 import { RefreshIcon, XIcon } from '@heroicons/react/outline'
 import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon } from '@heroicons/react/solid'
@@ -29,23 +29,26 @@ const subCategories = [
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
-const Filter = ({ _account }) => {
+const Filter = ({ _account, type }) => {
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
     const [filters, setFilters] = useState([])
     const refFilter = useRef()
     const web3Ctx = useContext(Web3Context);
     const collectionCtx = useContext(CollectionContext);
+    const markketplaceCtx = useContext(MarketplaceContext);
 
-    const getNFTCollection = async (genreId)=>{
-        console.log("@@genreId",genreId)
+    console.log("@@collectionCtx", collectionCtx)
+  
+    const getNFTCollection = async (genreId) => {
+        console.log("@@genreId", genreId)
         const networkId = await web3Ctx.loadNetworkId(web3);
         // Load Contracts      
         const nftDeployedNetwork = NFTCollection.networks[networkId];
         const nftContract = collectionCtx.loadContract(web3, NFTCollection, nftDeployedNetwork);
         if (nftContract) {
-            if(genreId){
+            if (genreId) {
                 const response = await request(`/api/nft/genre-id/${genreId}`, {}, {}, "GET")
-                collectionCtx.loadCollectionFromServer(nftContract, response ,_account);
+                collectionCtx.loadCollectionFromServer(nftContract, response);
                 return
             }
             const totalSupply = await collectionCtx.loadTotalSupply(nftContract);
@@ -53,7 +56,7 @@ const Filter = ({ _account }) => {
         }
     }
 
-    const fetchFilter = ()=>{
+    const fetchFilter = () => {
         request("/api/genre/index", {}, {}, "GET")
             .then(response => {
                 const options = response.map(item => {
@@ -215,7 +218,7 @@ const Filter = ({ _account }) => {
 
                             <button type="button" className="p-2 -m-2 ml-5 sm:ml-7 text-gray-400 hover:text-gray-500">
                                 <span className="sr-only">View grid</span>
-                                <RefreshIcon onClick={()=>{
+                                <RefreshIcon onClick={() => {
                                     window.location.reload()
                                 }} className="w-5 h-5" aria-hidden="true" />
                             </button>
@@ -260,7 +263,7 @@ const Filter = ({ _account }) => {
                                                         {section.options.map((option, optionIdx) => (
                                                             <div key={option.value} className="flex items-center">
                                                                 <input
-                                
+
                                                                     id={`filter-${section.id}-${optionIdx}`}
                                                                     name={`${section.id}[]`}
                                                                     defaultValue={option.value}
@@ -291,7 +294,7 @@ const Filter = ({ _account }) => {
 
                             {/* Product grid */}
                             <div className="lg:col-span-4">
-                                <MusicNFT _account={_account} />
+                                <MusicNFT type={type} />
                             </div>
                         </div>
                     </section>

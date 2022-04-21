@@ -1,4 +1,5 @@
 import { useReducer } from 'react';
+import { toast } from 'react-toastify';
 import { request } from '../helpers/utils';
 
 import CollectionContext from './collection-context';
@@ -33,7 +34,7 @@ const collectionReducer = (state, action) => {
   }
 
   if (action.type === 'LOADCOLLECTION') {
-    console.log("@@action",action)
+    console.log("@@action", action)
     return {
       contract: state.contract,
       totalSupply: state.totalSupply,
@@ -106,7 +107,6 @@ const CollectionProvider = props => {
 
   const loadCollectionHandler = async (contract, totalSupply) => {
     let collection = [];
-
     for (let i = 0; i < totalSupply; i++) {
       const hash = await contract.methods.tokenURIs(i).call();
       try {
@@ -117,8 +117,7 @@ const CollectionProvider = props => {
 
         const metadata = await response.json();
         const owner = await contract.methods.ownerOf(i + 1).call();
-
-        collection = [{
+        collection.push({
           id: i + 1,
           title: metadata.properties.name.description,
           metadata: metadata.properties.metadata.description,
@@ -126,15 +125,17 @@ const CollectionProvider = props => {
           coverPhoto: metadata.properties.coverPhoto.description,
           minter: metadata.properties.description.minter,
           owner: owner
-        }, ...collection];
-      } catch {
-        console.error('Something went wrong');
+        });
+
+      } catch (e){
+        toast.error(e.toString())
       }
     }
+    console.log("@@jsu",collection)
     dispatchCollectionAction({ type: 'LOADCOLLECTION', collection: collection, albums: [] });
   };
 
-  const loadCollectionFromServerHandler = async (contract, nfts, account) => {
+  const loadCollectionFromServerHandler = async (contract, nfts, account, marketplaceCtx) => {
     let collection = [];
     for (let i = 0; i < nfts.length; i++) {
       try {

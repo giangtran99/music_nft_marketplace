@@ -4,36 +4,47 @@ import eth from '../../../img/eth.png';
 import CollectionContext from '../../../store/collection-context';
 import MarketplaceContext from '../../../store/marketplace-context';
 import Web3Context from '../../../store/web3-context';
-import { formatPrice } from '../../../helpers/utils';
-
+import { formatPrice ,getOwner} from '../../../helpers/utils';
+import web3 from '../../../connection/web3'
 import { useParams } from 'react-router-dom';
 
 const NFTInfo = (props) => {
+
     const collectionCtx = React.useContext(CollectionContext);
     const marketplaceCtx = React.useContext(MarketplaceContext);
     const web3Ctx = React.useContext(Web3Context);
     const [nftInfo, setNFTInfo] = React.useState()
     const [price, setPrice] = React.useState()
-    const index = marketplaceCtx.offers ? marketplaceCtx.offers.findIndex(offer => offer.id === nftInfo?.id) : -1;
-
     let { id } = useParams();
+    const index = marketplaceCtx.offers ? marketplaceCtx.offers.findIndex(offer => offer.id == id) : -1;
 
+  
+
+    const getTransaction = async ()=>{
+       const result =  await web3.eth.getTransaction()
+       console.log("@@result",result)
+       return result
+    }
+    console.log("@@getTransaction",getTransaction("0x628fad3bd3190b25f538ddc0449417abbbd614f8b6962b78c5e5190ed019d9e4"))
     const getNFTPrice = () => {
         const price = index !== -1 ? formatPrice(marketplaceCtx.offers[index].price).toFixed(2) : null;
         setPrice(price)
     }
 
-    React.useEffect(() => {
+    React.useEffect(()=>{
+
+    },[])
+    React.useEffect(async () => {
         if (collectionCtx.collection.length > 0) {
-            const index = marketplaceCtx.offers ? marketplaceCtx.offers.findIndex(offer => offer.id == id) : -1;
-            const owner = index === -1 ? "anonymous" : marketplaceCtx.offers[index].user;
-            setNFTInfo({...collectionCtx.collection.filter(NFT => NFT.id == id)[0],["owner"]:owner})
+            const owner = await collectionCtx.contract.methods.ownerOf(id).call()
+            console.log("@@owner",owner)
+            setNFTInfo({...collectionCtx.collection.filter(NFT => NFT.id == id)[0],["owner"]:getOwner(web3Ctx.account,owner,marketplaceCtx,id)})
         }
     }, [collectionCtx.collection.length])
 
     React.useEffect(() => {
         getNFTPrice()
-    }, [nftInfo])
+    }, [nftInfo,index])
 
     const buyHandler = (event) => {
         const buyIndex = parseInt(event.target.value);
@@ -92,8 +103,8 @@ const NFTInfo = (props) => {
 
 
                         <div className="lg:w-1/2 w-full lg:pl-32 lg:py-6 mt-6 lg:mt-0">
-                            <h1 className="text-gray-900 text-4xl title-font font-lg mb-1">{nftInfo.title}</h1>
-                            <span className="italic text-gray-900 title-font text-base">{nftInfo.owner !== web3Ctx.account  ? `Owned by ${nftInfo.owner.substr(0, 2)}...${nftInfo.owner.substr(nftInfo.owner.length - 3)}`:"Owned by me"}</span>
+                            <h1 className="font-extrabold text-gray-900 text-4xl title-font font-lg mb-1">{nftInfo.title}</h1>
+                            <span className="italic text-gray-900 title-font text-base">{getOwner(web3Ctx.account,nftInfo.owner,marketplaceCtx,id) !== web3Ctx.account  ? `Owned by ${getOwner(web3Ctx.account,nftInfo.owner,marketplaceCtx,id).substring(0, 4)}...${getOwner(web3Ctx.account,nftInfo.owner,marketplaceCtx,id).substring(getOwner(web3Ctx.account,nftInfo.owner,marketplaceCtx,id).length - 4)}`:"Owned by me"}</span>
                             <div className="flex mb-46 mt-10">
                                 <span className="flex items-center">
                                     <svg fill="currentColor" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-red-500" viewBox="0 0 24 24">
@@ -141,7 +152,7 @@ const NFTInfo = (props) => {
                                     <span className="my-auto text-black"><b>{`${price || "Not listed"}`}</b></span>
                                     <img src={eth} width={38} height={28} className="bg-midnight" alt="price icon"></img>
                                 </div>
-                               {price &&  nftInfo.owner !== web3Ctx.account ? <button onClick={buyHandler} value={index} className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">Buy</button>:null}
+                               {price && getOwner(web3Ctx.account,nftInfo.owner,marketplaceCtx,id) !== web3Ctx.account ? <button onClick={buyHandler} value={index} className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">Buy</button>:null}
                                 {/* <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
                                     <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
                                         <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>

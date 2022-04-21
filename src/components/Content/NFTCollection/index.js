@@ -18,7 +18,7 @@ const NFTCollection = () => {
   if (priceRefs.current.length !== collectionCtx.collection.length) {
     priceRefs.current = Array(collectionCtx.collection.length).fill().map((_, i) => priceRefs.current[i] || createRef());
   }
-  console.log("@@collectionCtx",collectionCtx)
+
   // const makeOfferHandler = (event, id, key) => {
   //   event.preventDefault();
   //   const enteredPrice = web3.utils.toWei(priceRefs.current[key].current.value, 'ether');

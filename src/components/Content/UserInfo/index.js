@@ -5,7 +5,7 @@ const UserInfo = ({ color = "red" }) => {
 	const [openTab, setOpenTab] = React.useState(1);
 	return (
 		<>
-		<Profile/>
+		<Profile type="userinfo"/>
 		</>
 	);
 };

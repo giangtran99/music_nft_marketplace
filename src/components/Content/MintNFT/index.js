@@ -157,6 +157,9 @@ const MintForm = () => {
       collectionCtx.contract.methods.safeMint(metadataAdded.path).send({ from: web3Ctx.account })
         .on('transactionHash', async (hash) => {
           const receipt = await web3.eth.getTransactionReceipt(hash)
+          // console.log("@@vui buon0",web3.utils.hexToNumber(receipt.logs[0].topics[0]))
+          // console.log("@@vui buon1",web3.utils.hexToNumber(receipt.logs[0].topics[1]))
+          console.log("@@vui buon2",web3.utils.hexToNumber(receipt.logs[0].topics[2]))
           const tokenId = web3.utils.hexToNumber(receipt.logs[0].topics[3])
 
           const body = {

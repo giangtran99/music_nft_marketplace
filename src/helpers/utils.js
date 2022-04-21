@@ -11,6 +11,17 @@ export const formatPrice = (price) => {
   return price;
 };
 
+export const getOwner = (currentAddress,OwnerAddress,marketplaceCtx,tokenId) => {
+  console.log("@@ownerOnOffer",tokenId)
+  if(marketplaceCtx.contract._address === OwnerAddress){
+    const index = marketplaceCtx.offers ? marketplaceCtx.offers.findIndex(offer => offer.id == tokenId) : -1;
+    const ownerOnOffer = index === -1 ? "anonymous" : marketplaceCtx.offers[index].user;
+    return  ownerOnOffer
+  }
+  else{
+    return currentAddress === OwnerAddress ? currentAddress : OwnerAddress
+  }
+}
 export const request = async (url, data, headers, method = 'POST') => {
   url = `${process.env.REACT_APP_URL}${url}`;
   let option = {

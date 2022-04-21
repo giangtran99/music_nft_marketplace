@@ -12,6 +12,7 @@ import CollectionContext from './store/collection-context';
 import MarketplaceContext from './store/marketplace-context'
 import NFTCollection from './abis/NFTCollection.json';
 import NFTMarketplace from './abis/NFTMarketplace.json';
+import { SwitchHorizontalIcon } from '@heroicons/react/outline';
 import {
   BrowserRouter as Router,
   Routes,
@@ -22,7 +23,7 @@ import './App.css'
 import UserInfo from './components/Content/UserInfo';
 import NFTInfo from './components/Content/NFTInfo';
 import AlbumInfo from './components/Content/AlbumInfo';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
@@ -30,10 +31,11 @@ const App = () => {
   const collectionCtx = useContext(CollectionContext);
   const marketplaceCtx = useContext(MarketplaceContext);
 
+ 
   useEffect(() => {
     // Check if the user has Metamask active
     if (!web3) {
-      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
+      toast.warning('Non-Ethereum browser detected. You should consider trying MetaMask!');
       return;
     }
 
@@ -59,11 +61,12 @@ const App = () => {
 
       const mktDeployedNetwork = NFTMarketplace.networks[networkId];
       const mktContract = marketplaceCtx.loadContract(web3, NFTMarketplace, mktDeployedNetwork);
+      console.log("@@mktContract", marketplaceCtx)
       if (nftContract) {
         // Load total Supply
         const totalSupply = await collectionCtx.loadTotalSupply(nftContract);
         // Load Collection
-        collectionCtx.loadCollection(nftContract, totalSupply);
+        collectionCtx.loadCollection(nftContract, totalSupply, null);
         // Event subscription
         nftContract.events.Transfer()
           .on('data', (event) => {
@@ -75,10 +78,10 @@ const App = () => {
           });
 
       } else {
-        window.alert('NFTCollection contract not deployed to detected network.')
+        toast.warning('NFTCollection contract not deployed to detected network.')
       }
 
-      console.log("@@mktContract",mktContract)
+      console.log("@@mktContract", mktContract)
       if (mktContract) {
         // Load offer count
         const offerCount = await marketplaceCtx.loadOfferCount(mktContract);
@@ -122,7 +125,7 @@ const App = () => {
           });
 
       } else {
-        window.alert('NFTMarketplace contract not deployed to detected network.')
+        toast.warning('NFTMarketplace contract not deployed to detected network.')
       }
 
       collectionCtx.setNftIsLoading(false);
@@ -148,25 +151,26 @@ const App = () => {
 
   return (
     <React.Fragment>
+
       {showNavbar && <Navbar />}
       <Router>
         <div className="App">
           {/* Menu */}
           {/* Noi Dung */}
           <Routes>
-            <Route exact path='/marketplace' element={showContent && <Main/>}/>
-            <Route exact path='/mint' element={showContent && <MintForm/>}/>
-            <Route exact path='/create-album' element={showContent && <CreateAlbumForm/>}/>
-            <Route exact path='/creator' element={showContent && <Creator/>}/>
-            <Route exact path='/creator/:id' element={showContent && <CreatorInfo/>}/>
-            <Route exact path='/userinfo' element={showContent && <UserInfo/>}/>
-            <Route exact path='/nft/:id' element={showContent && <NFTInfo/>}/>
-            <Route exact path='/album/:id' element={showContent && <AlbumInfo/>}/>
+            <Route exact path='/marketplace' element={showContent && <Main />} />
+            <Route exact path='/mint' element={showContent && <MintForm />} />
+            <Route exact path='/create-album' element={showContent && <CreateAlbumForm />} />
+            <Route exact path='/creator' element={showContent && <Creator />} />
+            <Route exact path='/creator/:id' element={showContent && <CreatorInfo />} />
+            <Route exact path='/userinfo' element={showContent && <UserInfo />} />
+            <Route exact path='/nft/:id' element={showContent && <NFTInfo />} />
+            <Route exact path='/album/:id' element={showContent && <AlbumInfo />} />
           </Routes>
         </div>
       </Router>
       <ToastContainer />
-      {showNavbar && <Footer/>}
+      {showNavbar && <Footer />}
     </React.Fragment>
   );
 };
