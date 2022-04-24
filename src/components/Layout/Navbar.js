@@ -6,9 +6,10 @@ import CollectionContext from '../../store/collection-context';
 import NFTCollection from '../../abis/NFTCollection.json';
 
 import web3 from '../../connection/web3';
-import { formatPrice } from '../../helpers/utils';
+import { request } from '../../helpers/utils';
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { BellIcon, MenuIcon, XIcon, SwitchHorizontalIcon } from '@heroicons/react/outline'
+import { toast } from 'react-toastify';
 
 
 const user = {
@@ -68,17 +69,24 @@ const Navbar = () => {
   const marketplaceCtx = useContext(MarketplaceContext);
   const collectionCtx = useContext(CollectionContext);
 
-
   const connectWalletHandler = async () => {
-    try {
-      // Request account access
-      await window.ethereum.request({ method: 'eth_requestAccounts' });
-    } catch (error) {
-      console.error(error);
-    }
+    const result = await request('/api/auth/login-metamask', {
+      publicAddress: web3Ctx.account
+    }, {}, "POST")
 
-    // Load accounts
-    web3Ctx.loadAccount(web3);
+    console.log("@@ngon",result)
+    if(result){
+      web3.eth.personal.sign(`${result.nonce}`, web3Ctx.account, '', (err, signature) => {
+        if (err) {
+          toast.error(err)
+          return
+        }
+        request('/api/auth/auth-metamask', {
+          publicAddress: web3Ctx.account,
+          signature: signature
+        }, {}, "POST")
+      })
+    }
   };
 
   const claimFundsHandler = () => {
@@ -87,7 +95,7 @@ const Navbar = () => {
         setFundsLoading(true);
       })
       .on('error', (error) => {
-        window.alert('Something went wrong when pushing to the blockchain');
+        toast.error('Something went wrong when pushing to the blockchain');
         setFundsLoading(false);
       });
   };

@@ -78,7 +78,7 @@ const MusicNFT = ({ type }) => {
         
                         })
                         .on('error', (error) => {
-                            window.alert('Something went wrong when pushing to the blockchain');
+                            toast.error('Something went wrong when pushing to the blockchain');
                             marketplaceCtx.setMktIsLoading(false);
                         });
                 });

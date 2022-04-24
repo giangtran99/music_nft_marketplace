@@ -56,11 +56,10 @@ const NFTInfo = (props) => {
                 if(hash){
                     const receipt = await web3.eth.getTransactionReceipt(hash)
                     const tokenId = web3.utils.hexToNumber(receipt.logs[0].topics[3])
-                    console.log("@@vui make buy",receipt)
                     request('/api/transactionlog/create',{
                         action:"Buy",
-                        from:receipt.from,
-                        to:receipt.to,
+                        from:receipt.to,
+                        to:receipt.from,
                         ethPrice:+formatPrice(marketplaceCtx.offers[index].price).toFixed(2),
                         tokenId:tokenId
                       },{},'POST')
@@ -73,7 +72,7 @@ const NFTInfo = (props) => {
   
             })
             .on('error', (error) => {
-                window.alert('Something went wrong when pushing to the blockchain');
+                toast.error('Something went wrong when pushing to the blockchain');
                 marketplaceCtx.setMktIsLoading(false);
             });
     };

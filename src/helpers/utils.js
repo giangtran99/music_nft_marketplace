@@ -1,4 +1,6 @@
+import { toast } from "react-toastify";
 export const DECIMALS = (10**18);
+
 
 export const ether = wei => wei / DECIMALS;
 
@@ -45,9 +47,11 @@ export const request = async (url, data, headers, method = 'POST') => {
     if (window.debug) console.log(`[RESPONSE]`, url, rs);
     switch (res.status) {
       case 401:
-        window.alert('Phiên làm việc hết hạn. Vui lòng đăng nhập lại');
-        window.location.href = '/';
+        toast.error('Phiên làm việc hết hạn. Vui lòng đăng nhập lại');
         break;
+        case 500:
+          toast.error('Có lỗi xảy ra !');
+          break;
       case 200:
         return rs;
       default:

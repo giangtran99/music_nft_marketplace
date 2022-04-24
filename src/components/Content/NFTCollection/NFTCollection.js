@@ -27,7 +27,7 @@ const NFTCollection = () => {
   //     .on('receipt', (receipt) => {
   //       marketplaceCtx.contract.methods.makeOffer(id, enteredPrice).send({ from: web3Ctx.account })
   //         .on('error', (error) => {
-  //           window.alert('Something went wrong when pushing to the blockchain');
+  //           toast.error('Something went wrong when pushing to the blockchain');
   //           marketplaceCtx.setMktIsLoading(false);
   //         });
   //     });
@@ -40,7 +40,7 @@ const NFTCollection = () => {
   //       marketplaceCtx.setMktIsLoading(true);
   //     })
   //     .on('error', (error) => {
-  //       window.alert('Something went wrong when pushing to the blockchain');
+  //       toast.error('Something went wrong when pushing to the blockchain');
   //       marketplaceCtx.setMktIsLoading(false);
   //     });
   // };
@@ -52,7 +52,7 @@ const NFTCollection = () => {
   //       marketplaceCtx.setMktIsLoading(true);
   //     })
   //     .on('error', (error) => {
-  //       window.alert('Something went wrong when pushing to the blockchain');
+  //       toast.error('Something went wrong when pushing to the blockchain');
   //       marketplaceCtx.setMktIsLoading(false);
   //     });
   // };

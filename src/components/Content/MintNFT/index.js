@@ -111,7 +111,6 @@ const MintForm = () => {
     capturedFileBuffer ? setFileIsValid(true) : setFileIsValid(false);
     console.log("@@enteredName", enteredName)
     const formIsValid = enteredName && enteredDescription && capturedFileBuffer;
-
     // Upload file to IPFS and push to the blockchain
     const mintNFT = async () => {
       // Add file to the IPFS
@@ -194,7 +193,7 @@ const MintForm = () => {
           collectionCtx.setNftIsLoading(true);
         })
         .on('error', (e) => {
-          window.alert('Something went wrong when pushing to the blockchain');
+          toast.error('Something went wrong when pushing to the blockchain');
           collectionCtx.setNftIsLoading(false);
         })
     };
