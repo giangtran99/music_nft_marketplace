@@ -2,14 +2,14 @@ import { useState, useContext } from 'react';
 
 import Web3Context from '../../../store/web3-context';
 import CollectionContext from '../../../store/collection-context';
-import {request} from '../../../helpers/utils'
+import { request } from '../../../helpers/utils'
 import { toast } from 'react-toastify';
 
 const ipfsClient = require('ipfs-http-client');
 const ipfs = ipfsClient.create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
 
 const audioTail = ["mp3", "mp4"]
-const imageTail = ["jpg", "png","jpeg"]
+const imageTail = ["jpg", "png", "jpeg"]
 const CreateAlbumForm = () => {
   const [enteredName, setEnteredName] = useState('');
   const [descriptionIsValid, setDescriptionIsValid] = useState(true);
@@ -21,7 +21,7 @@ const CreateAlbumForm = () => {
   const web3Ctx = useContext(Web3Context);
   const collectionCtx = useContext(CollectionContext);
 
-  
+
   const enteredNameHandler = (event) => {
     setEnteredName(event.target.value);
   };
@@ -79,24 +79,24 @@ const CreateAlbumForm = () => {
 
       const body = {
         name: enteredName,
-        description:enteredDescription,
+        description: enteredDescription,
         album_picture: fileAdded.path,
         metamask_address: web3Ctx.account
       };
 
-      request("/api/album/create",body,{},"POST")
-      .then(response=>{
-        if(response.id){
-          toast.success("Success Create Album !", {
+      request("/api/album/create", body, {}, "POST")
+        .then(response => {
+          if (response.id) {
+            toast.success("Success Create Album !", {
+              position: toast.POSITION.TOP_RIGHT
+            });
+            return
+          }
+          toast.error("Fail Create Album !", {
             position: toast.POSITION.TOP_RIGHT
           });
           return
-        }
-        toast.error("Fail Create Album !", {
-          position: toast.POSITION.TOP_RIGHT
-        });
-        return
-      })
+        })
     };
 
     formIsValid && mintNFT();
@@ -164,7 +164,7 @@ const CreateAlbumForm = () => {
                       <label
                         class="flex flex-col w-[300px] h-[300px] border-4 border-dashed hover:bg-gray-100 hover:border-gray-300">
                         <div class="relative flex flex-col items-center justify-center pt-7">
-                        <img src={capturedFile.source} id="preview" class="absolute inset-0 w-full w-full" />
+                          <img src={capturedFile.source} id="preview" class="absolute inset-0 w-full w-full" />
                           <svg xmlns="http://www.w3.org/2000/svg"
                             class="w-12 h-12 text-gray-400 group-hover:text-gray-600" viewBox="0 0 20 20"
                             fill="currentColor">

@@ -131,7 +131,6 @@ const CollectionProvider = props => {
         toast.error(e.toString())
       }
     }
-    console.log("@@jsu",collection)
     dispatchCollectionAction({ type: 'LOADCOLLECTION', collection: collection, albums: [] });
   };
 

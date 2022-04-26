@@ -9,6 +9,7 @@ import TransactionTable from '../TransactionTable';
 import { PlusIcon, CollectionIcon } from '@heroicons/react/outline'
 import Filter from '../../components/General/Filter';
 const Profile = ({ color = "indigo", NFTs = [], Transactions = [] ,type}) => {
+    const userInfo = JSON.parse(localStorage.getItem("user"))
     const [openTab, setOpenTab] = React.useState(1);
     const collectionCtx = React.useContext(CollectionContext);
     const web3Ctx = React.useContext(Web3Context);
@@ -45,8 +46,9 @@ const Profile = ({ color = "indigo", NFTs = [], Transactions = [] ,type}) => {
                     </div>
                     <div className="max-w-7xl h-full mx-auto">
                         <div className="flex flex-col space-y-2 mt-3 items-center justify-center pb-3 border-b-2">
-                            <p className="text-4xl font-bold mt-2">{web3Ctx.account.substr(0,7)}...${web3Ctx.account.substr(web3Ctx.account.length - 7)}</p>
-                            <p className="text-sm text-gray-500">I am Software Engineer</p>
+                        <p className="text-4xl font-bold mt-4">{userInfo.name || "New User"}</p>
+                            <p className="text-2xl mt-2 font-mono">{web3Ctx.account.substr(0,7)}...${web3Ctx.account.substr(web3Ctx.account.length - 7)}</p>
+                            <p className="text-xl text-gray-500">{userInfo.description || "Write your description"}</p>
                             {/* <p className="text-sm text-gray-600 font-bold">Address Wallet : {web3Ctx.account}</p> */}
                         </div>
 
@@ -141,7 +143,7 @@ const Profile = ({ color = "indigo", NFTs = [], Transactions = [] ,type}) => {
                                                 <AlbumNFT type={type}/>
                                             </div>
                                             <div className={openTab === 3 ? "block" : "hidden"} id="link3">
-                                                <TransactionTable type={"userInfo"}/>
+                                                <TransactionTable type={type}/>
                                             </div>
                                         </div>
                                     </div>

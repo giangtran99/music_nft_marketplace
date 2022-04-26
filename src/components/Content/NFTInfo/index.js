@@ -16,18 +16,10 @@ const NFTInfo = (props) => {
     const web3Ctx = React.useContext(Web3Context);
     const [nftInfo, setNFTInfo] = React.useState()
     const [price, setPrice] = React.useState()
-    // const [transactionLogs,setTransactionLogs] = React.useState([])
-    let { id } = useParams();
+    const { id } = useParams();
     const index = marketplaceCtx.offers ? marketplaceCtx.offers.findIndex(offer => offer.id == id) : -1;
 
   
-
-    const getTransaction = async ()=>{
-       const result =  await web3.eth.getTransaction()
-       console.log("@@result",result)
-       return result
-    }
-    console.log("@@getTransaction",getTransaction("0x628fad3bd3190b25f538ddc0449417abbbd614f8b6962b78c5e5190ed019d9e4"))
     const getNFTPrice = () => {
         const price = index !== -1 ? formatPrice(marketplaceCtx.offers[index].price).toFixed(2) : null;
         setPrice(price)
@@ -40,7 +32,6 @@ const NFTInfo = (props) => {
     React.useEffect(async () => {
         if (collectionCtx.collection.length > 0) {
             const owner = await collectionCtx.contract.methods.ownerOf(id).call()
-            console.log("@@owner",owner)
             setNFTInfo({...collectionCtx.collection.filter(NFT => NFT.id == id)[0],["owner"]:getOwner(web3Ctx.account,owner,marketplaceCtx,id)})
         }
     }, [collectionCtx.collection.length])
@@ -181,7 +172,7 @@ const NFTInfo = (props) => {
                         </div>
                     </div>
                 </div>
-                <TransactionTable type="nftInfo" data={nftInfo}/>
+                <TransactionTable type="nftinfo" data={nftInfo}/>
             </section>
             : null}
     </>)

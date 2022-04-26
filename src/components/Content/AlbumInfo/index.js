@@ -13,8 +13,8 @@ const AlbumInfo = (props) => {
     const marketplaceCtx = React.useContext(MarketplaceContext);
     const web3Ctx = React.useContext(Web3Context);
     const [albumInfo, setAlbumInfo] = React.useState()
-    let { id } = useParams();
     const [modalIsOpen, setIsOpen] = React.useState(false);
+    const { id } = useParams();
 
     React.useEffect(()=>{
         setAlbumInfo()
@@ -99,4 +99,4 @@ const AlbumInfo = (props) => {
 :null}
     </>)
 }
-export default AlbumInfo
+export default AlbumInfo    

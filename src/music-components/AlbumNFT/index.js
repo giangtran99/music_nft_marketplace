@@ -5,6 +5,7 @@ import web3 from '../../connection/web3';
 import Web3Context from '../../store/web3-context';
 import CollectionContext from '../../store/collection-context';
 import MarketplaceContext from '../../store/marketplace-context';
+import { useParams } from 'react-router-dom';
 
 
 const AlbumNFT = ({ type }) => {
@@ -12,18 +13,18 @@ const AlbumNFT = ({ type }) => {
     const collectionCtx = useContext(CollectionContext);
     const marketplaceCtx = useContext(MarketplaceContext);
     const [listAlbum, setListAlbum] = useState([])
+    const { id } = useParams()
+   
 
     useEffect(async() =>{
         const fetchData= async ()=>{
-            const response = await request("/api/album/index", {}, {}, "GET")
-            console.log("@@response",response)
             switch(type){
                 case "userinfo":
-                return response.filter(item=>item.metamask_address == web3Ctx.account)
+                return await request(`/api/album/get-by-metamask/${web3Ctx.account}`, {}, {}, "GET")
                 case "creator":
-                return response
+                return await request(`/api/album/get-by-metamask/${id}`, {}, {}, "GET")
                 default:
-                return response
+                return await request("/api/album/index", {}, {}, "GET")
             }
         }
         const result = await fetchData()
@@ -31,10 +32,12 @@ const AlbumNFT = ({ type }) => {
         setListAlbum(result)
     }, [web3Ctx.account])
 
+    
     return (<>
         <div className="min-h-screen bg-white p-5">
             <div>
-                <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold text-black-200 mb-5 ml-2">Albums</h1>
+                <section className="grid grid-cols-1 sm:grid-cols-4 gap-4 justify-center">
                     {listAlbum.map((album, key) => {
                         return <div key={key} className="bg-sky-100 shadow-lg rounded-2xl p-3">
                             <div className="group relative">
@@ -61,8 +64,9 @@ const AlbumNFT = ({ type }) => {
                                 </div>
 
                             </div>
-                            <p className="text-gray-400 text-lg text-center">{web3Ctx.account === album?.metamask_address ? `Created by me` : `Created by ${album?.metamask_address?.substr(0, 4)}...${album?.metamask_address?.substr(album?.metamask_address?.length - 5)}`}</p>
-
+                            <p className="text-gray-400 text-lg text-center">
+                                {web3Ctx.account === album?.metamask_address ? `Created by me` : `Created by ${album?.metamask_address?.substr(0, 4)}...${album?.metamask_address?.substr(album?.metamask_address?.length - 5)}`}
+                                </p>
                         </div>
                     })}
                 </section>

@@ -37,8 +37,6 @@ const Filter = ({ _account, type }) => {
     const collectionCtx = useContext(CollectionContext);
     const markketplaceCtx = useContext(MarketplaceContext);
 
-    console.log("@@collectionCtx", collectionCtx)
-    console.log("@@markketplaceCtx", markketplaceCtx)
     const getNFTCollection = async (genreId) => {
         const networkId = await web3Ctx.loadNetworkId(web3);
         // Load Contracts      
@@ -237,17 +235,17 @@ const Filter = ({ _account, type }) => {
                             Products
                         </h2>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-5 gap-x-10 gap-y-10">
+                        <div className="grid grid-cols-1 lg:grid-cols-5 gap-x-10 gap-y-10 border">
                             {/* Filters */}
                             <form id="create-course-form" ref={refFilter} className="lg:block">
                                 <h3 className="sr-only">Categories</h3>
                                 {filters.map((section) => (
-                                    <Disclosure defaultOpen={true} as="div" key={section.id} className="border-b border-gray-200 py-6">
+                                    <Disclosure defaultOpen={true} as="div" key={section.id} className="border-y border-r border-gray-200 p-6">
                                         {({ open }) => (
                                             <>
                                                 <h3 className="-my-3 flow-root">
                                                     <Disclosure.Button className="py-3 bg-white w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500">
-                                                        <span className="font-medium text-gray-900">{section.name}</span>
+                                                        <span className="font-1xl text-gray-900">{section.name}</span>
                                                         <span className="ml-6 flex items-center">
                                                             {open ? (
                                                                 <MinusSmIcon className="h-5 w-5" aria-hidden="true" />
@@ -266,13 +264,12 @@ const Filter = ({ _account, type }) => {
                                                                     id={`filter-${section.id}-${optionIdx}`}
                                                                     name={`${section.id}[]`}
                                                                     defaultValue={option.value}
+                                                                    defaultChecked={option.checked}
                                                                     onChange={async (e) => {
-                                                                        // Load Network ID
                                                                         getNFTCollection(e.target.value)
 
                                                                     }}
                                                                     type="radio"
-                                                                    // defaultChecked={option.checked}
                                                                     className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
                                                                 />
                                                                 <label

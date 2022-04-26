@@ -7,21 +7,22 @@ import Web3Context from '../../store/web3-context';
 import { CollectionIcon, ShoppingCartIcon } from '@heroicons/react/outline';
 import CollectionContext from '../../store/collection-context';
 import MarketplaceContext from '../../store/marketplace-context';
+import { useParams } from 'react-router-dom';
 
 const TransactionTable = ({ type, data }) => {
     const [transactionLogs, setTransactionLogs] = React.useState([])
     const web3Ctx = React.useContext(Web3Context);
     const collectionCtx = React.useContext(CollectionContext);
     const marketplaceCtx = React.useContext(MarketplaceContext);
-
-
-    console.log("@@transactionLogs", transactionLogs)
+    const {id} = useParams()
     const getTransactionLogsbyType = async () => {
         switch (type) {
-            case "userInfo":
+            case "userinfo":
                 return await request(`/api/transactionlog/get-address/${web3Ctx.account}`, {}, {}, "GET")
-            case "nftInfo":
+            case "nftinfo":
                 return await request(`/api/transactionlog/get-tokenid/${data.id}`, {}, {}, "GET")
+            case "creator":
+                return await request(`/api/transactionlog/get-address/${id}`, {}, {}, "GET")
             default:
                 return []
         }
@@ -49,7 +50,6 @@ const TransactionTable = ({ type, data }) => {
     // }
 
     const getAddressIcon = (account) => {
-        console.log("@@transactionLogs11", account)
         if (account.toUpperCase() === collectionCtx.contract._address.toUpperCase()) {
             return <CollectionIcon className='w-5 h-5 mr-2 my-auto' />
         }

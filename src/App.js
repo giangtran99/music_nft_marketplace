@@ -5,6 +5,7 @@ import MintForm from './components/Content/MintNFT';
 import CreateAlbumForm from './components/Content/CreateAlbum';
 import Creator from './components/Content/CreatorList';
 import CreatorInfo from './components/Content/CreatorInfo';
+import AlbumNFT from './music-components/AlbumNFT';
 import Main from './components/Content/Main';
 import Footer from './components/Layout/Footer';
 import Web3Context from './store/web3-context';
@@ -31,7 +32,7 @@ const App = () => {
   const collectionCtx = useContext(CollectionContext);
   const marketplaceCtx = useContext(MarketplaceContext);
 
- 
+
   useEffect(() => {
     // Check if the user has Metamask active
     if (!web3) {
@@ -81,7 +82,6 @@ const App = () => {
         toast.warning('NFTCollection contract not deployed to detected network.')
       }
 
-      console.log("@@mktContract", mktContract)
       if (mktContract) {
         // Load offer count
         const offerCount = await marketplaceCtx.loadOfferCount(mktContract);
@@ -166,6 +166,7 @@ const App = () => {
             <Route exact path='/userinfo' element={showContent && <UserInfo />} />
             <Route exact path='/nft/:id' element={showContent && <NFTInfo />} />
             <Route exact path='/album/:id' element={showContent && <AlbumInfo />} />
+            <Route exact path='/album' element={showContent && <AlbumNFT />} />
           </Routes>
         </div>
       </Router>
