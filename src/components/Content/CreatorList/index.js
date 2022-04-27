@@ -47,8 +47,7 @@ const NFTCollection = () => {
   // };
   return (
     <>
-
-      <div className="bg-white flex flex-wrap ">
+      <div className="bg-white flex flex-wrap mt-10">
         {users.map((item, index) =>
           <div
             key={index}

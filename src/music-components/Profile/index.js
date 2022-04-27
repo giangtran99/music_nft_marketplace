@@ -8,14 +8,35 @@ import Web3Context from '../../store/web3-context';
 import TransactionTable from '../TransactionTable';
 import { PlusIcon, CollectionIcon } from '@heroicons/react/outline'
 import Filter from '../../components/General/Filter';
+import { request } from '../../helpers/utils';
+import { useParams } from 'react-router-dom';
 const Profile = ({ color = "indigo", NFTs = [], Transactions = [] ,type}) => {
-    const userInfo = JSON.parse(localStorage.getItem("user"))
+    // const userInfo = JSON.parse(localStorage.getItem("user"))
     const [openTab, setOpenTab] = React.useState(1);
     const collectionCtx = React.useContext(CollectionContext);
     const web3Ctx = React.useContext(Web3Context);
     const marketplaceCtx = React.useContext(MarketplaceContext);
+    const [userInfo,setUserInfo] = React.useState([])
+    const {id} = useParams()
 
-    console.log("!!marketplaceCtx",marketplaceCtx,collectionCtx)
+    const getUsetInfobyType = async ()=>{
+        switch(type){
+            case "userinfo":
+            const userInfo = JSON.parse(localStorage.getItem("user"))
+            return userInfo
+            case "creator":
+            const result = await request(`/api/users/get-user-by-metamask/${id}`,{},{},"GET")
+            return result
+            default:
+            return {}
+        }
+    }
+
+    React.useEffect(async ()=>{
+        const userInfo = await getUsetInfobyType()
+        setUserInfo(userInfo)
+    },[])
+
     return (<>
         <div className="w-full h-full">
             <div className="w-full h-auto shadow bg-white rounded-md">
@@ -46,9 +67,9 @@ const Profile = ({ color = "indigo", NFTs = [], Transactions = [] ,type}) => {
                     </div>
                     <div className="max-w-7xl h-full mx-auto">
                         <div className="flex flex-col space-y-2 mt-3 items-center justify-center pb-3 border-b-2">
-                        <p className="text-4xl font-bold mt-4">{userInfo.name || "New User"}</p>
-                            <p className="text-2xl mt-2 font-mono">{web3Ctx.account.substr(0,7)}...${web3Ctx.account.substr(web3Ctx.account.length - 7)}</p>
-                            <p className="text-xl text-gray-500">{userInfo.description || "Write your description"}</p>
+                        <p className="text-4xl font-bold mt-4">{userInfo?.name || "New User"}</p>
+                            <p className="text-2xl mt-2 font-mono">{userInfo?.metamask_address?.substr(0,7)}...{userInfo?.metamask_address?.substr(userInfo?.metamask_address?.length - 7)}</p>
+                            <p className="text-xl text-gray-500">{userInfo?.description || "Write your description"}</p>
                             {/* <p className="text-sm text-gray-600 font-bold">Address Wallet : {web3Ctx.account}</p> */}
                         </div>
 

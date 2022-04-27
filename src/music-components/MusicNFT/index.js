@@ -5,7 +5,6 @@ import web3 from '../../connection/web3';
 import Web3Context from '../../store/web3-context';
 import CollectionContext from '../../store/collection-context';
 import MarketplaceContext from '../../store/marketplace-context';
-import { PlusIcon } from '@heroicons/react/outline'
 import { toast } from 'react-toastify';
 import { useParams } from 'react-router-dom'
 
@@ -101,7 +100,7 @@ const MusicNFT = ({ type }) => {
             {collectionCtx.collection.length > 0 ?
                 <div className={`min-h-screen bg-white p-5`}>
                     <div>
-                        <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-black-200 mb-5">NFTs</h1>
+                        {/* <h1 className="text-2xl sm:text-2xl md:text-5xl font-bold text-black-200 mb-5">NFTs</h1> */}
                         <section className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                             {collectionCtx.collection.map((NFT, key) => {
                                 const index = marketplaceCtx.offers ? marketplaceCtx.offers.findIndex(offer => offer.id === NFT.id) : -1;

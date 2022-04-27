@@ -59,8 +59,8 @@ const TransactionTable = ({ type, data }) => {
         return null
     }
     return (<>
-        <div className="grid place-items-center p-5">
-            <div className="border shadow-lg mt-2 container px-7 py-24 mx-auto">
+        {/* <div className="grid place-items-center p-2"> */}
+            <div className="border shadow-lg container px-6 py-20 mx-auto">
                 <h1 className="text-gray-900 text-3xl title-font font-medium">Item Activity</h1>
                 <table className='mt-5 max-w-7xl w-full whitespace-nowrap rounded-lg bg-gray divide-y divide-gray-300 overflow-hidden'>
                     <thead className="bg-gray-900">
@@ -131,7 +131,7 @@ const TransactionTable = ({ type, data }) => {
                     </tbody>
                 </table>
             </div>
-        </div>
+        {/* </div> */}
 
 
     </>)

@@ -36,7 +36,6 @@ function classNames(...classes) {
 
 const SearchBar = ({ collectionCtx, web3Ctx }) => {
   const [textSearch, setTextSearch] = useState()
-
   return (<>
     <div class="container flex mx-auto ml-20">
       <div class="flex border-2 rounded">

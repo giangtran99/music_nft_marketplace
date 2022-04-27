@@ -28,7 +28,6 @@ const AlbumNFT = ({ type }) => {
             }
         }
         const result = await fetchData()
-        console.log("@@result",result)
         setListAlbum(result)
     }, [web3Ctx.account])
 
@@ -36,8 +35,8 @@ const AlbumNFT = ({ type }) => {
     return (<>
         <div className="min-h-screen bg-white p-5">
             <div>
-            <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold text-black-200 mb-5 ml-2">Albums</h1>
-                <section className="grid grid-cols-1 sm:grid-cols-4 gap-4 justify-center">
+            {/* <h1 className="text-2xl sm:text-2xl md:text-4xl font-bold text-black-200 mb-5 ml-2">Albums</h1> */}
+                <section className="grid grid-cols-1 sm:grid-cols-4 gap-4 justify-center mt-10">
                     {listAlbum.map((album, key) => {
                         return <div key={key} className="bg-sky-100 shadow-lg rounded-2xl p-3">
                             <div className="group relative">
