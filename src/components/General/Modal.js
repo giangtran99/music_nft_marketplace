@@ -1,10 +1,28 @@
 import React from 'react'
-
-const Modal = ({title, isShowModal, onClose, onSubmit }) => {
+import { Table } from 'antd'
+const Modal = ({ title, isShowModal, onClose, onSubmit }) => {
+  const [selectedRowKeys, setSelectedRowKeys] = React.useState([])
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (selectedRowKeys) => {
+      console.log('selectedRowKeys changed: ', selectedRowKeys);
+      setSelectedRowKeys(selectedRowKeys);
+    }
+  };
   const columns = [
-
-
-  ]
+    {
+      title: 'Name',
+      dataIndex: 'name',
+    },
+    {
+      title: 'Age',
+      dataIndex: 'age',
+    },
+    {
+      title: 'Address',
+      dataIndex: 'address',
+    },
+  ];
   return (<>
 
     {isShowModal ? (
@@ -31,7 +49,9 @@ const Modal = ({title, isShowModal, onClose, onSubmit }) => {
               </div>
               {/*body*/}
               <div className="relative p-6 flex-auto">
-             
+                <Table
+                  columns={columns} rowSelection={rowSelection}
+                />
               </div>
               {/*footer*/}
               <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">

@@ -26,6 +26,7 @@ import NFTInfo from './components/Content/NFTInfo';
 import AlbumInfo from './components/Content/AlbumInfo';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 
 const App = () => {
   const web3Ctx = useContext(Web3Context);
