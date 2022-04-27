@@ -26,8 +26,8 @@ const AlbumInfo = (props) => {
             <>
                 <Modal
                     isShowModal={modalIsOpen}
-                    onClose={()=>setIsOpen(false)}
-                    
+                    onClose={() => setIsOpen(false)}
+                    title="ADD NFT TO YOUR ALBUM"
                 >
 
                 </Modal>
@@ -45,7 +45,7 @@ const AlbumInfo = (props) => {
 
                     <div className="mt-6 flex justify-between">
                         <div className="flex">
-                            {albumInfo.metamask_address === web3Ctx.account ?
+                            {localStorage.getItem("token") ?
                                 <button onClick={() => {
                                     setIsOpen(true)
                                 }} className="mr-2 bg-indigo-500 text-green-100 block py-2 px-8 rounded-full">Add NFTs

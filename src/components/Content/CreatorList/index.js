@@ -51,7 +51,7 @@ const NFTCollection = () => {
         {users.map((item, index) =>
           <div
             key={index}
-            className="container max-w-xs bg-white rounded dark:bg-gray-800 shadow-lg transform duration-200 easy-in-out m-4">
+            className="border-4 container max-w-xs bg-white rounded dark:bg-gray-800 shadow-1xl	transform duration-200 easy-in-out m-4">
             <div className="h-2/4 sm:h-64 overflow-hidden">
               <img className="w-full rounded-t"
                 src="https://images.unsplash.com/photo-1638803040283-7a5ffd48dad5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"

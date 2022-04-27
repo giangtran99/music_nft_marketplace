@@ -38,7 +38,7 @@ const AlbumNFT = ({ type }) => {
             {/* <h1 className="text-2xl sm:text-2xl md:text-4xl font-bold text-black-200 mb-5 ml-2">Albums</h1> */}
                 <section className="grid grid-cols-1 sm:grid-cols-4 gap-4 justify-center mt-10">
                     {listAlbum.map((album, key) => {
-                        return <div key={key} className="bg-sky-100 shadow-lg rounded-2xl p-3">
+                        return <div key={key} className="bg-white shadow-2xl border-4 shadow-lg rounded-2xl p-3">
                             <div className="group relative">
                                 <img className="w-full block rounded" src={`https://ipfs.infura.io/ipfs/${album?.album_picture}`} alt="" />
                                 <div className="absolute bg-black rounded bg-opacity-0 group-hover:bg-opacity-60 w-full h-full top-0 flex items-center group-hover:opacity-100 transition justify-evenly">

@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState,useEffect } from 'react';
 import { Fragment } from 'react'
 import Web3Context from '../../store/web3-context';
 import MarketplaceContext from '../../store/marketplace-context';
@@ -12,24 +12,7 @@ import { BellIcon, MenuIcon, XIcon, SwitchHorizontalIcon } from '@heroicons/reac
 import { toast } from 'react-toastify';
 
 
-const user = {
-  name: 'Tom Cook',
-  email: 'tom@example.com',
-  imageUrl:
-    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-}
-const navigation = [
-  { name: 'Marketplace', href: '/', current: true },
-  { name: 'Creator', href: '/creator', current: false },
-  { name: 'Albums', href: '/album', current: false },
 
-  // { name: 'Mint', href: '/mint', current: false },
-]
-const userNavigation = [
-  { name: 'Your Profile', href: '/userinfo' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
-]
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
@@ -64,11 +47,38 @@ const SearchBar = ({ collectionCtx, web3Ctx }) => {
 }
 
 const Navbar = () => {
+  
   const [fundsLoading, setFundsLoading] = useState(false);
   console.log(fundsLoading)
   const web3Ctx = useContext(Web3Context);
   const marketplaceCtx = useContext(MarketplaceContext);
   const collectionCtx = useContext(CollectionContext);
+  const [token,setToken] = useState(localStorage.getItem("token") || null)
+
+  const user = {
+    name: 'Tom Cook',
+    email: 'tom@example.com',
+    imageUrl:
+      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+  }
+  const navigation = [
+    { name: 'Marketplace', href: '/', current: true },
+    { name: 'Creator', href: '/creator', current: true },
+    { name: 'Albums', href: '/album', current: true },
+  
+    // { name: 'Mint', href: '/mint', current: false },
+  ]
+  
+  const userNavigation = [
+    { name: 'Your Profile', href: '/userinfo' },
+    { name: 'Settings', href: '/' },
+    { name: 'Sign out', href: '/',onClick:()=>{
+      localStorage.clear()
+      window.href = '/'
+      setToken(null)
+    } },
+  ]
+  console.log("@@navigation",navigation)
 
   const connectWalletHandler = async () => {
     const result = await request('/api/auth/login-metamask', {
@@ -86,9 +96,10 @@ const Navbar = () => {
           publicAddress: web3Ctx.account,
           signature: signature
         }, {}, "POST")
-        console.log("@@ky ghe",authInfo)
+        console.log("@@ky ghe", authInfo)
         localStorage.setItem("token", authInfo.access_token)
         localStorage.setItem("user", JSON.stringify(authInfo.user))
+        setToken(authInfo.access_token)
       })
     }
   };
@@ -150,8 +161,8 @@ const Navbar = () => {
                           href={item.href}
                           className={classNames(
                             item.current
-                              ? 'bg-gray-900 text-white'
-                              : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                              ? 'bg-gray-300 text-black'
+                              : 'text-gray-300 hover:bg-gray-300 hover:text-black',
                             'px-3 py-2 rounded-md text-sm font-medium'
                           )}
                           aria-current={item.current ? 'page' : undefined}
@@ -185,7 +196,7 @@ const Navbar = () => {
                   </button> */}
 
                     {/* Profile dropdown */}
-                    <Menu as="div" className="ml-3 relative">
+                    {token ? <Menu as="div" className="z-10 ml-3 relative">
                       <div>
                         <Menu.Button className="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                           <span className="sr-only">Open user menu</span>
@@ -201,11 +212,12 @@ const Navbar = () => {
                         leaveFrom="transform opacity-100 scale-100"
                         leaveTo="transform opacity-0 scale-95"
                       >
-                        <Menu.Items className="z-10	origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                           {userNavigation.map((item) => (
                             <Menu.Item key={item.name}>
                               {({ active }) => (
                                 <a
+                                onClick={item.onClick}
                                   href={item.href}
                                   className={classNames(
                                     active ? 'bg-gray-100' : '',
@@ -220,6 +232,7 @@ const Navbar = () => {
                         </Menu.Items>
                       </Transition>
                     </Menu>
+                      : null}
                   </div>
                 </div>
                 <div className="-mr-2 flex md:hidden">

@@ -163,7 +163,7 @@ const App = () => {
             <Route exact path='/create-album' element={showContent && <CreateAlbumForm />} />
             <Route exact path='/creator' element={showContent && <Creator />} />
             <Route exact path='/creator/:id' element={showContent && <CreatorInfo />} />
-            <Route exact path='/userinfo' element={showContent && <UserInfo />} />
+            <Route exact path='/userinfo' element={showContent && localStorage.getItem('token') && <UserInfo />} />
             <Route exact path='/nft/:id' element={showContent && <NFTInfo />} />
             <Route exact path='/album/:id' element={showContent && <AlbumInfo />} />
             <Route exact path='/album' element={showContent && <AlbumNFT />} />

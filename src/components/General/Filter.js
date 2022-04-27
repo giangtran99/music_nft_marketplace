@@ -91,7 +91,7 @@ const Filter = ({ _account, type }) => {
             <div>
                 {/* Mobile filter dialog */}
                 <Transition.Root show={mobileFiltersOpen} as={Fragment}>
-                    <Dialog as="div" className="fixed inset-0 flex z-10 lg:hidden" onClose={setMobileFiltersOpen}>
+                    <Dialog as="div" className="fixed inset-0 flex z-0 lg:hidden" onClose={setMobileFiltersOpen}>
 
                         <Transition.Child
                             as={Fragment}
@@ -166,8 +166,8 @@ const Filter = ({ _account, type }) => {
                     </Dialog>
                 </Transition.Root>
 
-                <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="relative z-10 flex items-baseline justify-between pt-20 pb-6 border-b border-gray-200">
+                <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
+                    <div className="relative z-0 flex items-baseline justify-between pt-20 pb-6 border-b border-gray-200">
                         <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">Explore music</h1>
                         <div className="flex items-center">
                             <Menu as="div" className="relative inline-block text-left">

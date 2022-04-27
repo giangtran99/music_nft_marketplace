@@ -60,11 +60,11 @@ const TransactionTable = ({ type, data }) => {
     }
     return (<>
         {/* <div className="grid place-items-center p-2"> */}
-            <div className="border shadow-lg container px-6 py-20 mx-auto">
-                <h1 className="text-gray-900 text-3xl title-font font-medium">Item Activity</h1>
+            <div className="container px-6 py-20 mx-auto border-5 shadow-2xl">
+                <h1 className="text-white-900 text-3xl title-font font-medium">Item Activity</h1>
                 <table className='mt-5 max-w-7xl w-full whitespace-nowrap rounded-lg bg-gray divide-y divide-gray-300 overflow-hidden'>
-                    <thead className="bg-gray-900">
-                        <tr className="text-white text-left">
+                    <thead className="bg-gray-200">
+                        <tr className="text-black text-left">
                             <th className="font-semibold text-sm uppercase px-6 py-4"> Item </th>
                             <th className="font-semibold text-sm uppercase px-6 py-4"> Price </th>
                             <th className="font-semibold text-sm uppercase px-6 py-4 text-center"> From </th>
