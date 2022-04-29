@@ -51,7 +51,7 @@ const NFTCollection = () => {
         {users.map((item, index) =>
           <div
             key={index}
-            className="border-4 container max-w-xs bg-white rounded dark:bg-gray-800 shadow-1xl	transform duration-200 easy-in-out m-4">
+            className="border-4 container max-w-xs bg-white rounded white:bg-gray-800 shadow-1xl	transform duration-200 easy-in-out m-4">
             <div className="h-2/4 sm:h-64 overflow-hidden">
               <img className="w-full rounded-t"
                 src="https://images.unsplash.com/photo-1638803040283-7a5ffd48dad5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
@@ -66,8 +66,8 @@ const NFTCollection = () => {
             </div>
             <div className="">
               <div className="px-7 mb-8">
-                <a href={`/creator/${item.metamask_address}`} className="text-2xl font-bold text-indigo-800 dark:text-gray-300">{item.name || "New User"}</a>
-                <p className="text-gray-400 mt-2 dark:text-gray-400">{`${item?.metamask_address.substr(0, 7)}...${item.metamask_address?.substr(item?.metamask_address.length - 7)}`}</p>
+                <a href={`/creator/${item.metamask_address}`} className="text-2xl font-bold text-black-800 dark:text-black-300">{item.name || "New User"}</a>
+                <p className="text-black-400 mt-2 dark:text-black-400">{`${item?.metamask_address.substr(0, 7)}...${item.metamask_address?.substr(item?.metamask_address.length - 7)}`}</p>
                 {/* <p className="mt-2 text-gray-600 dark:text-gray-300">{item.description || "Write your description"}</p> */}
                 {/* <div
                   className="justify-center px-4 py-2 cursor-pointer bg-indigo-900 max-w-min mx-auto mt-8 rounded-lg text-gray-300 hover:bg-indigo-800 hover:text-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-gray-200">

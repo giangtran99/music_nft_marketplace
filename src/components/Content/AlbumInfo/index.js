@@ -13,12 +13,32 @@ const AlbumInfo = (props) => {
     const marketplaceCtx = React.useContext(MarketplaceContext);
     const web3Ctx = React.useContext(Web3Context);
     const [albumInfo, setAlbumInfo] = React.useState()
+    const [nftsByAlbum, setNftsByAlbum] = React.useState([])
     const [modalIsOpen, setIsOpen] = React.useState(false);
     const { id } = useParams();
 
+    const getNFTbyAlbum = async ()=>{
+        const nfts = await request(`/api/nft/album-id/${id}`, {}, {}, "GET")
+        const cids = nfts.map(item=>item.cid)
+        const nftInfoIPFS = await Promise.all(cids.map(async (hash)=> {
+          const result = await request(`https://ipfs.infura.io/ipfs/${hash}?clear`)
+          console.log("@@result",result)
+          return {
+              [`${hash}`]:{
+                  metadata:result.metadata.description
+              }
+          }
+        }))
+        const nftMerge = cids.map(item=>{
+            return {...item,["metadata"]:nftInfoIPFS[`${item.cid}`].metadata}
+        })
+       console.log("@@nftMerge",nftInfoIPFS)
+
+    }
     React.useEffect(async () => {
-        const result = await request(`/api/album/get/${id}`, {}, {}, "GET")
-        setAlbumInfo(result)
+        const album = await request(`/api/album/get/${id}`, {}, {}, "GET")
+        setAlbumInfo(album)
+        getNFTbyAlbum()
     }, [])
 
     return (<>
@@ -53,7 +73,7 @@ const AlbumInfo = (props) => {
                             {/* <button className="mr-2 border border-black block p-2 rounded-full">...</button> */}
                         </div>
                         <div className="text-black-600 text-sm tracking-widest text-right">
-                            <h5 className="mb-1">Followers</h5>
+                            <h5 className="mb-1">Likes</h5>
                             <p>5,055</p>
                         </div>
                     </div>

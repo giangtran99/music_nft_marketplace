@@ -11,16 +11,16 @@ const Modal = ({ title, isShowModal, onClose, onSubmit }) => {
   };
   const columns = [
     {
-      title: 'Name',
+      title: 'Title',
       dataIndex: 'name',
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
+      title: 'Cover Photo',
+      dataIndex: 'cover_photo',
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
+      title: 'Audio',
+      dataIndex: 'Game',
     },
   ];
   return (<>
