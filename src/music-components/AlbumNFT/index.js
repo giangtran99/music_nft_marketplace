@@ -40,7 +40,7 @@ const AlbumNFT = ({ type }) => {
                     {listAlbum.map((album, key) => {
                         return <div key={key} className="bg-white shadow-2xl border-4 shadow-lg rounded-2xl p-3">
                             <div className="group relative">
-                                <img className="w-full block rounded" src={`https://ipfs.infura.io/ipfs/${album?.album_picture}`} alt="" />
+                                <img className="w-full block rounded" src={`${process.env.REACT_APP_IPFS_URL}/ipfs/${album?.album_picture}`} alt="" />
                                 <div className="absolute bg-black rounded bg-opacity-0 group-hover:bg-opacity-60 w-full h-full top-0 flex items-center group-hover:opacity-100 transition justify-evenly">
                                     <button className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-heart" viewBox="0 0 16 16">

@@ -49,8 +49,8 @@ const NFTInfo = (props) => {
                     const tokenId = web3.utils.hexToNumber(receipt.logs[0].topics[3])
                     request('/api/transactionlog/create',{
                         action:"Buy",
-                        from:receipt.to,
-                        to:receipt.from,
+                        from:receipt.from,
+                        to:receipt.to,
                         ethPrice:+formatPrice(marketplaceCtx.offers[index].price).toFixed(2),
                         tokenId:tokenId
                       },{},'POST')
@@ -78,7 +78,7 @@ const NFTInfo = (props) => {
 
                         <div key={""} className="bg-white-900 shadow-2xl rounded p-3">
                             <div className="group relative">
-                                <img className="m-auto w-72 block rounded" src={nftInfo.coverPhoto ? `https://ipfs.infura.io/ipfs/${nftInfo.coverPhoto}` : "https://upload.wikimedia.org/wikipedia/en/f/f1/Tycho_-_Epoch.jpg"} alt="" />
+                                <img className="m-auto w-72 block rounded" src={nftInfo.coverPhoto ? `${process.env.REACT_APP_IPFS_URL}/ipfs/${nftInfo.coverPhoto}` : "https://upload.wikimedia.org/wikipedia/en/f/f1/Tycho_-_Epoch.jpg"} alt="" />
                                 <div className="absolute bg-white rounded bg-opacity-0 group-hover:bg-opacity-60 w-full h-full top-0 flex items-center group-hover:opacity-100 transition justify-evenly">
                                     <button className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-heart" viewBox="0 0 16 16">
@@ -93,7 +93,7 @@ const NFTInfo = (props) => {
                                     </button>
                                 </div>
                                 <audio className='mt-5 w-64 m-auto' controls>
-                                    <source src={`https://ipfs.infura.io/ipfs/${nftInfo.metadata}`} />
+                                    <source src={`${process.env.REACT_APP_IPFS_URL}/ipfs/${nftInfo.metadata}`} />
                                 </audio>
                             </div>
 

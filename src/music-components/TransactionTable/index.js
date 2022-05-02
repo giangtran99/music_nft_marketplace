@@ -8,6 +8,7 @@ import { CollectionIcon, ShoppingCartIcon } from '@heroicons/react/outline';
 import CollectionContext from '../../store/collection-context';
 import MarketplaceContext from '../../store/marketplace-context';
 import { useParams } from 'react-router-dom';
+import moment from 'moment'
 
 const TransactionTable = ({ type, data }) => {
     const [transactionLogs, setTransactionLogs] = React.useState([])
@@ -44,9 +45,7 @@ const TransactionTable = ({ type, data }) => {
     //         })
     //     }
     //     else{
-
     //     }
-
     // }
 
     const getAddressIcon = (account) => {
@@ -69,6 +68,7 @@ const TransactionTable = ({ type, data }) => {
                             <th className="font-semibold text-sm uppercase px-6 py-4"> Price </th>
                             <th className="font-semibold text-sm uppercase px-6 py-4 text-center"> From </th>
                             <th className="font-semibold text-sm uppercase px-6 py-4 text-center"> To </th>
+                            <th className="font-semibold text-sm uppercase px-6 py-4 text-center">Time</th>
                             <th className="font-semibold text-sm uppercase px-6 py-4 text-center">Action</th>
                         </tr>
                     </thead>
@@ -79,7 +79,7 @@ const TransactionTable = ({ type, data }) => {
                                 <tr key={item.id}>
                                     <td className="px-6 py-4">
                                         <div className="flex items-center space-x-6">
-                                            <div className="inline-flex w-10 h-10"> <img className='w-10 h-10 object-cover' alt='User avatar' src={`https://ipfs.infura.io/ipfs/${item.cover_photo}`} /> </div>
+                                            <div className="inline-flex w-10 h-10"> <img className='w-10 h-10 object-cover' alt='User avatar' src={`${process.env.REACT_APP_IPFS_URL}/ipfs/${item.cover_photo}`} /> </div>
                                             <div>
                                                 <p> {item.name} </p>
                                                 <p className="text-gray-500 text-sm font-semibold tracking-wide"></p>
@@ -115,6 +115,13 @@ const TransactionTable = ({ type, data }) => {
                                                 {getAddressIcon(item.to)}
                                                 {item.to.substr(0, 7)}...{item.to.substr(item.to.length - 7)}
                                             </div>}
+                                    </td>
+                                    <td className="px-6 py-4 text-center">
+                                        <div
+                                            class="ml-4 text-xs inline-flex items-center font-bold leading-sm uppercase px-3 py-1 bg-orange-200 text-orange-700 rounded-full"
+                                        >
+                                            {moment(new Date(`${item.created_at}`)).fromNow()}
+                                        </div>
                                     </td>
                                     <td className="px-6 py-4 text-center">
                                         <div

@@ -92,6 +92,7 @@ contract('NFTMarketplace', (accounts) => {
       await expectRevert(mktContract.fillOffer(2, { from: accounts[1], value: 5 }), 'The ETH amount should match with the NFT Price');
     });
   });
+  
 
   describe('Cancel Offer', () => {
     it('Only the owner can cancel', async() => {
@@ -141,4 +142,17 @@ contract('NFTMarketplace', (accounts) => {
       assert.equal(event.amount.toNumber(), 10);
     });
   });
+
+  describe('Get tokens by owner', () => {
+    it('Get tokens by owner', async () => {
+      const result = await mktContract.tokensByOwner(accounts[0]);
+  
+      // SUCCESS
+      console.log(result)
+
+    });
+
+
+  });
+
 });

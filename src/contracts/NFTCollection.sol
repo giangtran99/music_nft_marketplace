@@ -6,12 +6,23 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
 contract NFTCollection is ERC721, ERC721Enumerable {
   string[] public tokenURIs;
+  uint public transactionCount;
   mapping(string => bool) _tokenURIExists;
   mapping(uint => string) _tokenIdToTokenURI;
+  event EventListener(uint id,address from, address to, string eventName,uint256 ethPrice,uint tokenId);
+  event createNFTOwner(address owner,uint tokenId);
 
   constructor() 
     ERC721("mTC Collection", "mTC") 
   {
+  }
+
+
+  function getTransactionCount() public view returns (uint){
+    return transactionCount;
+  }
+    function setTransactionCount() public{
+     transactionCount++;
   }
 
   function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal override(ERC721, ERC721Enumerable) {
@@ -34,5 +45,10 @@ contract NFTCollection is ERC721, ERC721Enumerable {
     _tokenIdToTokenURI[_id] = _tokenURI;
     _safeMint(msg.sender, _id);
     _tokenURIExists[_tokenURI] = true;
+    transactionCount++;
+    emit EventListener(transactionCount,msg.sender,address(this),"safeMint",0,_id);
+    emit createNFTOwner(msg.sender,_id);
   }
+
+  
 }

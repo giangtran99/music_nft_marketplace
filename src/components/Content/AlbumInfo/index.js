@@ -21,7 +21,7 @@ const AlbumInfo = (props) => {
         const nfts = await request(`/api/nft/album-id/${id}`, {}, {}, "GET")
         const cids = nfts.map(item=>item.cid)
         const nftInfoIPFS = await Promise.all(cids.map(async (hash)=> {
-          const result = await request(`https://ipfs.infura.io/ipfs/${hash}?clear`)
+          const result = await request(`${process.env.REACT_APP_IPFS_URL}/ipfs/${hash}?clear`)
           console.log("@@result",result)
           return {
               [`${hash}`]:{
@@ -36,6 +36,7 @@ const AlbumInfo = (props) => {
 
     }
     React.useEffect(async () => {
+        // console.log("@@new contract",await marketplaceCtx.contract.methods.tokensByOwner(web3Ctx.account).call())
         const album = await request(`/api/album/get/${id}`, {}, {}, "GET")
         setAlbumInfo(album)
         getNFTbyAlbum()
@@ -47,14 +48,14 @@ const AlbumInfo = (props) => {
                 <Modal
                     isShowModal={modalIsOpen}
                     onClose={() => setIsOpen(false)}
-                    title="ADD NFT TO YOUR ALBUM"
+                    title="Add NFT to your album"
                 >
 
                 </Modal>
 
                 <div className="bg-black-200 text-black-300 min-h-screen p-10">
                     <div className="flex border p-2 shadow-lg	bg-gray-100">
-                        <img className="mr-6 h-48 w-48" src={`https://ipfs.infura.io/ipfs/${albumInfo.album_picture}`} />
+                        <img className="mr-6 h-48 w-48" src={`${process.env.REACT_APP_IPFS_URL}/ipfs/${albumInfo.album_picture}`} />
                         <div className="flex flex-col justify-center">
                             <h4 className="mt-0 mb-2 uppercase text-black-500 tracking-widest text-xs">Album</h4>
                             <h1 className="mt-0 mb-2 text-black text-4xl">{albumInfo.name}</h1>

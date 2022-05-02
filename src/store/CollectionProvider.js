@@ -110,7 +110,7 @@ const CollectionProvider = props => {
     for (let i = 0; i < totalSupply; i++) {
       const hash = await contract.methods.tokenURIs(i).call();
       try {
-        const response = await fetch(`https://ipfs.infura.io/ipfs/${hash}?clear`);
+        const response = await fetch(`${process.env.REACT_APP_IPFS_URL}/ipfs/${hash}?clear`);
         if (!response.ok) {
           throw new Error('Something went wrong');
         }
@@ -138,7 +138,7 @@ const CollectionProvider = props => {
     let collection = [];
     for (let i = 0; i < nfts.length; i++) {
       try {
-        const response = await fetch(`https://ipfs.infura.io/ipfs/${nfts[i].cid}?clear`);
+        const response = await fetch(`${process.env.REACT_APP_IPFS_URL}/ipfs/${nfts[i].cid}?clear`);
         if (!response.ok) {
           throw new Error('Something went wrong');
         }
@@ -167,7 +167,7 @@ const CollectionProvider = props => {
     const result = await request(`/api/nft/search/${textSearch}`, {}, {}, 'GET')
     for (let i = 0; i < result.nfts.length; i++) {
       try {
-        const response = await fetch(`https://ipfs.infura.io/ipfs/${result.nfts[i].cid}?clear`);
+        const response = await fetch(`${process.env.REACT_APP_IPFS_URL}/ipfs/${result.nfts[i].cid}?clear`);
         if (!response.ok) {
           throw new Error('Something went wrong');
         }
@@ -196,7 +196,7 @@ const CollectionProvider = props => {
     let NFT;
     const hash = await contract.methods.tokenURI(id).call();
     try {
-      const response = await fetch(`https://ipfs.infura.io/ipfs/${hash}?clear`);
+      const response = await fetch(`${process.env.REACT_APP_IPFS_URL}/ipfs/${hash}?clear`);
       if (!response.ok) {
         throw new Error('Something went wrong');
       }

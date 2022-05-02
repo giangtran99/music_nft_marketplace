@@ -14,7 +14,6 @@ export const formatPrice = (price) => {
 };
 
 export const getOwner = (currentAddress, OwnerAddress, marketplaceCtx, tokenId) => {
-
   if (marketplaceCtx.contract._address === OwnerAddress) {
     const index = marketplaceCtx.offers ? marketplaceCtx.offers.findIndex(offer => offer.id == tokenId) : -1;
     const ownerOnOffer = index === -1 ? "anonymous" : marketplaceCtx.offers[index].user;

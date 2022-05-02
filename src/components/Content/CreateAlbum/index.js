@@ -6,7 +6,7 @@ import { request } from '../../../helpers/utils'
 import { toast } from 'react-toastify';
 
 const ipfsClient = require('ipfs-http-client');
-const ipfs = ipfsClient.create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
+const ipfs = ipfsClient.create({ host: '127.0.0.1', port: 5001, protocol: 'http' });
 
 const audioTail = ["mp3", "mp4"]
 const imageTail = ["jpg", "png", "jpeg"]

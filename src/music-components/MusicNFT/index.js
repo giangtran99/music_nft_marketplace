@@ -32,26 +32,8 @@ const MusicNFT = ({ type }) => {
     }
 
     const isShowNFT = (_type, owner) => {
-        switch (_type) {
-            case "userinfo":
-                return owner === web3Ctx.account ? true : false
-            case "creator":
-                return owner === id ? true : false
-            default:
-                return true
-        }
-    }
-
-
-    const getAlbumbyAccount = (_type) => {
-        switch (_type) {
-            case "userinfo":
-                return collectionCtx.albums.filter(album => album.metamask_address === web3Ctx.account)
-            case "creator":
-                return collectionCtx.albums
-            default:
-                return collectionCtx.albums
-        }
+        if(getAddressbyType(_type)) return true
+        return owner.toUpperCase() === getAddressbyType(_type).toUpperCase() ? true : false
     }
 
     const makeOfferHandler = (event, id, key) => {
@@ -95,6 +77,7 @@ const MusicNFT = ({ type }) => {
 
     };
 
+    console.log("@@collectionCtx.collection11",collectionCtx.collection)
     return (
         <>
             {collectionCtx.collection.length > 0 ?
@@ -108,9 +91,10 @@ const MusicNFT = ({ type }) => {
                                 const price = index !== -1 ? formatPrice(marketplaceCtx.offers[index].price).toFixed(2) : null;
                                 const realOwner = getOwner(getAddressbyType(type), NFT.owner, marketplaceCtx, NFT.id)
                                 const isShow = isShowNFT(type, realOwner)
+                                console.log("@@isShow",isShow)
                                 return isShow ? (<div key={key} className="bg-white shadow-2xl border rounded p-3">
                                     <div className="group relative">
-                                        <img className="m-auto w-68 block rounded" src={NFT.coverPhoto ? `https://ipfs.infura.io/ipfs/${NFT.coverPhoto}` : 'https://upload.wikimedia.org/wikipedia/en/f/f1/Tycho_-_Epoch.jpg'} alt="" />
+                                        <img className="m-auto w-68 block rounded" src={NFT.coverPhoto ? `${process.env.REACT_APP_IPFS_URL}/ipfs/${NFT.coverPhoto}` : 'https://upload.wikimedia.org/wikipedia/en/f/f1/Tycho_-_Epoch.jpg'} alt="" />
                                         <div className="absolute bg-white rounded bg-opacity-0 group-hover:bg-opacity-60 w-full h-full top-0 flex items-center group-hover:opacity-100 transition justify-evenly">
                                             <button className="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-heart" viewBox="0 0 16 16">
@@ -125,7 +109,7 @@ const MusicNFT = ({ type }) => {
                                             </button>
                                         </div>
                                         <audio className='w-64 m-auto mt-5' controls>
-                                            <source src={`https://ipfs.infura.io/ipfs/${NFT.metadata}`} />
+                                            <source src={`${process.env.REACT_APP_IPFS_URL}/ipfs/${NFT.metadata}`} />
                                         </audio>
                                     </div>
 

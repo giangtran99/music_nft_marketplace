@@ -5,7 +5,7 @@ import CollectionContext from '../../../store/collection-context';
 import { request } from '../../../helpers/utils'
 import { toast } from 'react-toastify';
 const ipfsClient = require('ipfs-http-client');
-const ipfs = ipfsClient.create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
+const ipfs = ipfsClient.create({ host: '127.0.0.1', port: 5001, protocol: 'http' });
 
 const audioTail = ["mp3", "mp4"]
 const imageTail = ["jpg", "png", "jpeg"]
@@ -156,9 +156,6 @@ const MintForm = () => {
       collectionCtx.contract.methods.safeMint(metadataAdded.path).send({ from: web3Ctx.account })
         .on('transactionHash', async (hash) => {
           const receipt = await web3.eth.getTransactionReceipt(hash)
-          // console.log("@@vui buon0",web3.utils.hexToNumber(receipt.logs[0].topics[0]))
-          // console.log("@@vui buon1",web3.utils.hexToNumber(receipt.logs[0].topics[1]))
-          // console.log("@@vui buon2",web3.utils.hexToNumber(receipt.logs[0].topics[2]))
           if (hash) {
             const tokenId = web3.utils.hexToNumber(receipt.logs[0].topics[3])
             request('/api/transactionlog/create',{
