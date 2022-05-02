@@ -1,0 +1,15 @@
+type TransactionLog @entity {
+  id: ID!
+  from: Bytes!
+  to: Bytes!
+  eventName: String!
+  ethPrice: BigInt!
+  tokenId: BigInt!
+  created_at: BigInt!
+}
+
+type NFT @entity {
+  id: ID!
+  owner:Bytes!
+}
+

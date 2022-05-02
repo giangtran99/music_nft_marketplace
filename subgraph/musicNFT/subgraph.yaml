@@ -1,0 +1,51 @@
+specVersion: 0.0.2
+description: NFTMarketPlace for Ethereum
+repository: https://github.com/graphprotocol/example-subgraph
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: NFTCollection
+    network: mainnet
+    source:
+      abi: NFTCollection
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - TransactionLog
+        - NFT
+      abis:
+        - name: NFTCollection
+          file: ../../src/abis/NFTCollection.json
+      eventHandlers:
+        - event: EventListener(uint256,address,address,string,uint256,uint256)
+          handler: handleNewEventFromNFTCollection
+        - event: createNFTOwner(address,uint256)
+          handler: handleCreateNFTOwner
+      file: ./src/mapping.ts
+
+  - kind: ethereum/contract
+    name: NFTMarketplace
+    network: mainnet
+    source:
+      abi: NFTMarketplace
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - TransactionLog
+        - NFT
+      abis:
+        - name: NFTMarketplace
+          file: ../../src/abis/NFTMarketplace.json
+      eventHandlers:
+        - event: EventListener(uint256,address,address,string,uint256,uint256)
+          handler: handleNewEventFromNFTMarketplace
+        - event: updateNFTOwner(address,uint256)
+          handler: handleUpdateNFTOwner
+      file: ./src/mapping.ts
+
+
