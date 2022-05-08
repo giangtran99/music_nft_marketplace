@@ -9,7 +9,7 @@ contract NFTCollection is ERC721, ERC721Enumerable {
   uint public transactionCount;
   mapping(string => bool) _tokenURIExists;
   mapping(uint => string) _tokenIdToTokenURI;
-  event EventListener(uint id,address from, address to, string eventName,uint256 ethPrice,uint tokenId);
+  event EventListener(uint id,address from, address to, string eventName,uint256 ethPrice,uint tokenId,uint256 created_at);
   event createNFTOwner(address owner,uint tokenId);
 
   constructor() 
@@ -46,7 +46,7 @@ contract NFTCollection is ERC721, ERC721Enumerable {
     _safeMint(msg.sender, _id);
     _tokenURIExists[_tokenURI] = true;
     transactionCount++;
-    emit EventListener(transactionCount,msg.sender,address(this),"safeMint",0,_id);
+    emit EventListener(transactionCount,msg.sender,address(this),"Safe Mint",0,_id,block.timestamp);
     emit createNFTOwner(msg.sender,_id);
   }
 

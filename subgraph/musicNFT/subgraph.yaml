@@ -20,7 +20,7 @@ dataSources:
         - name: NFTCollection
           file: ../../src/abis/NFTCollection.json
       eventHandlers:
-        - event: EventListener(uint256,address,address,string,uint256,uint256)
+        - event: EventListener(uint256,address,address,string,uint256,uint256,uint256)
           handler: handleNewEventFromNFTCollection
         - event: createNFTOwner(address,uint256)
           handler: handleCreateNFTOwner
@@ -42,7 +42,7 @@ dataSources:
         - name: NFTMarketplace
           file: ../../src/abis/NFTMarketplace.json
       eventHandlers:
-        - event: EventListener(uint256,address,address,string,uint256,uint256)
+        - event: EventListener(uint256,address,address,string,uint256,uint256,uint256)
           handler: handleNewEventFromNFTMarketplace
         - event: updateNFTOwner(address,uint256)
           handler: handleUpdateNFTOwner

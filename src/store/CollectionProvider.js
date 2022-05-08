@@ -108,15 +108,18 @@ const CollectionProvider = props => {
   const loadCollectionHandler = async (contract, totalSupply) => {
     let collection = [];
     for (let i = 0; i < totalSupply; i++) {
+
       const hash = await contract.methods.tokenURIs(i).call();
+
       try {
-        const response = await fetch(`${process.env.REACT_APP_IPFS_URL}/ipfs/${hash}?clear`);
+        const response = await fetch(`${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${hash}?clear`);
         if (!response.ok) {
           throw new Error('Something went wrong');
         }
 
         const metadata = await response.json();
         const owner = await contract.methods.ownerOf(i + 1).call();
+        
         collection.push({
           id: i + 1,
           title: metadata.properties.name.description,
@@ -138,14 +141,15 @@ const CollectionProvider = props => {
     let collection = [];
     for (let i = 0; i < nfts.length; i++) {
       try {
-        const response = await fetch(`${process.env.REACT_APP_IPFS_URL}/ipfs/${nfts[i].cid}?clear`);
+        const hash = await contract.methods.tokenURIs(nfts[i].tokenId-1).call();
+        console.log("@!khac1",hash)
+        const response = await fetch(`${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${hash}}?clear`);
         if (!response.ok) {
           throw new Error('Something went wrong');
         }
 
         const metadata = await response.json();
         const owner = await contract.methods.ownerOf(nfts[i].tokenId).call();
-
         collection = [{
           id: nfts[i].tokenId,
           title: metadata.properties.name.description,
@@ -167,7 +171,10 @@ const CollectionProvider = props => {
     const result = await request(`/api/nft/search/${textSearch}`, {}, {}, 'GET')
     for (let i = 0; i < result.nfts.length; i++) {
       try {
-        const response = await fetch(`${process.env.REACT_APP_IPFS_URL}/ipfs/${result.nfts[i].cid}?clear`);
+        const hash = await contract.methods.tokenURIs(result.nfts[i].tokenId-1).call();
+        console.log("@@result.nfts[i].tokenId",result.nfts[i].tokenId)
+
+        const response = await fetch(`${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${hash}?clear`);
         if (!response.ok) {
           throw new Error('Something went wrong');
         }
@@ -196,7 +203,7 @@ const CollectionProvider = props => {
     let NFT;
     const hash = await contract.methods.tokenURI(id).call();
     try {
-      const response = await fetch(`${process.env.REACT_APP_IPFS_URL}/ipfs/${hash}?clear`);
+      const response = await fetch(`${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${hash}?clear`);
       if (!response.ok) {
         throw new Error('Something went wrong');
       }

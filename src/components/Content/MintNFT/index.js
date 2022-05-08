@@ -5,7 +5,7 @@ import CollectionContext from '../../../store/collection-context';
 import { request } from '../../../helpers/utils'
 import { toast } from 'react-toastify';
 const ipfsClient = require('ipfs-http-client');
-const ipfs = ipfsClient.create({ host: '127.0.0.1', port: 5001, protocol: 'http' });
+const ipfs = ipfsClient.create({ host: '127.0.0.1', port: process.env.REACT_APP_IPFS_API_PORT, protocol: 'http' });
 
 const audioTail = ["mp3", "mp4"]
 const imageTail = ["jpg", "png", "jpeg"]
@@ -75,7 +75,9 @@ const MintForm = () => {
     setCapturedCoverFile(result)
     const reader = new window.FileReader();
     reader.readAsArrayBuffer(file);
+    console.log("@@file",file)
     reader.onloadend = () => {
+      console.log("@@reader",reader)
       setCapturedCoverFileBuffer(Buffer(reader.result));
     }
   };
@@ -115,6 +117,7 @@ const MintForm = () => {
     const mintNFT = async () => {
       // Add file to the IPFS
       const fileAdded = await ipfs.add(capturedFileBuffer);
+      console.log("@@capturedFileBuffer",capturedFileBuffer)
       const fileCoverPhotoAdded = await ipfs.add(capturedCoverFileBuffer);
       if (!fileAdded) {
         console.error('Something went wrong when updloading the file');
@@ -158,17 +161,8 @@ const MintForm = () => {
           const receipt = await web3.eth.getTransactionReceipt(hash)
           if (hash) {
             const tokenId = web3.utils.hexToNumber(receipt.logs[0].topics[3])
-            request('/api/transactionlog/create',{
-              action:"Mint",
-              from:receipt.from,
-              to:receipt.to,
-              ethPrice:0,
-              tokenId:tokenId
-            },{},'POST')
-  
             const body = {
               name: enteredName,
-              cid: metadataAdded.path,
               genre_id: enteredGenre,
               tokenId: tokenId,
               cover_photo:fileCoverPhotoAdded.path

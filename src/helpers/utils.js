@@ -61,3 +61,40 @@ export const request = async (url, data, headers, method = 'POST') => {
     throw err;
   }
 };
+
+export const getTokenInfowithTokenIds= async (tokenIds,collectionCtx)=>{
+  console.log("@@tokenIds",tokenIds)
+  const hashes =await Promise.all(tokenIds.map(async (tokenId)=>{
+      let hash = await collectionCtx.contract.methods.tokenURIs(tokenId-1).call()
+      return {
+          "tokenId":tokenId,
+          "hash":hash
+      };
+  }))
+  console.log("@@alo11",hashes)
+  const responses = await Promise.all(hashes.map(async item=>{
+      const response = await fetch(`${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${item.hash}?clear`);
+      if (!response.ok) {
+        throw new Error('Something went wrong');
+      }
+      const metadata = await response.json();
+      console.log("@@response",metadata)
+
+      return {
+          "id":item.tokenId,
+          "title":metadata.properties.name.description,
+          "coverPhoto":metadata.properties.coverPhoto.description,
+          "metadata":metadata.properties.metadata.description
+      }
+  }))
+  let result = {}
+  responses.map(async item=>{
+      result[`${item.id}`] = {
+          "title":item.title,
+          "coverPhoto":item.coverPhoto,
+          "metadata":item.metadata
+
+      }
+  })
+  return result
+} 

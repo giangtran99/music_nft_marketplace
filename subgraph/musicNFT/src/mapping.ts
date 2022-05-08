@@ -9,7 +9,7 @@ export function handleNewEventFromNFTCollection(event: NewTransactionLogFromColl
   transactionlog.to = event.params.to
   transactionlog.ethPrice = event.params.ethPrice
   transactionlog.tokenId = event.params.tokenId
-  transactionlog.created_at = bigInt.fromString(`${Date.now()}`)
+  transactionlog.created_at = event.params.created_at
   transactionlog.save()
 }
 
@@ -20,13 +20,14 @@ export function handleNewEventFromNFTMarketplace(event: NewTransactionLogFromMar
   transactionlog.ethPrice = event.params.ethPrice
   transactionlog.eventName = event.params.eventName
   transactionlog.tokenId = event.params.tokenId
-  transactionlog.created_at = bigInt.fromString(`${Date.now()}`)
+  transactionlog.created_at = event.params.created_at
   transactionlog.save()
 }
 
 export function handleCreateNFTOwner(event: createNFTOwner): void {
   let nft = new NFT(`${event.params.tokenId}`)
   nft.owner = event.params.owner
+  nft.save()
 }
 
 export function handleUpdateNFTOwner(event: updateNFTOwner): void {

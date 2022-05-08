@@ -54,16 +54,17 @@ const Navbar = () => {
   const marketplaceCtx = useContext(MarketplaceContext);
   const collectionCtx = useContext(CollectionContext);
   const [token,setToken] = useState(localStorage.getItem("token") || null)
+  const currentUser = JSON.parse(localStorage.getItem("user"))
 
   const user = {
     name: 'Tom Cook',
     email: 'tom@example.com',
-    imageUrl:
-      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    imageUrl: currentUser?.avatar_picture ? `${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${currentUser?.avatar_picture}` 
+    : 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
   }
   const navigation = [
     { name: 'Marketplace', href: '/', current: true },
-    { name: 'Creator', href: '/creator', current: true },
+    { name: 'Creators', href: '/creator', current: true },
     { name: 'Albums', href: '/album', current: true },
   
     // { name: 'Mint', href: '/mint', current: false },
@@ -147,11 +148,13 @@ const Navbar = () => {
               <div className="flex items-center justify-between h-16">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
+                    <a href="/dashboard"> 
                     <img
                       className="h-8 w-8"
                       src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
                       alt="Workflow"
                     />
+                    </a>
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-10 flex items-baseline space-x-4">

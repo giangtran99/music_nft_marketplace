@@ -54,14 +54,17 @@ const Profile = ({ color = "indigo", NFTs = [], Transactions = [] ,type}) => {
                             <div className="w-44 h-44 rounded-full bg-gray-300 border-4 border-white">
                                 <img
                                     className="w-full h-full rounded-full"
-                                    src="https://picsum.photos/200"
+                                    src={userInfo?.avatar_picture ?`${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${userInfo.avatar_picture}` :"https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png"}
                                     alt="dp"
                                 />
                             </div>
                             <div className="absolute" style={{ bottom: 30, right: 30 }}>
+                                <a href='/edit-user-info'>
                                 <button className="focus:outline-none px-3 py-2 hover:bg-gray-50 font-semibold bg-white rounded-md">
-                                    <i className="fas fa-camera mr-1"></i>Edit Cover Photo
+                                    <i className="fas fa-camera mr-1"></i>Edit Profile
                                 </button>
+                                </a>
+
                             </div>
                         </div>
                     </div>

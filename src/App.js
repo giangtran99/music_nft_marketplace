@@ -22,8 +22,10 @@ import {
 } from "react-router-dom";
 import './App.css'
 import UserInfo from './components/Content/UserInfo';
+import EditUserInfo from './components/Content/Accounts/BaseView';
 import NFTInfo from './components/Content/NFTInfo';
 import AlbumInfo from './components/Content/AlbumInfo';
+import Dashboard from './components/Content/Dashboard';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
@@ -165,9 +167,11 @@ const App = () => {
             <Route exact path='/creator' element={showContent && <Creator />} />
             <Route exact path='/creator/:id' element={showContent && <CreatorInfo />} />
             <Route exact path='/userinfo' element={showContent && localStorage.getItem('token') && <UserInfo />} />
+            <Route exact path='/edit-user-info' element={showContent && localStorage.getItem('token') && <EditUserInfo />} />
             <Route exact path='/nft/:id' element={showContent && <NFTInfo />} />
             <Route exact path='/album/:id' element={showContent && <AlbumInfo />} />
             <Route exact path='/album' element={showContent && <AlbumNFT />} />
+            <Route exact path='/dashboard' element={showContent && localStorage.getItem('token') && <Dashboard />} />
           </Routes>
         </div>
       </Router>

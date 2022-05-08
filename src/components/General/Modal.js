@@ -1,28 +1,7 @@
 import React from 'react'
-import { Table } from 'antd'
-const Modal = ({ title, isShowModal, onClose, onSubmit }) => {
-  const [selectedRowKeys, setSelectedRowKeys] = React.useState([])
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (selectedRowKeys) => {
-      console.log('selectedRowKeys changed: ', selectedRowKeys);
-      setSelectedRowKeys(selectedRowKeys);
-    }
-  };
-  const columns = [
-    {
-      title: 'Title',
-      dataIndex: 'name',
-    },
-    {
-      title: 'Cover Photo',
-      dataIndex: 'cover_photo',
-    },
-    {
-      title: 'Audio',
-      dataIndex: 'Game',
-    },
-  ];
+const Modal = ({ title, isShowModal, onClose, onSubmit,children }) => {
+  
+  
   return (<>
 
     {isShowModal ? (
@@ -32,7 +11,7 @@ const Modal = ({ title, isShowModal, onClose, onSubmit }) => {
         >
           <div className="relative w-auto my-6 mx-auto max-w-6xl">
             {/*content*/}
-            <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+            <div className="border-0 rounded-lg shadow-lg relative flex m-0 flex-col w-[80vw] text-center bg-white outline-none focus:outline-none">
               {/*header*/}
               <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
                 <h3 className="text-3xl font-semibold">
@@ -49,9 +28,7 @@ const Modal = ({ title, isShowModal, onClose, onSubmit }) => {
               </div>
               {/*body*/}
               <div className="relative p-6 flex-auto">
-                <Table
-                  columns={columns} rowSelection={rowSelection}
-                />
+                {children}
               </div>
               {/*footer*/}
               <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
