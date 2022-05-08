@@ -98,7 +98,6 @@ const MusicNFT = ({ type }) => {
                                 const price = index !== -1 ? formatPrice(marketplaceCtx.offers[index].price).toFixed(2) : null;
                                 const realOwner = getOwner(getAddressbyType(type), NFT.owner, marketplaceCtx, NFT.id)
                                 const isShow = isShowNFT(type, realOwner)
-                                console.log("@@isShow", type, realOwner, isShow, getAddressbyType(type))
                                 return isShow ? (<div key={key} className="bg-white shadow-2xl border rounded p-3">
                                     <div className="group relative">
                                         <img className="m-auto w-68 block rounded" src={NFT.coverPhoto ? `${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${NFT.coverPhoto}` : 'https://upload.wikimedia.org/wikipedia/en/f/f1/Tycho_-_Epoch.jpg'} alt="" />
@@ -115,7 +114,7 @@ const MusicNFT = ({ type }) => {
                                                 </svg>
                                             </button>
                                         </div>
-                                        <audio className='w-64 m-auto mt-5' controls>
+                                        <audio className='w-4/5 m-auto mt-5' controls>
                                             <source src={`${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${NFT.metadata}`} />
                                         </audio>
                                     </div>

@@ -113,7 +113,7 @@ class BaseView extends Component {
     console.log("@@this", this.form)
     return (
       <>
-        <Card className="shadow-lg b-4 mt-10" border={true} title={"Edit profile"} actions={[]}>
+        <Card className="shadow-lg b-4 mt-10 m-5" border={true} title={"Edit profile"} actions={[]}>
           <Form ref={this.form} layout="vertical" onFinish={this.handleSubmit} hideRequiredMark>
             <Row>
               <Col span={10} offset={2}>

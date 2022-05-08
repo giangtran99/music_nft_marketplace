@@ -139,11 +139,12 @@ const CollectionProvider = props => {
 
   const loadCollectionFromServerHandler = async (contract, nfts, account, marketplaceCtx) => {
     let collection = [];
+    console.log("@@nfts11",nfts)
     for (let i = 0; i < nfts.length; i++) {
       try {
         const hash = await contract.methods.tokenURIs(nfts[i].tokenId-1).call();
         console.log("@!khac1",hash)
-        const response = await fetch(`${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${hash}}?clear`);
+        const response = await fetch(`${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${hash}?clear`);
         if (!response.ok) {
           throw new Error('Something went wrong');
         }
