@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Comment, Tooltip as TooltipAntd, Select, Form } from 'antd';
 import moment from 'moment';
-import { getPreMonth, getPreYear, getPreQuarter } from '../../../helpers/date';
+import { getMonth, getYear, getQuarter } from '../../../helpers/date';
 import CommentComponents from '../../General/Comments'
 import {
     LineChart,
@@ -66,11 +66,11 @@ const NFTInfo = (props) => {
     const getFromTime = (key) => {
         switch (key) {
             case 1:
-                return getPreYear().start
+                return getYear().start
             case 2:
-                return getPreMonth().start
+                return getMonth().start
             case 3:
-                return getPreQuarter().start
+                return getQuarter().start
 
         }
     }
@@ -123,9 +123,9 @@ const NFTInfo = (props) => {
 
     const SelectFilter = ({ onChange }) => {
         const data = [
-            { key: 1, name: "Từ năm trước" },
-            { key: 2, name: "Từ tháng trước" },
-            { key: 3, name: "Từ quý trước" },
+            { key: 1, name: "From begin of current year to now" },
+            { key: 2, name: "From begin of current month to now" },
+            { key: 3, name: "From begin of current quarter to now" },
         ]
         return (
             <>
