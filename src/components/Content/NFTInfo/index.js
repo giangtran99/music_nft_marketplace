@@ -4,7 +4,7 @@ import eth from '../../../img/eth.png';
 import CollectionContext from '../../../store/collection-context';
 import MarketplaceContext from '../../../store/marketplace-context';
 import Web3Context from '../../../store/web3-context';
-import { formatPrice, getOwner, request } from '../../../helpers/utils';
+import { formatPrice, getOwner, request,getMetdataforOwner } from '../../../helpers/utils';
 import web3 from '../../../connection/web3'
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -78,7 +78,7 @@ const NFTInfo = (props) => {
     const getPriceHistory = async () => {
         let fromTime = getFromTime(metric).getTime() / 1000
         let payload = {
-            query: `query MyQuery{transactionLogs(where: {created_at_gte: ${fromTime},tokenId: "${id}",eventName_contains:"fill"}) {
+            query: `query MyQuery{transactionLogs(where: {created_at_gte: ${fromTime},tokenId: "${id}",eventName_contains:"Buy"}) {
                 id
                 eventName
                 from
@@ -166,7 +166,7 @@ const NFTInfo = (props) => {
                                     </button>
                                 </div>
                                 <audio className='mt-5 w-64 m-auto' controls>
-                                    <source src={`${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${nftInfo.metadata}`} />
+                                    <source src={`${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${getMetdataforOwner(nftInfo,web3Ctx.account,nftInfo.owner)}`} />
                                 </audio>
                             </div>
 
@@ -245,7 +245,11 @@ const NFTInfo = (props) => {
                         </div>
                     </div>
                 </div>
-                <TransactionTable type="nftinfo" data={nftInfo} />
+                <div className="container px-6 py-20 mx-auto border-5 shadow-2xl">
+                    {/* <h1 className="text-white-900 text-3xl title-font font-medium">Activiry</h1> */}
+                    <TransactionTable type="nftinfo" data={nftInfo} />
+
+                    </div>
                 <div className="container px-6 py-20 mx-auto border-5 shadow-2xl">
                     <h1 className="text-white-900 text-3xl title-font font-medium">Price History</h1>
                     <div className="mt-5 p-8">

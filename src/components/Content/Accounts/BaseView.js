@@ -17,7 +17,6 @@ const { Option } = Select;
 const AvatarView = ({ value, onChange }) => {
   const [imageUrl, setImageUrl] = React.useState({})
   React.useEffect(() => {
-    console.log("@@ngon ngon", value)
     if (value && typeof value === "string") {
       setImageUrl({
         source: `${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${value}`
@@ -99,8 +98,7 @@ class BaseView extends Component {
         ["name"]: response.name,
         ["avatar_picture"]: response.avatar_picture
       }
-      console.log("@@response", response)
-      console.log("@@newStateCurrentUser", newStateCurrentUser)
+  
       toast.success("Edit profile success")
       localStorage.removeItem("user")
       localStorage.setItem("user", JSON.stringify(newStateCurrentUser))

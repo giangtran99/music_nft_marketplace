@@ -12,6 +12,7 @@ contract NFTMarketplace {
         uint256 offerId;
         uint256 id;
         address user;
+        address minter;
         uint256 price;
         bool fulfilled;
         bool cancelled;
@@ -21,6 +22,7 @@ contract NFTMarketplace {
         uint256 offerId,
         uint256 id,
         address user,
+        address minter,
         uint256 price,
         bool fulfilled,
         bool cancelled
@@ -43,18 +45,19 @@ contract NFTMarketplace {
         nftCollection = NFTCollection(_nftCollection);
     }
 
-    function makeOffer(uint256 _id, uint256 _price) public {
+    function makeOffer(uint256 _id, uint256 _price , address _minter) public {
         nftCollection.transferFrom(msg.sender, address(this), _id);
         offerCount++;
         offers[offerCount] = _Offer(
             offerCount,
             _id,
             msg.sender,
+            _minter,
             _price,
             false,
             false
         );
-        emit Offer(offerCount, _id, msg.sender, _price, false, false);
+        emit Offer(offerCount, _id, msg.sender, _minter , _price, false, false);
         nftCollection.setTransactionCount();
         emit EventListener(
             nftCollection.getTransactionCount(),
@@ -84,14 +87,16 @@ contract NFTMarketplace {
         _offer.fulfilled = true;
         userFunds[_offer.user] += msg.value;
         emit OfferFilled(_offerId, _offer.id, msg.sender);
-
+        //tranfer eth to minter
+        payable(_offer.minter).transfer((5 * _offer.price)/100);
+        //listen event from graph
         nftCollection.setTransactionCount();
         emit updateNFTOwner(msg.sender, _offer.id);
         emit EventListener(
             nftCollection.getTransactionCount(),
             address(this),
             msg.sender,
-            "Can Offer",
+            "Buy",
             _offer.price,
             _offer.id,
             block.timestamp

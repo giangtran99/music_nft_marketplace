@@ -4,9 +4,9 @@ import Web3Context from '../../../store/web3-context';
 import CollectionContext from '../../../store/collection-context';
 import { request } from '../../../helpers/utils'
 import { toast } from 'react-toastify';
+import AES from 'crypto-js/aes';
 const ipfsClient = require('ipfs-http-client');
 const ipfs = ipfsClient.create({ host: '127.0.0.1', port: process.env.REACT_APP_IPFS_API_PORT, protocol: 'http' });
-
 const audioTail = ["mp3", "mp4"]
 const imageTail = ["jpg", "png", "jpeg"]
 const MintForm = () => {
@@ -17,18 +17,19 @@ const MintForm = () => {
   const [nameIsValid, setNameIsValid] = useState(true);
   const [capturedFileBuffer, setCapturedFileBuffer] = useState(null);
   const [capturedFile, setCapturedFile] = useState({});
+  const [capturedDemoFileBuffer, setCapturedDemoFileBuffer] = useState(null);
+  const [capturedDemoFile, setCapturedDemoFile] = useState({});
   const [listGenre, setListGenre] = useState([])
   const [capturedCoverFileBuffer, setCapturedCoverFileBuffer] = useState(null);
   const [capturedCoverFile, setCapturedCoverFile] = useState({});
-
   const [fileIsValid, setFileIsValid] = useState(true);
   const web3Ctx = useContext(Web3Context);
   const collectionCtx = useContext(CollectionContext);
 
+
   useEffect(() => {
     request("/api/genre/index", {}, {}, "GET")
       .then(response => {
-        console.log("@@thuoc", response)
         setListGenre(response)
         setEnteredGenree(response[0].id)
       })
@@ -75,9 +76,9 @@ const MintForm = () => {
     setCapturedCoverFile(result)
     const reader = new window.FileReader();
     reader.readAsArrayBuffer(file);
-    console.log("@@file",file)
+    console.log("@@file", file)
     reader.onloadend = () => {
-      console.log("@@reader",reader)
+      console.log("@@reader", reader)
       setCapturedCoverFileBuffer(Buffer(reader.result));
     }
   };
@@ -91,8 +92,8 @@ const MintForm = () => {
     result.source = src
     let tail = file.name.split(".")[file.name.split(".").length - 1]
     let typeFile = getTypeFile(tail)
-    if (!typeFile) {
-      toast.error("File type invalid", {
+    if (!typeFile || typeFile === "image") {
+      toast.error("Audio only allow for .mp3,.mp4 ,...", {
         position: toast.POSITION.TOP_RIGHT
       });
       return
@@ -106,20 +107,45 @@ const MintForm = () => {
     }
   };
 
+  const captureDemoFile = (event) => {
+    event.preventDefault();
+
+    let result = {}
+    const file = event.target.files[0];
+    var src = URL.createObjectURL(file);
+    result.source = src
+    let tail = file.name.split(".")[file.name.split(".").length - 1]
+    let typeFile = getTypeFile(tail)
+    if (!typeFile || typeFile === "image") {
+      toast.error("Demo audio only allow for .mp3,.mp4 ,...", {
+        position: toast.POSITION.TOP_RIGHT
+      });
+      return
+    }
+    result.type = typeFile
+    setCapturedDemoFile(result)
+    const reader = new window.FileReader();
+    reader.readAsArrayBuffer(file);
+    reader.onloadend = () => {
+      setCapturedDemoFileBuffer(Buffer(reader.result));
+    }
+  };
+
   const submissionHandler = (event) => {
     event.preventDefault();
     enteredName ? setNameIsValid(true) : setNameIsValid(false);
     enteredDescription ? setDescriptionIsValid(true) : setDescriptionIsValid(false);
     capturedFileBuffer ? setFileIsValid(true) : setFileIsValid(false);
-    console.log("@@enteredName", enteredName)
     const formIsValid = enteredName && enteredDescription && capturedFileBuffer;
     // Upload file to IPFS and push to the blockchain
     const mintNFT = async () => {
       // Add file to the IPFS
-      const fileAdded = await ipfs.add(capturedFileBuffer);
-      console.log("@@capturedFileBuffer",capturedFileBuffer)
-      const fileCoverPhotoAdded = await ipfs.add(capturedCoverFileBuffer);
-      if (!fileAdded) {
+      const fileAdded = await Promise.all([ipfs.add(capturedFileBuffer),ipfs.add(capturedDemoFileBuffer),ipfs.add(capturedCoverFileBuffer)])
+      // const fileAdded = await ipfs.add(capturedFileBuffer);
+      // const demoFileAdded = await ipfs.add(capturedDemoFileBuffer);
+      // const fileCoverPhotoAdded = await ipfs.add(capturedCoverFileBuffer);
+      console.log("@@fileAdded",fileAdded)
+      if (!fileAdded[0] || !fileAdded[1] || !fileAdded[2]) {
         console.error('Something went wrong when updloading the file');
         return;
       }
@@ -138,11 +164,15 @@ const MintForm = () => {
           },
           coverPhoto: {
             type: "string",
-            description: fileCoverPhotoAdded.path
+            description: fileAdded[2].path
           },
           metadata: {
             type: "string",
-            description: fileAdded.path
+            description: AES.encrypt(fileAdded[0].path, process.env.REACT_APP_AES_KEY).toString()
+          },
+          demoMetadata: {
+            type: "string",
+            description: fileAdded[1].path
           },
           minter: {
             type: "string",
@@ -150,29 +180,34 @@ const MintForm = () => {
           }
         }
       };
+      console.log("!@!@",metadata)
+
 
       const metadataAdded = await ipfs.add(JSON.stringify(metadata));
+      console.log("@@chua hieu", metadataAdded)
       if (!metadataAdded) {
         console.error('Something went wrong when updloading the file');
         return;
       }
+
+      const body = {
+        name: enteredName,
+        genre_id: enteredGenre,
+        cover_photo: fileAdded[2].path
+      }
+      const createdNFT = await request("/api/nft/create", body, {}, "POST")
       collectionCtx.contract.methods.safeMint(metadataAdded.path).send({ from: web3Ctx.account })
         .on('transactionHash', async (hash) => {
           const receipt = await web3.eth.getTransactionReceipt(hash)
           if (hash) {
             const tokenId = web3.utils.hexToNumber(receipt.logs[0].topics[3])
-            const body = {
-              name: enteredName,
-              genre_id: enteredGenre,
-              tokenId: tokenId,
-              cover_photo:fileCoverPhotoAdded.path
-            }
+            request(`/api/nft/update-token/${createdNFT.id}`,{tokenId:tokenId},{},"POST")
             toast.success("Success Mint NFT !", {
               position: toast.POSITION.TOP_RIGHT
             });
-            request("/api/nft/create", body, {}, "POST")
             return
           }
+          request(`/api/nft/delete/${createdNFT.id}`,{},{},"POST")
           toast.error("Failed Mint NFT !", {
             position: toast.POSITION.TOP_RIGHT
           });
@@ -270,6 +305,32 @@ const MintForm = () => {
                             Select a photo</p>
                         </div>
                         <input onChange={captureCoverFile} type="file" className="opacity-0" accept="image/*" />
+                      </label>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="about" className="block text-sm font-medium text-black mt-5">
+                      Demo metadata
+                    </label>
+                    <div className="flex items-center justify-center w-full">
+                      <label
+                        className="flex flex-col w-full h-[300px] border-4 border-dashed hover:bg-gray-100 hover:border-gray-300">
+                        <div className="relative flex flex-col items-center justify-center pt-16">
+                          {capturedDemoFile.type === "audio" ? <audio controls>
+                            <source src={capturedDemoFile.source} type="audio/ogg" />
+                          </audio>
+                            : <img src={capturedDemoFile.source} id="preview" className="absolute inset-0 w-64 h-auto" />}
+                          <svg xmlns="http://www.w3.org/2000/svg"
+                            className="w-12 h-14 text-gray-400 group-hover:text-gray-600" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fillRule="evenodd"
+                              d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                              clipRule="evenodd" />
+                          </svg>
+                          <p className="pt-2 text-sm tracking-wider text-gray-400 group-hover:text-indigo-400"> Select demo audio</p>
+                        </div>
+                        <input onChange={captureDemoFile} type="file" className="opacity-0" />
                       </label>
                     </div>
                   </div>

@@ -69,7 +69,7 @@ const Dashboard = ({ color = "red" }) => {
         setChartNftMint(dataMint)
         ///
         payload = {
-            query: `query MyQuery{transactionLogs(orderBy:created_at,orderDirection:asc,where: {created_at_gte: ${metric.start.getTime() / 1000},created_at_lte: ${metric.end.getTime() / 1000},eventName_contains:"Fill"}) {
+            query: `query MyQuery{transactionLogs(orderBy:created_at,orderDirection:asc,where: {created_at_gte: ${metric.start.getTime() / 1000},created_at_lte: ${metric.end.getTime() / 1000},eventName_contains:"Buy"}) {
                 id
                 eventName
                 from

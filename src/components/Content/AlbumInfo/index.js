@@ -4,7 +4,7 @@ import eth from '../../../img/eth.png';
 import CollectionContext from '../../../store/collection-context';
 import MarketplaceContext from '../../../store/marketplace-context';
 import Web3Context from '../../../store/web3-context';
-import { request, getTokenInfowithTokenIds } from '../../../helpers/utils';
+import { request, getTokenInfowithTokenIds, getMetdataforOwner, getOwner } from '../../../helpers/utils';
 import { useParams } from 'react-router-dom';
 import Modal from '../../General/Modal'
 import { Avatar, Table, Popconfirm } from 'antd'
@@ -101,15 +101,31 @@ const AlbumInfo = (props) => {
             dataIndex: 'Game',
             align: "center",
             render: (value, record) => {
+                const realOwner = getOwner(web3Ctx.account, listNFTInfoNullAlbum[`${record.tokenId}`]?.owner, marketplaceCtx, record.tokenId)
+                console.log("@!@", realOwner)
                 return <>
                     <audio className='w-[600px] m-auto mt-5' controls>
-                        <source src={listNFTInfoNullAlbum?.[`${record.tokenId}`]?.metadata ? `${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${listNFTInfoNullAlbum?.[`${record.tokenId}`]?.metadata}` : null} />
+                        <source src={listNFTInfoNullAlbum?.[`${record.tokenId}`]?.metadata ?
+                            `${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${getMetdataforOwner(listNFTInfoNullAlbum[`${record.tokenId}`], web3Ctx.account, realOwner)}` : null} />
                     </audio>
                 </>
             }
         },
     ];
-    React.useEffect(()=>{setListNFTInfo(listNFTInfo)},[listNFTInfo])
+
+    const renderAudio = (item) => {
+        const ipfsHash = getMetdataforOwner(listNFTInfo[`${item.tokenId}`], web3Ctx.account, getOwner(web3Ctx.account, listNFTInfo[`${item.tokenId}`]?.owner, marketplaceCtx, item.tokenId))
+        console.log("@@!", ipfsHash)
+
+        return <>
+            {ipfsHash ?
+                <audio className='w-[900px] m-auto bg-gray-200' controls>
+                    <source src={ipfsHash ? `${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${ipfsHash}` : null} />
+                </audio>
+                : null}
+        </>
+    }
+    React.useEffect(() => { setListNFTInfo(listNFTInfo) }, [listNFTInfo])
     return (<>
         {albumInfo ?
             <>
@@ -190,7 +206,6 @@ const AlbumInfo = (props) => {
                                                             <a href={`/nft/${item.tokenId}`}>
                                                                 <p className="font-bold	"> {listNFTInfo?.[item.tokenId]?.title} </p>
                                                             </a>
-
                                                             <p className="text-gray-500 text-sm font-semibold tracking-wide"></p>
                                                         </div>
                                                     </div>
@@ -199,11 +214,13 @@ const AlbumInfo = (props) => {
                                                     <div
                                                         class="ml-4 text-xs inline-flex items-center font-bold leading-sm uppercase px-3 py-1 rounded-full"
                                                     >
-                                                        {listNFTInfo?.[item.tokenId]?.metadata ?
-                                                        <audio className='w-[900px] m-auto bg-gray-200' controls>
-                                                            <source src={listNFTInfo?.[item.tokenId]?.metadata ? `${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${listNFTInfo?.[item.tokenId]?.metadata}` : null} />
-                                                        </audio>
-                                                        :null}
+                                                        {renderAudio(item)}
+                                                        {/* {listNFTInfo?.[item.tokenId]?.metadata ?
+                                                            <audio className='w-[900px] m-auto bg-gray-200' controls>
+                                                                <source src={listNFTInfo?.[item.tokenId]?.metadata ? `${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/
+                                                                ${getMetdataforOwner(listNFTInfo[`${item.tokenId}`], web3Ctx.account , getOwner(web3Ctx.account, listNFTInfo[`${item.tokenId}`]?.owner, marketplaceCtx, item.tokenId))}` : null} />
+                                                            </audio>
+                                                            : null} */}
                                                     </div>
                                                 </td>
                                                 {localStorage.getItem("token") && albumInfo.metamask_address === web3Ctx.account ?
@@ -235,8 +252,6 @@ const AlbumInfo = (props) => {
                                             </tr>
                                         </>
                                     })}
-
-
                                 </tbody>
                             </table>
                         </div>

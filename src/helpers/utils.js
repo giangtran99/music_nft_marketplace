@@ -1,4 +1,6 @@
 import { toast } from "react-toastify";
+import AES from 'crypto-js/aes';
+import { enc } from 'crypto-js/core';
 export const DECIMALS = (10 ** 18);
 
 
@@ -40,23 +42,25 @@ export const request = async (url, data, headers, method = 'POST') => {
 
   // helper.showLoading();
   let res = await fetch(url, option);
+
   // helper.hideLoading();
   try {
     let rs = await res.json();
-    if (window.debug) console.log(`[RESPONSE]`, url, rs);
     switch (res.status) {
       case 401:
         toast.error('Phiên làm việc hết hạn. Vui lòng đăng nhập lại');
         break;
       case 500:
-        toast.error('Có lỗi xảy ra !');
+        toast.error('Please connect metamask wallet!');
         break;
       case 200:
         return rs;
       default:
         throw rs;
     }
+    if (window.debug) console.log(`[RESPONSE]`, url, rs);
   } catch (err) {
+    toast.error('System is busy !');
     console.log('res', res, err);
     throw err;
   }
@@ -71,20 +75,22 @@ export const getTokenInfowithTokenIds= async (tokenIds,collectionCtx)=>{
           "hash":hash
       };
   }))
-  console.log("@@alo11",hashes)
   const responses = await Promise.all(hashes.map(async item=>{
       const response = await fetch(`${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${item.hash}?clear`);
       if (!response.ok) {
         throw new Error('Something went wrong');
       }
       const metadata = await response.json();
-      console.log("@@response",metadata)
+      const owner = await collectionCtx.contract.methods.ownerOf(item.tokenId).call();
 
+      console.log("@@ky vay",metadata)
       return {
           "id":item.tokenId,
           "title":metadata.properties.name.description,
           "coverPhoto":metadata.properties.coverPhoto.description,
-          "metadata":metadata.properties.metadata.description
+          "metadata":metadata.properties.metadata.description,
+          "demoMetadata":metadata.properties.demoMetadata.description,
+          "owner":owner
       }
   }))
   let result = {}
@@ -92,9 +98,29 @@ export const getTokenInfowithTokenIds= async (tokenIds,collectionCtx)=>{
       result[`${item.id}`] = {
           "title":item.title,
           "coverPhoto":item.coverPhoto,
-          "metadata":item.metadata
+          "metadata":item.metadata,
+          "demoMetadata":item.demoMetadata,
+          "owner":item.owner,
 
       }
   })
   return result
 } 
+
+export const getMetdataforOwner = (NFT,currentAccount,realOwner)=>{
+  
+  try{
+   if(currentAccount === realOwner && NFT.metadata){
+       let bytes = AES.decrypt(NFT.metadata, process.env.REACT_APP_AES_KEY) 
+       let decryptedData = bytes.toString(enc.Utf8);
+       console.log("@@rea",decryptedData)
+       return decryptedData
+   }
+   return NFT.demoMetadata
+  }
+  catch(err){
+      toast.error(err)
+      return null
+  }
+ 
+}

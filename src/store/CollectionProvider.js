@@ -118,15 +118,16 @@ const CollectionProvider = props => {
         }
 
         const metadata = await response.json();
+        console.log("!@!@2",metadata)
         const owner = await contract.methods.ownerOf(i + 1).call();
-        
         collection.push({
           id: i + 1,
           title: metadata.properties.name.description,
           metadata: metadata.properties.metadata.description,
+          demoMetadata: metadata.properties?.demoMetadata?.description,
           description: metadata.properties.description.description,
           coverPhoto: metadata.properties.coverPhoto.description,
-          minter: metadata.properties.description.minter,
+          minter: metadata.properties.minter.description,
           owner: owner
         });
 
@@ -155,6 +156,7 @@ const CollectionProvider = props => {
           id: nfts[i].tokenId,
           title: metadata.properties.name.description,
           metadata: metadata.properties.metadata.description,
+          demoMetadata: metadata.properties.demoMetadata.description,
           description: metadata.properties.description.description,
           coverPhoto: metadata.properties.coverPhoto.description,
           minter: metadata.properties.description.minter,
@@ -187,6 +189,7 @@ const CollectionProvider = props => {
           id: result.nfts[i].tokenId,
           title: metadata.properties.name.description,
           metadata: metadata.properties.metadata.description,
+          demoMetadata: metadata.properties.demoMetadata.description,
           description: metadata.properties.description.description,
           coverPhoto: metadata.properties.coverPhoto.description,
           minter: metadata.properties.description.minter,
@@ -215,6 +218,7 @@ const CollectionProvider = props => {
         id: parseInt(id),
         title: metadata.properties.name.description,
         metadata: metadata.properties.metadata.description,
+        demoMetadata: metadata.properties.demoMetadata.description,
         description: metadata.properties.description.description,
         coverPhoto: metadata.properties.coverPhoto.description,
         minter: metadata.properties.description.minter,

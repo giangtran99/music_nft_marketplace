@@ -97,10 +97,14 @@ const Navbar = () => {
           publicAddress: web3Ctx.account,
           signature: signature
         }, {}, "POST")
-        console.log("@@ky ghe", authInfo)
         localStorage.setItem("token", authInfo.access_token)
         localStorage.setItem("user", JSON.stringify(authInfo.user))
         setToken(authInfo.access_token)
+        setTimeout(async ()=>{
+          const authInfo = await request('/api/auth/refresh', {}, {}, "GET")
+          localStorage.setItem("token", authInfo.access_token)
+          localStorage.setItem("user", JSON.stringify(authInfo.user))
+        },authInfo.expires_in-600)
       })
     }
   };

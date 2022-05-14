@@ -1,6 +1,6 @@
 import React, { useContext, useRef, createRef } from 'react'
 import eth from '../../img/eth.png';
-import { formatPrice, getOwner, request } from '../../helpers/utils';
+import { formatPrice, getOwner, request,getMetdataforOwner } from '../../helpers/utils';
 import web3 from '../../connection/web3';
 import Web3Context from '../../store/web3-context';
 import CollectionContext from '../../store/collection-context';
@@ -31,18 +31,17 @@ const MusicNFT = ({ type }) => {
     }
 
     const isShowNFT = (_type, owner) => {
-        console.log("@@ype", _type)
         if (_type === "all") return true
         return owner.toUpperCase() === getAddressbyType(_type).toUpperCase() ? true : false
     }
 
-    const makeOfferHandler = (event, id, key) => {
+    const makeOfferHandler = (event, id, key ,minter) => {
         event.preventDefault();
         try {
             const enteredPrice = web3.utils.toWei(priceRefs.current[key].current.value, 'ether');
             collectionCtx.contract.methods.approve(marketplaceCtx.contract.options.address, id).send({ from: web3Ctx.account })
                 .on('receipt', (receipt) => {
-                    marketplaceCtx.contract.methods.makeOffer(id, enteredPrice).send({ from: web3Ctx.account })
+                    marketplaceCtx.contract.methods.makeOffer(id, enteredPrice , minter).send({ from: web3Ctx.account })
                         .on('transactionHash', async (hash) => {
                             if (hash) {
                                 marketplaceCtx.setMktIsLoading(true);
@@ -66,7 +65,6 @@ const MusicNFT = ({ type }) => {
     };
     const cancelHandler = (event) => {
         const cancelIndex = parseInt(event.target.value);
-        console.log("@@ghe", cancelIndex)
 
         marketplaceCtx.contract.methods.cancelOffer(marketplaceCtx.offers[cancelIndex].offerId).send({ from: web3Ctx.account })
             .on('transactionHash', (hash) => {
@@ -84,7 +82,6 @@ const MusicNFT = ({ type }) => {
             });
     };
 
-    console.log("@@collectionCtx", collectionCtx.albums.length)
     return (
         <>
             {collectionCtx.collection.length > 0 ?
@@ -97,6 +94,7 @@ const MusicNFT = ({ type }) => {
                                 const owner = index === -1 ? NFT.owner : marketplaceCtx.offers[index].user;
                                 const price = index !== -1 ? formatPrice(marketplaceCtx.offers[index].price).toFixed(2) : null;
                                 const realOwner = getOwner(getAddressbyType(type), NFT.owner, marketplaceCtx, NFT.id)
+                                console.log("@!@",NFT)
                                 const isShow = isShowNFT(type, realOwner)
                                 return isShow ? (<div key={key} className="bg-white shadow-2xl border rounded p-3">
                                     <div className="group relative">
@@ -115,7 +113,7 @@ const MusicNFT = ({ type }) => {
                                             </button>
                                         </div>
                                         <audio className='w-4/5 m-auto mt-5' controls>
-                                            <source src={`${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${NFT.metadata}`} />
+                                            <source src={`${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${getMetdataforOwner(NFT,web3Ctx.account,realOwner)}`} />
                                         </audio>
                                     </div>
 
@@ -135,7 +133,7 @@ const MusicNFT = ({ type }) => {
                                     {!price && type === "userinfo" && realOwner === web3Ctx.account ?
                                         <div class="flex items-center border-b border-indigo-500 py-2">
                                             <input ref={priceRefs.current[key]} class="appearance-none bg-transparent border-none w-full text-black mr-3 py-1 px-2 leading-tight focus:outline-none" type="number" placeholder="Set price your NFT" aria-label="Full name" />
-                                            <button onClick={(e) => makeOfferHandler(e, NFT.id, key)} class="flex-shrink-0 bg-indigo-400 hover:bg-indigo-600 border-indigo-400 hover:border-indigo-700 text-sm border-4 text-white py-1 px-2 rounded" type="button">
+                                            <button onClick={(e) => makeOfferHandler(e, NFT.id, key, NFT.minter)} class="flex-shrink-0 bg-indigo-400 hover:bg-indigo-600 border-indigo-400 hover:border-indigo-700 text-sm border-4 text-white py-1 px-2 rounded" type="button">
                                                 Offer
                                             </button>
                                         </div>

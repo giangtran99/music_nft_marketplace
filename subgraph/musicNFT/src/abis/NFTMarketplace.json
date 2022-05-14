@@ -101,6 +101,12 @@
       },
       {
         "indexed": false,
+        "internalType": "address",
+        "name": "minter",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "uint256",
         "name": "price",
         "type": "uint256"
@@ -205,7 +211,8 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -233,6 +240,11 @@
         "type": "address"
       },
       {
+        "internalType": "address",
+        "name": "minter",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
         "name": "price",
         "type": "uint256"
@@ -249,7 +261,8 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -268,7 +281,8 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -281,6 +295,11 @@
         "internalType": "uint256",
         "name": "_price",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_minter",
+        "type": "address"
       }
     ],
     "name": "makeOffer",
@@ -299,7 +318,8 @@
     "name": "fillOffer",
     "outputs": [],
     "stateMutability": "payable",
-    "type": "function"
+    "type": "function",
+    "payable": true
   },
   {
     "inputs": [
