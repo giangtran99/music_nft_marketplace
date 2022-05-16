@@ -60,6 +60,9 @@ export const request = async (url, data, headers, method = 'POST') => {
     }
     if (window.debug) console.log(`[RESPONSE]`, url, rs);
   } catch (err) {
+    const authInfo = await request('/api/auth/refresh', {}, {}, "GET")
+    localStorage.setItem("token", authInfo.access_token)
+    localStorage.setItem("user", JSON.stringify(authInfo.user))
     toast.error('System is busy !');
     console.log('res', res, err);
     throw err;

@@ -69,14 +69,14 @@ const Filter = ({ _account, type }) => {
                         name: 'Genre',
                         options: options
                     },
-                    {
-                        id: 'status',
-                        name: 'Status',
-                        options: [
-                            { value: 'on sale', label: 'On Sale', checked: false },
-                            { value: 'not listed', label: 'Not Listed', checked: false },
-                        ],
-                    },
+                    // {
+                    //     id: 'status',
+                    //     name: 'Status',
+                    //     options: [
+                    //         { value: 'on sale', label: 'On Sale', checked: false },
+                    //         { value: 'not listed', label: 'Not Listed', checked: false },
+                    //     ],
+                    // },
                 ]
                 setFilters(_filters)
             })

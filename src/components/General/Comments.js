@@ -102,10 +102,10 @@ class CommentComponents extends React.Component {
             <>
                 {localStorage.getItem("token") ?
                     <Comment
-                        avatar={<Avatar src={this.state.currentUser.avatar_picture ? 
+                        avatar={<Avatar src={this.state.currentUser?.avatar_picture ? 
                             `${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${this.state.currentUser.avatar_picture}`
                             : "https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png"}
-                            alt={this.state.currentUser.name} />}
+                            alt={this.state.currentUser?.name} />}
                         content={
                             <Editor
                                 onChange={this.handleChange}

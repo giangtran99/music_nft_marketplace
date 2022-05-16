@@ -143,16 +143,4 @@ contract('NFTMarketplace', (accounts) => {
     });
   });
 
-  describe('Get tokens by owner', () => {
-    it('Get tokens by owner', async () => {
-      const result = await mktContract.tokensByOwner(accounts[0]);
-  
-      // SUCCESS
-      console.log(result)
-
-    });
-
-
-  });
-
 });

@@ -108,6 +108,7 @@ const NFTInfo = (props) => {
         marketplaceCtx.contract.methods.fillOffer(marketplaceCtx.offers[buyIndex].offerId).send({ from: web3Ctx.account, value: marketplaceCtx.offers[buyIndex].price })
             .on('transactionHash', async (hash) => {
                 if (hash) {
+                    request(`/api/nft/update-token/${marketplaceCtx.offers[buyIndex].id}`, { album_id: 0 }, {}, "POST")
                     marketplaceCtx.setMktIsLoading(true);
                     toast.success("Buy action is success ")
                     return

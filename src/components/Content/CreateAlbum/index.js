@@ -100,6 +100,7 @@ const CreateAlbumForm = () => {
     };
 
     formIsValid && mintNFT();
+    !formIsValid && toast.error('Please fill your Album info !');
   };
 
   const nameClass = nameIsValid ? "form-control" : "form-control is-invalid";

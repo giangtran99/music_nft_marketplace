@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect, useRef } from 'react';
 import web3 from '../../../connection/web3'
 import Web3Context from '../../../store/web3-context';
 import CollectionContext from '../../../store/collection-context';
@@ -25,6 +25,8 @@ const MintForm = () => {
   const [fileIsValid, setFileIsValid] = useState(true);
   const web3Ctx = useContext(Web3Context);
   const collectionCtx = useContext(CollectionContext);
+  const audioRef = useRef()
+  const audioRef2 = useRef()
 
 
   useEffect(() => {
@@ -74,6 +76,10 @@ const MintForm = () => {
     }
     result.type = typeFile
     setCapturedCoverFile(result)
+    if (audioRef2.current) {
+      audioRef2.current.pause();
+      audioRef2.current.load();
+    }
     const reader = new window.FileReader();
     reader.readAsArrayBuffer(file);
     console.log("@@file", file)
@@ -85,7 +91,6 @@ const MintForm = () => {
 
   const captureFile = (event) => {
     event.preventDefault();
-
     let result = {}
     const file = event.target.files[0];
     var src = URL.createObjectURL(file);
@@ -112,6 +117,7 @@ const MintForm = () => {
 
     let result = {}
     const file = event.target.files[0];
+    console.log("@@ko pnai khen", file)
     var src = URL.createObjectURL(file);
     result.source = src
     let tail = file.name.split(".")[file.name.split(".").length - 1]
@@ -124,6 +130,11 @@ const MintForm = () => {
     }
     result.type = typeFile
     setCapturedDemoFile(result)
+
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.load();
+    }
     const reader = new window.FileReader();
     reader.readAsArrayBuffer(file);
     reader.onloadend = () => {
@@ -138,14 +149,19 @@ const MintForm = () => {
     capturedFileBuffer ? setFileIsValid(true) : setFileIsValid(false);
     const formIsValid = enteredName && enteredDescription && capturedFileBuffer;
     // Upload file to IPFS and push to the blockchain
+    console.log("!@#", formIsValid)
+
+
     const mintNFT = async () => {
       // Add file to the IPFS
-      const fileAdded = await Promise.all([ipfs.add(capturedFileBuffer),ipfs.add(capturedDemoFileBuffer),ipfs.add(capturedCoverFileBuffer)])
+      const fileAdded = await Promise.all([ipfs.add(capturedFileBuffer), ipfs.add(capturedDemoFileBuffer), ipfs.add(capturedCoverFileBuffer)])
       // const fileAdded = await ipfs.add(capturedFileBuffer);
       // const demoFileAdded = await ipfs.add(capturedDemoFileBuffer);
       // const fileCoverPhotoAdded = await ipfs.add(capturedCoverFileBuffer);
-      console.log("@@fileAdded",fileAdded)
       if (!fileAdded[0] || !fileAdded[1] || !fileAdded[2]) {
+        toast.error("Something went wrong when updloading the file", {
+          position: toast.POSITION.TOP_RIGHT
+        });
         console.error('Something went wrong when updloading the file');
         return;
       }
@@ -180,12 +196,12 @@ const MintForm = () => {
           }
         }
       };
-      console.log("!@!@",metadata)
-
 
       const metadataAdded = await ipfs.add(JSON.stringify(metadata));
-      console.log("@@chua hieu", metadataAdded)
       if (!metadataAdded) {
+        toast.error("Something went wrong when updloading the file", {
+          position: toast.POSITION.TOP_RIGHT
+        });
         console.error('Something went wrong when updloading the file');
         return;
       }
@@ -196,32 +212,37 @@ const MintForm = () => {
         cover_photo: fileAdded[2].path
       }
       const createdNFT = await request("/api/nft/create", body, {}, "POST")
+      if(!createdNFT.id){
+        toast.error("Failed Mint NFT !", {
+          position: toast.POSITION.TOP_RIGHT
+        });
+      }
       collectionCtx.contract.methods.safeMint(metadataAdded.path).send({ from: web3Ctx.account })
         .on('transactionHash', async (hash) => {
           const receipt = await web3.eth.getTransactionReceipt(hash)
           if (hash) {
             const tokenId = web3.utils.hexToNumber(receipt.logs[0].topics[3])
-            request(`/api/nft/update-token/${createdNFT.id}`,{tokenId:tokenId},{},"POST")
+            request(`/api/nft/update-token/${createdNFT.id}`, { tokenId: tokenId }, {}, "POST")
             toast.success("Success Mint NFT !", {
               position: toast.POSITION.TOP_RIGHT
             });
             return
           }
-          request(`/api/nft/delete/${createdNFT.id}`,{},{},"POST")
+          request(`/api/nft/delete/${createdNFT.id}`, {}, {}, "GET")
           toast.error("Failed Mint NFT !", {
             position: toast.POSITION.TOP_RIGHT
           });
-
-
           collectionCtx.setNftIsLoading(true);
         })
         .on('error', (e) => {
+          request(`/api/nft/delete/${createdNFT.id}`, {}, {}, "GET")
           toast.error('Something went wrong when pushing to the blockchain');
           collectionCtx.setNftIsLoading(false);
         })
     };
 
     formIsValid && mintNFT();
+    !formIsValid && toast.error('Please fill your NFT info !');
   };
 
   return (
@@ -317,7 +338,7 @@ const MintForm = () => {
                       <label
                         className="flex flex-col w-full h-[300px] border-4 border-dashed hover:bg-gray-100 hover:border-gray-300">
                         <div className="relative flex flex-col items-center justify-center pt-16">
-                          {capturedDemoFile.type === "audio" ? <audio controls>
+                          {capturedDemoFile.type === "audio" ? <audio controls ref={audioRef}>
                             <source src={capturedDemoFile.source} type="audio/ogg" />
                           </audio>
                             : <img src={capturedDemoFile.source} id="preview" className="absolute inset-0 w-64 h-auto" />}
@@ -344,7 +365,7 @@ const MintForm = () => {
                         className="flex flex-col w-full h-[300px] border-4 border-dashed hover:bg-gray-100 hover:border-gray-300">
                         <div className="relative flex flex-col items-center justify-center pt-16">
                           {capturedFile.type === "audio" ? <audio controls>
-                            <source src={capturedFile.source} type="audio/ogg" />
+                            <source ref={audioRef2} src={capturedFile.source} type="audio/ogg" />
                           </audio>
                             : <img src={capturedFile.source} id="preview" className="absolute inset-0 w-64 h-auto" />}
                           <svg xmlns="http://www.w3.org/2000/svg"

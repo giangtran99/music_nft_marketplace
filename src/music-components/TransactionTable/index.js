@@ -9,7 +9,9 @@ import CollectionContext from '../../store/collection-context';
 import MarketplaceContext from '../../store/marketplace-context';
 import { useParams } from 'react-router-dom';
 import moment from 'moment'
-import { Table, Avatar } from "antd"
+import { Table, Avatar ,Button,Input,Space} from "antd"
+import { SearchOutlined } from '@ant-design/icons';
+
 import _ from 'lodash'
 
 const TransactionTable = ({ type, data }) => {
@@ -17,6 +19,8 @@ const TransactionTable = ({ type, data }) => {
     const web3Ctx = React.useContext(Web3Context);
     const collectionCtx = React.useContext(CollectionContext);
     const marketplaceCtx = React.useContext(MarketplaceContext);
+    const [listSearch, setListSearch] = React.useState({});
+    const searchInput = React.useRef();
     const [nftInfoForTransaction, setNftInfoForTransaction] = React.useState({})
     const { id } = useParams()
 
@@ -54,6 +58,61 @@ const TransactionTable = ({ type, data }) => {
     //     })
     //     return result
     // } 
+
+    const handleSearchFilter = (selectedKeys, confirm, dataIndex) => {
+        setListSearch({
+          ...listSearch,
+          [`search_${dataIndex}`]: selectedKeys[0],
+        });
+        confirm();
+      };
+    
+      const getColumnSearchProps = dataIndex => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+          <div style={{ padding: 8 }}>
+            <Input
+              ref={searchInput}
+              placeholder={`Tìm kiếm ${dataIndex}`}
+              value={selectedKeys[0]}
+              onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+              onPressEnter={() => handleSearchFilter(selectedKeys, confirm, dataIndex)}
+              style={{ width: 188, marginBottom: 8, display: 'block' }}
+            />
+            <Space>
+              <Button
+                type="primary"
+                onClick={() => handleSearchFilter(selectedKeys, confirm, dataIndex)}
+                icon={<SearchOutlined />}
+                size="small"
+                style={{ width: 90 }}
+              >
+                Tìm
+              </Button>
+              <Button onClick={() => handleReset(clearFilters, confirm, dataIndex)} size="small" style={{ width: 90 }}>
+                Reset
+              </Button>
+            </Space>
+          </div>
+        ),
+        filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+        onFilterDropdownVisibleChange: visible => {
+          if (visible) {
+            setTimeout(() => searchInput.current.select());
+          }
+        },
+        onFilter: (value, record) => {
+            return record.eventName.toLowerCase().includes(value.toLowerCase())
+        }
+      });
+    
+      const handleReset = (clearFilters, confirm, dataIndex) => {
+        clearFilters();
+        setListSearch({
+          ...listSearch,
+          [`search_${dataIndex}`]: '',
+        });
+        confirm();
+      };
 
     const getTransactionLogsbyType = async (skip = 0, limit = 10) => {
         let payload = {}
@@ -164,7 +223,6 @@ const TransactionTable = ({ type, data }) => {
                 const tokenIds4 = _.uniq(mergeTransactionlogs4.map(item => +item.tokenId))
                 const nftInfobyTransaction4 = await getTokenInfowithTokenIds(tokenIds4, collectionCtx)
                 setNftInfoForTransaction(nftInfobyTransaction4)
-                console.log("@@mergeTransactionlogs4", mergeTransactionlogs4)
                 return mergeTransactionlogs4
             // return await request(`/api/transactionlog/get-address/${id}`, {}, {}, "GET")
         }
@@ -203,7 +261,7 @@ const TransactionTable = ({ type, data }) => {
             render: (value, record) => {
                 return <>
                     <Avatar size={96} shape={"square"} src={`${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${nftInfoForTransaction?.[record.tokenId]?.coverPhoto}`} />
-                    <span className="font-bold ml-2">{nftInfoForTransaction?.[record.tokenId]?.title}</span>
+                    <a href={`/nft/${record.tokenId}`} className="font-bold ml-2">{nftInfoForTransaction?.[record.tokenId]?.title}</a>
 
                 </>
             }
@@ -284,20 +342,7 @@ const TransactionTable = ({ type, data }) => {
             dataIndex: 'eventName',
             align: "center",
             width: 20,
-            filters: [
-                {
-                  text: 'Safe Mint',
-                  value: 'safe mint',
-                },
-                {
-                  text: 'Make Offer',
-                  value: 'make offer',
-                },
-                {
-                    text: 'Buy',
-                    value: 'buy',
-                  },
-            ],
+            ...getColumnSearchProps("eventName"),
             render: (eventName) => {
                 return <>
                     <div
@@ -311,7 +356,7 @@ const TransactionTable = ({ type, data }) => {
 
     ];
     return (<>
-        <Table dataSource={transactionLogs} columns={columns} size="small" pagination={{ pageSize: 5 }}/>
+        <Table dataSource={transactionLogs} columns={columns} size="small" pagination={{ pageSize: 5 }} />
     </>)
 }
 export default TransactionTable

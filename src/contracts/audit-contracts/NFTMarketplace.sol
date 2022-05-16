@@ -4,9 +4,10 @@ pragma solidity ^0.8.0;
 import "./NFTCollection.sol";
 
 contract NFTMarketplace {
+
     uint256 public offerCount;
     mapping(uint256 => _Offer) public offers;
-    mapping(address => uint256) userFunds;
+    mapping(address => uint256) public userFunds;
     NFTCollection nftCollection;
     struct _Offer {
         uint256 offerId;
@@ -85,11 +86,10 @@ contract NFTMarketplace {
         );
         nftCollection.transferFrom(address(this), msg.sender, _offer.id);
         _offer.fulfilled = true;
-        userFunds[_offer.user] += (80 * msg.value )/100;
-        //tranfer eth to minter
-        userFunds[_offer.minter] += (10 * msg.value)/100;
+        userFunds[_offer.user] += msg.value;
         emit OfferFilled(_offerId, _offer.id, msg.sender);
-        
+        //tranfer eth to minter
+        payable(_offer.minter).transfer((5 * msg.value)/100);
         //listen event from graph
         nftCollection.setTransactionCount();
         emit updateNFTOwner(msg.sender, _offer.id);
@@ -134,16 +134,16 @@ contract NFTMarketplace {
     }
 
     function claimFunds() public payable{
-        uint256 eth = userFunds[msg.sender];
         require(
-            eth > 0,
+            userFunds[msg.sender] > 0,
             "This user has no funds to be claimed"
         );
+        payable(msg.sender).transfer(userFunds[msg.sender]);
+        //this
+        emit ClaimFunds(msg.sender, userFunds[msg.sender]);
         userFunds[msg.sender] = 0;
-        payable(msg.sender).transfer(eth);
-        emit ClaimFunds(msg.sender, eth);
     }
-    
+
 
     // Fallback: reverts if Ether is sent to this smart-contract by mistake
     fallback() external {

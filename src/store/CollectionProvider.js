@@ -107,6 +107,7 @@ const CollectionProvider = props => {
 
   const loadCollectionHandler = async (contract, totalSupply) => {
     let collection = [];
+    console.log("1111@!@",totalSupply)
     for (let i = 0; i < totalSupply; i++) {
 
       const hash = await contract.methods.tokenURIs(i).call();
@@ -140,7 +141,6 @@ const CollectionProvider = props => {
 
   const loadCollectionFromServerHandler = async (contract, nfts, account, marketplaceCtx) => {
     let collection = [];
-    console.log("@@nfts11",nfts)
     for (let i = 0; i < nfts.length; i++) {
       try {
         const hash = await contract.methods.tokenURIs(nfts[i].tokenId-1).call();
@@ -164,18 +164,23 @@ const CollectionProvider = props => {
         }, ...collection];
 
       } catch {
+        toast.error("Something went wrong")
         console.error('Something went wrong');
       }
     }
+    console.log("@@!",collection)
     dispatchCollectionAction({ type: 'LOADCOLLECTION', collection: collection, albums: [] });
   };
   const loadCollectionFromSearchHander = async (contract, textSearch) => {
     let collection = []
+    if(!textSearch){
+      loadCollectionHandler(contract,await contract.methods.totalSupply().call())
+      return
+    }
     const result = await request(`/api/nft/search/${textSearch}`, {}, {}, 'GET')
     for (let i = 0; i < result.nfts.length; i++) {
       try {
         const hash = await contract.methods.tokenURIs(result.nfts[i].tokenId-1).call();
-        console.log("@@result.nfts[i].tokenId",result.nfts[i].tokenId)
 
         const response = await fetch(`${process.env.REACT_APP_IPFS_URL}:${process.env.REACT_APP_IPFS_GATEWAY_PORT}/ipfs/${hash}?clear`);
         if (!response.ok) {
@@ -197,6 +202,7 @@ const CollectionProvider = props => {
         }, ...collection];
 
       } catch {
+        toast.error("Something went wrong")
         console.error('Something went wrong');
       }
     }
@@ -226,6 +232,7 @@ const CollectionProvider = props => {
       };
 
     } catch {
+      toast.error("Something went wrong")
       console.error('Something went wrong');
     }
     dispatchCollectionAction({ type: 'UPDATECOLLECTION', NFT: NFT });

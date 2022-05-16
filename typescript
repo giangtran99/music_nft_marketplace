@@ -1,0 +1,98 @@
+Script started on Mon May 16 16:43:06 2022
+[1m[7m%[27m[1m[0m                                                                                  [0m[27m[24m[Jgiangtran@Giangs-MacBook-Air nft-marketplace % [K[?2004hgit push origin main[?2004l
+Everything up-to-date
+[1m[7m%[27m[1m[0m                                                                                  [0m[27m[24m[Jgiangtran@Giangs-MacBook-Air nft-marketplace % [K[?2004hgit push origin main[16Dcommit -m "update shipping"[27Dadd .                      [22Dpull origin main[16Dadd .           [11Dcommit -m "update shipping"[27Dpush origin main           [11D[20D                    [20Dssh script.sh[1m [0m[0m [?2004l
+start running nft marketplace .......
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+
+Compiling your contracts...
+===========================
+[?25l[33m⠋[39m Fetching solc version list from solc-bin. Attempt #1[2K[1G[33m⠙[39m Fetching solc version list from solc-bin. Attempt #1[2K[1G[33m⠹[39m Fetching solc version list from solc-bin. Attempt #1[2K[1G[33m⠸[39m Fetching solc version list from solc-bin. Attempt #1[2K[1G[33m⠼[39m Fetching solc version list from solc-bin. Attempt #1[2K[1G[33m⠴[39m Fetching solc version list from solc-bin. Attempt #1[2K[1G[33m⠦[39m Fetching solc version list from solc-bin. Attempt #1[2K[1G[33m⠧[39m Fetching solc version list from solc-bin. Attempt #1[2K[1G[33m⠇[39m Fetching solc version list from solc-bin. Attempt #1[2K[1G[33m⠏[39m Fetching solc version list from solc-bin. Attempt #1[2K[1G[?25h[32m✔[39m Fetching solc version list from solc-bin. Attempt #1
+[?25l[33m⠋[39m Fetching solc version list from solc-bin. Attempt #1[2K[1G[33m⠙[39m Fetching solc version list from solc-bin. Attempt #1[2K[1G[33m⠹[39m Fetching solc version list from solc-bin. Attempt #1[2K[1G[33m⠸[39m Fetching solc version list from solc-bin. Attempt #1[2K[1G[33m⠼[39m Fetching solc version list from solc-bin. Attempt #1[2K[1G[33m⠴[39m Fetching solc version list from solc-bin. Attempt #1[2K[1G[33m⠦[39m Fetching solc version list from solc-bin. Attempt #1[2K[1G[33m⠧[39m Fetching solc version list from solc-bin. Attempt #1[2K[1G[33m⠇[39m Fetching solc version list from solc-bin. Attempt #1[2K[1G[33m⠏[39m Fetching solc version list from solc-bin. Attempt #1[2K[1G[33m⠋[39m Fetching solc version list from solc-bin. Attempt #1[2K[1G[33m⠙[39m Fetching solc version list from solc-bin. Attempt #1[2K[1G[?25h[32m✔[39m Fetching solc version list from solc-bin. Attempt #1
+> Compiling ./src/contracts/audit-contracts/Migrations.sol
+> Compiling ./src/contracts/audit-contracts/NFTCollection.sol
+> Compiling ./src/contracts/audit-contracts/NFTMarketplace.sol
+> Artifacts written to /Users/giangtran/Desktop/workspace/nft-marketplace/src/abis
+> Compiled successfully using:
+   - solc: 0.8.13+commit.abaa5c0e.Emscripten.clang
+Network up to date.
+[?25hRemoving docker_graph-node_1 ... 
+Removing docker_ipfs_1       ... 
+Removing docker_postgres_1   ... 
+[2A[2KRemoving docker_ipfs_1       ... [32mdone[0m[2B[1A[2KRemoving docker_postgres_1   ... [32mdone[0m[1B[3A[2KRemoving docker_graph-node_1 ... [32mdone[0m[3BRemoving network docker_default
+rm: /Users/giangtran/Desktop/workspace/graph-node/docker/data: is a directory
+Creating network "docker_default" with the default driver
+Creating docker_ipfs_1 ... 
+Creating docker_postgres_1 ... 
+[1A[2KCreating docker_postgres_1 ... [32mdone[0m[1B[2A[2KCreating docker_ipfs_1     ... [32mdone[0m[2BCreating docker_graph-node_1 ... 
+[1A[2KCreating docker_graph-node_1 ... [32mdone[0m[1BAttaching to docker_postgres_1, docker_ipfs_1, docker_graph-node_1
+[33mipfs_1        |[0m Changing user to ipfs
+[33mipfs_1        |[0m ipfs version 0.4.23
+[33mipfs_1        |[0m Found IPFS fs-repo at /data/ipfs
+[33mipfs_1        |[0m Initializing daemon...
+[33mipfs_1        |[0m go-ipfs version: 0.4.23-6ce9a35
+[33mipfs_1        |[0m Repo version: 7
+[33mipfs_1        |[0m System version: amd64/linux
+[33mipfs_1        |[0m Golang version: go1.12.16
+[32mpostgres_1    |[0m 
+[32mpostgres_1    |[0m PostgreSQL Database directory appears to contain a database; Skipping initialization
+[32mpostgres_1    |[0m 
+[32mpostgres_1    |[0m 2022-05-16 09:43:41.395 UTC [1] LOG:  starting PostgreSQL 14.2 (Debian 14.2-1.pgdg110+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 10.2.1-6) 10.2.1 20210110, 64-bit
+[32mpostgres_1    |[0m 2022-05-16 09:43:41.395 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+[32mpostgres_1    |[0m 2022-05-16 09:43:41.395 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+[32mpostgres_1    |[0m 2022-05-16 09:43:41.406 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+[32mpostgres_1    |[0m 2022-05-16 09:43:41.440 UTC [27] LOG:  database system was shut down at 2022-05-16 09:42:57 UTC
+[32mpostgres_1    |[0m 2022-05-16 09:43:41.493 UTC [1] LOG:  database system is ready to accept connections
+[33mipfs_1        |[0m Swarm listening on /ip4/127.0.0.1/tcp/4001
+[33mipfs_1        |[0m Swarm listening on /ip4/172.20.0.3/tcp/4001
+[33mipfs_1        |[0m Swarm listening on /p2p-circuit
+[33mipfs_1        |[0m Swarm announcing /ip4/127.0.0.1/tcp/4001
+[33mipfs_1        |[0m Swarm announcing /ip4/172.20.0.3/tcp/4001
+[33mipfs_1        |[0m API server listening on /ip4/0.0.0.0/tcp/5001
+[33mipfs_1        |[0m WebUI: http://0.0.0.0:5001/webui
+[33mipfs_1        |[0m Gateway (readonly) server listening on /ip4/0.0.0.0/tcp/8080
+[33mipfs_1        |[0m Daemon is ready
+[36mgraph-node_1  |[0m May 16 09:43:56.696 INFO Graph Node version: 0.26.0 (2022-05-02)
+[36mgraph-node_1  |[0m May 16 09:43:56.696 WARN GRAPH_POI_ACCESS_TOKEN not set; might leak POIs to the public via GraphQL
+[36mgraph-node_1  |[0m May 16 09:43:56.696 INFO Generating configuration from command line arguments
+[36mgraph-node_1  |[0m May 16 09:43:56.696 WARN No fork base URL specified, subgraph forking is disabled
+[36mgraph-node_1  |[0m May 16 09:43:56.696 INFO Starting up
+[36mgraph-node_1  |[0m May 16 09:43:56.696 INFO Trying IPFS node at: http://ipfs:5001/
+[36mgraph-node_1  |[0m May 16 09:43:56.704 INFO Creating transport, capabilities: archive, traces, url: http://host.docker.internal:8545, provider: mainnet-rpc-0
+[36mgraph-node_1  |[0m May 16 09:43:56.721 INFO Successfully connected to IPFS node at: http://ipfs:5001/
+[32mpostgres_1    |[0m 2022-05-16 09:43:56.726 UTC [35] FATAL:  no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption
+[36mgraph-node_1  |[0m May 16 09:43:56.727 ERRO Failed to connect notification listener: db error: FATAL: no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption, retry_delay_s: 1, attempt: 0, channel: store_events, component: NotificationListener
+[36mgraph-node_1  |[0m May 16 09:43:56.728 INFO Connecting to Postgres, weight: 1, conn_pool_size: 10, url: postgresql://graph-node:HIDDEN_PASSWORD@postgres:5432/graph-node, pool: main, shard: primary
+[36mgraph-node_1  |[0m May 16 09:43:56.728 INFO Pool successfully connected to Postgres, pool: main, shard: primary, component: Store
+[32mpostgres_1    |[0m 2022-05-16 09:43:56.736 UTC [37] FATAL:  no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption
+[36mgraph-node_1  |[0m May 16 09:43:56.739 ERRO Postgres connection error, error: FATAL:  no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption, pool: main, shard: primary, component: ConnectionPool
+[32mpostgres_1    |[0m 2022-05-16 09:43:56.739 UTC [36] FATAL:  no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption
+[32mpostgres_1    |[0m 2022-05-16 09:43:56.741 UTC [38] FATAL:  no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption
+[32mpostgres_1    |[0m 2022-05-16 09:43:56.744 UTC [39] FATAL:  no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption
+[32mpostgres_1    |[0m 2022-05-16 09:43:57.169 UTC [40] FATAL:  no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption
+[32mpostgres_1    |[0m 2022-05-16 09:43:57.745 UTC [41] FATAL:  no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption
+[32mpostgres_1    |[0m 2022-05-16 09:43:57.986 UTC [42] FATAL:  no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption
+[32mpostgres_1    |[0m 2022-05-16 09:43:59.609 UTC [43] FATAL:  no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption
+[32mpostgres_1    |[0m 2022-05-16 09:44:01.762 UTC [44] FATAL:  no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption
+[32mpostgres_1    |[0m 2022-05-16 09:44:01.766 UTC [45] FATAL:  no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption
+[36mgraph-node_1  |[0m May 16 09:44:01.767 INFO Connecting to Ethereum to get network identifier, capabilities: archive, traces, provider: mainnet-rpc-0
+[36mgraph-node_1  |[0m May 16 09:44:01.768 ERRO Failed to connect notification listener: db error: FATAL: no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption, retry_delay_s: 1, attempt: 0, channel: chain_head_updates, component: ChainHeadUpdateListener > NotificationListener
+[32mpostgres_1    |[0m 2022-05-16 09:44:01.773 UTC [47] FATAL:  no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption
+[32mpostgres_1    |[0m 2022-05-16 09:44:01.779 UTC [46] FATAL:  no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption
+[36mgraph-node_1  |[0m thread 'tokio-runtime-worker' panicked at 'Creating the BlockStore works: DatabaseUnavailable', node/src/store_builder.rs:177:14
+[36mgraph-node_1  |[0m note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+[36mgraph-node_1  |[0m May 16 09:44:01.790 INFO Connected to Ethereum, capabilities: archive, traces, network_version: 1652693655474, provider: mainnet-rpc-0
+[32mpostgres_1    |[0m 2022-05-16 09:44:01.801 UTC [48] FATAL:  no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption
+[32mpostgres_1    |[0m 2022-05-16 09:44:01.801 UTC [50] FATAL:  no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption
+[32mpostgres_1    |[0m 2022-05-16 09:44:01.809 UTC [49] FATAL:  no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption
+[32mpostgres_1    |[0m 2022-05-16 09:44:01.819 UTC [51] FATAL:  no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption
+[32mpostgres_1    |[0m 2022-05-16 09:44:01.831 UTC [52] FATAL:  no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption
+[32mpostgres_1    |[0m 2022-05-16 09:44:01.836 UTC [53] FATAL:  no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption
+[32mpostgres_1    |[0m 2022-05-16 09:44:01.841 UTC [54] FATAL:  no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption
+[32mpostgres_1    |[0m 2022-05-16 09:44:07.805 UTC [55] FATAL:  no pg_hba.conf entry for host "172.20.0.4", user "graph-node", database "graph-node", no encryption
+^CGracefully stopping... (press Ctrl+C again to force)
+Stopping docker_graph-node_1 ... 
+Stopping docker_postgres_1   ... 
+Stopping docker_ipfs_1       ... 
+[3A[2KStopping docker_graph-node_1 ... [32mdone[0m[3B[2A[2KStopping docker_postgres_1   ... [32mdone[0m[2B[1A[2KStopping docker_ipfs_1       ... [32mdone[0m[1BDone !!!!!!!!!!!!!!!!!!!!
+[1m[7m%[27m[1m[0m                                                                                  [0m[27m[24m[Jgiangtran@Giangs-MacBook-Air nft-marketplace % [K[?2004h
