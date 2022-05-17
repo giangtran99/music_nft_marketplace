@@ -142,13 +142,11 @@ const Dashboard = ({ color = "red" }) => {
 
             <Card className="shadow-lg b-4 p-5 m-5" border={true} title={<Segmented options={['Quarterly', 'Yearly', 'Monthly']} value={value} onChange={setValue} />}>
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-5">
-
                     <Card>
                         <Statistic title="User" value={dashboardInfo?.user_count} prefix={<UserOutlined
                             className="m-auto text-red-700"
                         />} />
                     </Card>
-
 
                     <Card>
                         <Statistic title="Comments" value={dashboardInfo?.comment_count} prefix={<CommentOutlined
@@ -166,12 +164,6 @@ const Dashboard = ({ color = "red" }) => {
                             className="m-auto text-orange-700"
                         />} />
                     </Card>
-
-
-
-
-
-
                 </div>
               
 

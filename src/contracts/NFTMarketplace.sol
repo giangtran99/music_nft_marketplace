@@ -85,9 +85,9 @@ contract NFTMarketplace {
         );
         nftCollection.transferFrom(address(this), msg.sender, _offer.id);
         _offer.fulfilled = true;
-        userFunds[_offer.user] += (80 * msg.value )/100;
+        userFunds[_offer.user] += (90 * msg.value )/100;
         //tranfer eth to minter
-        userFunds[_offer.minter] += (10 * msg.value)/100;
+        payable(_offer.minter).transfer((10 * msg.value)/100);
         emit OfferFilled(_offerId, _offer.id, msg.sender);
         
         //listen event from graph

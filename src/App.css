@@ -1,0 +1,7 @@
+.ant-btn-primary{
+    color:black !important;
+}   
+
+.ant-statistic-content-prefix span svg{
+    margin-top: -10px;
+}
