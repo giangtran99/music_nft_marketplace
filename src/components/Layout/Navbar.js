@@ -188,9 +188,9 @@ const Navbar = () => {
                       <span className='m-auto font-medium'>Connect</span>
                     </button>
 
-                    <button onClick={claimFundsHandler} class="w-[160px] bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold px-3 py-2 rounded inline-flex items-center">
+                    <button onClick={claimFundsHandler} class="w-[120px] bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold px-3 py-2 rounded inline-flex items-center">
                       <SwitchHorizontalIcon className="h-4 w-4 text-blue-500" />
-                      <span className='m-auto font-medium'>{`Claim ${formatPrice(marketplaceCtx.userFunds)} ETH`}</span>
+                      <span className='m-auto font-medium'>{`Claim`}</span>
                     </button>
 
                     {/* <button
