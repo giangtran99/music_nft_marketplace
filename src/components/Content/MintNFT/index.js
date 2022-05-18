@@ -76,10 +76,7 @@ const MintForm = () => {
     }
     result.type = typeFile
     setCapturedCoverFile(result)
-    if (audioRef2.current) {
-      audioRef2.current.pause();
-      audioRef2.current.load();
-    }
+
     const reader = new window.FileReader();
     reader.readAsArrayBuffer(file);
     console.log("@@file", file)
@@ -105,6 +102,10 @@ const MintForm = () => {
     }
     result.type = typeFile
     setCapturedFile(result)
+    if (audioRef2.current) {
+      audioRef2.current.pause();
+      audioRef2.current.load();
+    }
     const reader = new window.FileReader();
     reader.readAsArrayBuffer(file);
     reader.onloadend = () => {
@@ -364,8 +365,8 @@ const MintForm = () => {
                       <label
                         className="flex flex-col w-full h-[300px] border-4 border-dashed hover:bg-gray-100 hover:border-gray-300">
                         <div className="relative flex flex-col items-center justify-center pt-16">
-                          {capturedFile.type === "audio" ? <audio controls>
-                            <source ref={audioRef2} src={capturedFile.source} type="audio/ogg" />
+                          {capturedFile.type === "audio" ? <audio controls ref={audioRef2}>
+                            <source src={capturedFile.source} type="audio/ogg" />
                           </audio>
                             : <img src={capturedFile.source} id="preview" className="absolute inset-0 w-64 h-auto" />}
                           <svg xmlns="http://www.w3.org/2000/svg"
