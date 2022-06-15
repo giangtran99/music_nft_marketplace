@@ -1,5 +1,24 @@
 `#Ethereum`
 
+### Technology stack
+
+# Running Project in Terminal
+Clone source (with SSH)
+
+Run PHP backend  
+$ git clone git@github.com:tatadongvanhung/nft_marketplace_main.git
+
+
+Run Graph node and truffle
+$ git clone git@github.com:graphprotocol/graph-node.git
+$ sh script.sh
+$ sh script_v2.sh
+
+Run Frontend 
+$ git clone git@github.com:giangtran99/nft-marketplace.git
+$ yarn && yarn start
+
+
 # mTC - NFT Marketplace
 
 This is an open decentralized NFT Marketplace built with smart contracts powered by Ethereum. It basically consists in an open platform where each user can mint his own NFT and expose it on a marketplace.
