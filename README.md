@@ -157,13 +157,13 @@ The user can access the application via web-browser, and he must have the Metama
 
 ### NFT Marketplace features
 
-<img src="./img/UI_1.PNG" alt="layout">
+<img src="./img/UI_1.png" alt="layout">
 
-<img src="./img/UI_2.PNG" alt="layout">
+<img src="./img/UI_2.png" alt="layout">
 
-<img src="./img/UI_3.PNG" alt="layout">
+<img src="./img/UI_3.png" alt="layout">
 
-<img src="./img/UI_4.PNG" alt="layout">
+<img src="./img/UI_4.png" alt="layout">
 
 
 The user can perform the following actions on this NFT Marketplace:
