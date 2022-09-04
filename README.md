@@ -64,6 +64,27 @@ command:
 $ truffle test
 ```
 
+# Running Project in terminal
+Clone source (with SSH)
+
+Run PHP backend 
+```
+$ git clone git@github.com:tatadongvanhung/nft_marketplace_main.git
+```
+
+Run Graph node and truffle
+```
+$ git clone git@github.com:graphprotocol/graph-node.git
+$ sh script.sh
+$ sh script_v2.sh
+```
+
+Run Frontend 
+```
+$ git clone git@github.com:giangtran99/nft-marketplace.git
+$ yarn && yarn start
+```
+
 ### Deployment on Local Blockchain
 
 Deploy the contracts on your Ganache local blockchain by running the following command:
@@ -162,26 +183,6 @@ A user can buy those NFT which someone else offered. This will require paying th
 If a user sold an NFT, he can claim his funds by clicking the button in the top-right.
 
 
-# Running Project in terminal
-Clone source (with SSH)
-
-Run PHP backend 
-```
-$ git clone git@github.com:tatadongvanhung/nft_marketplace_main.git
-```
-
-Run Graph node and truffle
-```
-$ git clone git@github.com:graphprotocol/graph-node.git
-$ sh script.sh
-$ sh script_v2.sh
-```
-
-Run Frontend 
-```
-$ git clone git@github.com:giangtran99/nft-marketplace.git
-$ yarn && yarn start
-```
 ## Resources
 
 - [ethereum.org](https://ethereum.org/)
